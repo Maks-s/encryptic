@@ -3,7 +3,7 @@
  * @file
  */
 import test from 'tape';
-import Profile from '../../../app/scripts/models/Profile';
+import Profile from '../../../src/scripts/models/Profile';
 
 test('models/Profile: storeName', t => {
     t.equal(new Profile().storeName, 'profiles');

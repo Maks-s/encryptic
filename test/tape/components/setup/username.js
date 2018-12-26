@@ -6,14 +6,14 @@ import test from 'tape';
 import sinon from 'sinon';
 // import Radio from 'backbone.radio';
 
-import _ from '../../../../app/scripts/utils/underscore';
-import ContentView from '../../../../app/scripts/components/setup/ContentView';
-import View from '../../../../app/scripts/components/setup/username/View';
-import {configNames} from '../../../../app/scripts/collections/configNames';
+import _ from '../../../../src/scripts/utils/underscore';
+import ContentView from '../../../../src/scripts/components/setup/ContentView';
+import View from '../../../../src/scripts/components/setup/username/View';
+import {configNames} from '../../../../src/scripts/collections/configNames';
 
 let sand;
 test('setup/username/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -47,7 +47,7 @@ test('setup/username/Username: serializeData()', t => {
     const view = new View({newIdentity: true});
     t.deepEqual(view.serializeData(), {
         newIdentity  : true,
-        signalServer : configNames.sync.signalServer,
+        signalServer : configNames.signalServer,
     });
     t.end();
 });
@@ -133,13 +133,13 @@ test('setup/username/View: onClickNext()', t => {
     const trig = sand.stub(view, 'triggerMethod');
     view.ui    = {
         username     : {val: () => 'user'},
-        signalServer : {val: () => 'https://laverna.cc'},
+        signalServer : {val: () => 'https://encryptic.org'},
     };
 
     view.onClickNext();
     t.equal(trig.calledWith('check:user', {
         username     : 'user',
-        signalServer : 'https://laverna.cc',
+        signalServer : 'https://encryptic.org',
     }), true, 'triggers "check:user"');
 
     sand.restore();

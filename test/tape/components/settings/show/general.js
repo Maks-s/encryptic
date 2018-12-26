@@ -6,15 +6,15 @@ import test from 'tape';
 import sinon from 'sinon';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/settings/show/general/View';
-import Behavior from '../../../../../app/scripts/components/settings/show/Behavior';
-import Configs from '../../../../../app/scripts/collections/Configs';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/settings/show/general/View';
+import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
+import Configs from '../../../../../src/scripts/collections/Configs';
 /* eslint-enable */
 
 let sand;
 test('settings/show/general/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -43,7 +43,6 @@ test('settings/show/general/View: ui()', t => {
 
 test('settings/show/general/View: serializeData()', t => {
     const collection = new Configs();
-    collection.resetFromObject(collection.configNames);
     const useDefault = {attributes: {id: 'useDefaultConfigs'}};
 
     const view = new View({collection, useDefault, profileId: 'test'});

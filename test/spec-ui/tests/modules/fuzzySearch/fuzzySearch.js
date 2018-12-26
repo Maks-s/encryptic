@@ -4,15 +4,15 @@
  * Test fuzzy search module
  */
 module.exports = {
-    before: function(client) {
+    before(client) {
         client.closeWelcome();
     },
 
-    after: function(client) {
+    after(client) {
         client.end();
     },
 
-    'wait': function(client) {
+    wait(client) {
         client.urlHash('notes');
         client.expect.element('#header--add').to.be.visible.before(50000);
 
@@ -99,5 +99,5 @@ module.exports = {
         client
         .setValue('#header--search--input', client.Keys.ENTER)
         .assert.urlContains('notes/f/search/q/note');
-    }
+    },
 };

@@ -3,7 +3,7 @@
  * @file
  */
 import test from 'tape';
-import Notebook from '../../../app/scripts/models/Notebook';
+import Notebook from '../../../src/scripts/models/Notebook';
 
 test('Notebook: storeName', t => {
     const notebook = new Notebook();

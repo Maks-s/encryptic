@@ -8,7 +8,7 @@ import Radio from 'backbone.radio';
 import Mn from 'backbone.marionette';
 import Mousetrap from 'mousetrap';
 
-import Sidemenu from '../../../app/scripts/behaviors/Sidemenu';
+import Sidemenu from '../../../src/scripts/behaviors/Sidemenu';
 
 class View extends Mn.View {
 
@@ -24,7 +24,7 @@ class View extends Mn.View {
 
 let sand;
 test('behaviors/Sidemenu: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

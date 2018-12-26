@@ -7,12 +7,12 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import Mousetrap from 'mousetrap';
 
-import _ from '../../../../app/scripts/utils/underscore';
-import View from '../../../../app/scripts/components/share/users/View';
+import _ from '../../../../src/scripts/utils/underscore';
+import View from '../../../../src/scripts/components/share/users/View';
 
 let sand;
 test('share/users/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

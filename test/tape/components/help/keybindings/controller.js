@@ -7,13 +7,13 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import Configs from '../../../../../app/scripts/collections/Configs';
-import Controller from '../../../../../app/scripts/components/help/keybindings/Controller';
+import Configs from '../../../../../src/scripts/collections/Configs';
+import Controller from '../../../../../src/scripts/components/help/keybindings/Controller';
 /* eslint-enable */
 
 let sand;
 test('help/keybindings/controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -34,6 +34,10 @@ test('help/keybindings/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

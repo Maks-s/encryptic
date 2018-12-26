@@ -5,14 +5,14 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../app/scripts/utils/underscore';
+import '../../../src/scripts/utils/underscore';
 
-import Pagination from '../../../app/scripts/behaviors/Pagination';
-import Notes from '../../../app/scripts/collections/Notes';
+import Pagination from '../../../src/scripts/behaviors/Pagination';
+import Notes from '../../../src/scripts/collections/Notes';
 
 let sand;
 test('behaviors/Pagination: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

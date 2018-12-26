@@ -5,14 +5,14 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import Controller from '../../../../app/scripts/components/share/Controller';
-import Note from '../../../../app/scripts/models/Note';
-import Users from '../../../../app/scripts/collections/Users';
-import View from '../../../../app/scripts/components/share/View';
+import Controller from '../../../../src/scripts/components/share/Controller';
+import Note from '../../../../src/scripts/models/Note';
+import Users from '../../../../src/scripts/collections/Users';
+import View from '../../../../src/scripts/components/share/View';
 
 let sand;
 test('share/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -42,7 +42,7 @@ test('share/Controller: init()', t => {
     const users   = new Users();
 
     req.withArgs('collections/Profiles', 'getProfile').returns('alice');
-    req.withArgs('collections/Users').returns(Promise.resolve(users));
+    req.withArgs('collections/Users').resolves(users);
     sand.stub(con, 'show');
 
     const res     = con.init({model});
@@ -54,6 +54,10 @@ test('share/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -85,7 +89,7 @@ test('share/Controller: searchUser()', t => {
     };
 
     const req = sand.stub(con.signalChannel, 'request');
-    req.returns(Promise.resolve({}));
+    req.resolves({});
 
     username = '';
     con.searchUser();
@@ -113,7 +117,7 @@ test('share/Controller: searchUser()', t => {
             'triggers "user:error" event');
 
         const user = {username: 'test'};
-        req.returns(Promise.resolve(user));
+        req.resolves(user);
         return con.searchUser();
     })
     .then(() => {
@@ -122,12 +126,16 @@ test('share/Controller: searchUser()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('share/Controller: addTrust()', t => {
     const con = new Controller();
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const req = sand.stub(Radio, 'request').resolves();
     con.view  = {
         options   : {user: 'test'},
         showUsers : sand.stub(),
@@ -143,6 +151,10 @@ test('share/Controller: addTrust()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

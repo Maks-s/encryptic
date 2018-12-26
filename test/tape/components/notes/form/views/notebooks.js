@@ -6,13 +6,13 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import '../../../../../../app/scripts/utils/underscore';
-import Notebooks from '../../../../../../app/scripts/collections/Notebooks';
-import View from '../../../../../../app/scripts/components/notes/form/views/Notebooks';
+import '../../../../../../src/scripts/utils/underscore';
+import Notebooks from '../../../../../../src/scripts/collections/Notebooks';
+import View from '../../../../../../src/scripts/components/notes/form/views/Notebooks';
 
 let sand;
 test('notes/form/views/Notebooks: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -75,7 +75,7 @@ test('notes/form/views/Notebooks: addNotebook()', t => {
         find : sand.stub().returns({is}),
         val  : sand.stub().returns('2'),
     }};
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve({model: {id: '2'}}));
+    const req = sand.stub(Radio, 'request').resolves({model: {id: '2'}});
     sand.stub(view, 'selectModel');
 
     is.returns(false);
@@ -96,5 +96,9 @@ test('notes/form/views/Notebooks: addNotebook()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });

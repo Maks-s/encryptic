@@ -7,14 +7,14 @@ import sinon from 'sinon';
 import _ from 'underscore';
 import Radio from 'backbone.radio';
 import fs from 'fs';
-import '../../../../app/scripts/utils/underscore';
-import Import from '../../../../app/scripts/components/importExport/ImportEvernote';
+import '../../../../src/scripts/utils/underscore';
+import Import from '../../../../src/scripts/components/importExport/ImportEvernote';
 
 const xml = fs.readFileSync(`${__dirname}/backup.enex`, {encoding: 'utf8'});
 
 let sand;
 test('importExport/ImportEvernote: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -41,6 +41,10 @@ test('importExport/ImportEvernote: init()', t => {
         t.equal(res, false, 'returns false');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -89,6 +93,10 @@ test('importExport/ImportEvernote: getXml()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

@@ -5,22 +5,22 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../../app/scripts/utils/underscore';
+import _ from '../../../../../src/scripts/utils/underscore';
 
-import NoteView from '../../../../../app/scripts/components/notes/list/views/NoteView';
-import ModelFocus from '../../../../../app/scripts/behaviors/ModelFocus';
-import Note from '../../../../../app/scripts/models/Note';
+import NoteView from '../../../../../src/scripts/components/notes/list/views/NoteView';
+import NavModel from '../../../../../src/scripts/behaviors/NavModel';
+import Note from '../../../../../src/scripts/models/Note';
 
 let sand;
 test('notes/list/views/NoteView: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
 test('notes/list/views/NoteView: behaviors()', t => {
     const behaviors = NoteView.prototype.behaviors();
     t.equal(Array.isArray(behaviors), true, 'returns an array');
-    t.equal(behaviors.indexOf(ModelFocus) > -1, true, 'uses ModelFocus behavior');
+    t.equal(behaviors.indexOf(NavModel) > -1, true, 'uses NavModel behavior');
     t.end();
 });
 

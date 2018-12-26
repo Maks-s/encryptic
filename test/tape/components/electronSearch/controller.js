@@ -6,14 +6,14 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import Mousetrap from 'mousetrap';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import Controller from '../../../../app/scripts/components/electronSearch/Controller';
-import View from '../../../../app/scripts/components/electronSearch/View';
+import Controller from '../../../../src/scripts/components/electronSearch/Controller';
+import View from '../../../../src/scripts/components/electronSearch/View';
 
 let sand;
 test('electronSearch/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

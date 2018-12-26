@@ -300,7 +300,6 @@ export default class Import extends MnObject {
      */
     import(zip) {
         console.log(zip);
-        console.log(this.options.files[0]);
         console.log("files:");
 
         if (!_.isUndefined(zip.files['laverna-backups/notes-db/configs.json'])) {

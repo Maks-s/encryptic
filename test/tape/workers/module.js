@@ -6,11 +6,11 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import Module from '../../../app/scripts/workers/Module';
+import Module from '../../../src/scripts/workers/Module';
 
 let sand;
 test('workers/Module: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -101,7 +101,7 @@ test('workers/Module: processRequest() - delegate to worker', t => {
 
 test('workers/Module: delegateToWorker()', t => {
     const module = new Module();
-    const stub   = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const stub   = sand.stub(Radio, 'request').resolves();
 
     module.delegateToWorker('save', [1, 2]);
     const called = stub.calledWith('workers/Delegator', 'execute', {

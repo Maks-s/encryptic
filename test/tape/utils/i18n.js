@@ -8,17 +8,17 @@ import i18next from 'i18next';
 import i18nextXhr from 'i18next-xhr-backend';
 import Radio from 'backbone.radio';
 
-import {default as I18n, initialize} from '../../../app/scripts/utils/I18n';
+import {default as I18n, initialize} from '../../../src/scripts/utils/I18n';
 
 let sand;
 test('Initializer: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
 test('utils/I18nn: initialize()', t => {
     const i18n = new I18n();
-    sand.stub(i18n, 'getLang').returns(Promise.resolve('en'));
+    sand.stub(i18n, 'getLang').resolves('en');
     sand.stub(i18n, 'initLocale');
 
     const res = i18n.initialize();
@@ -33,6 +33,10 @@ test('utils/I18nn: initialize()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -61,6 +65,10 @@ test('utils/I18nn: initLocale()', t => {
             'initializes i18next');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -83,6 +91,10 @@ test('utils/I18nn: getLang() - configs', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -99,6 +111,10 @@ test('utils/I18nn: getLang() - browser', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

@@ -5,11 +5,11 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Backbone from 'backbone';
-import Url from '../../../app/scripts/utils/Url';
+import Url from '../../../src/scripts/utils/Url';
 
 let sand;
 test('utils/Url: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

@@ -5,13 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import Hammer from 'hammerjs';
 
-import Content from '../../../app/scripts/behaviors/Content';
+import Content from '../../../src/scripts/behaviors/Content';
 
 let sand;
 test('behaviors/Content: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

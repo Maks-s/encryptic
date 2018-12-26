@@ -5,11 +5,11 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import theme from '../../../app/scripts/utils/theme';
+import theme from '../../../src/scripts/utils/theme';
 
 let sand;
 test('utils/theme: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

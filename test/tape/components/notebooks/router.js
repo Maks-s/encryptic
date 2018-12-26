@@ -4,8 +4,8 @@
  */
 import test from 'tape';
 
-import Router from '../../../../app/scripts/components/notebooks/Router.js';
-import controller from '../../../../app/scripts/components/notebooks/controller.js';
+import Router from '../../../../src/scripts/components/notebooks/Router.js';
+import controller from '../../../../src/scripts/components/notebooks/controller.js';
 
 test('notebooks/Router: controller', t => {
     t.equal(typeof Router.prototype.controller, 'object',
@@ -18,7 +18,7 @@ test('notebooks/Router: appRoutes', t => {
     const routes = Router.prototype.appRoutes;
     t.equal(typeof routes, 'object', 'is an object');
 
-    t.equal(routes['notebooks'], 'showList',
+    t.equal(routes.notebooks, 'showList',
         'shows a list of notebooks and tags');
     t.equal(routes['notebooks/add'], 'notebookForm',
         'shows notebook add form');

@@ -4,18 +4,18 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../app/scripts/utils/underscore';
+import _ from '../../../../src/scripts/utils/underscore';
 import * as openpgp from 'openpgp';
 
-import Module from '../../../../app/scripts/collections/modules/Users';
-import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
-import Users from '../../../../app/scripts/collections/Users';
-import User  from '../../../../app/scripts/models/User';
+import Module from '../../../../src/scripts/modules/Users';
+import ModuleOrig from '../../../../src/scripts/modules/Module';
+import Users from '../../../../src/scripts/collections/Users';
+import User  from '../../../../src/scripts/models/User';
 
 let sand;
 test('collections/modules/Users: before()', t => {
     Radio.channel('models/Signal').stopReplying();
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -50,7 +50,7 @@ test('collections/modules/Users: constructor()', t => {
 
 test('collections/modules/Users: find()', t => {
     const mod      = new Module();
-    const find     = sand.stub(ModuleOrig.prototype, 'find').returns(Promise.resolve());
+    const find     = sand.stub(ModuleOrig.prototype, 'find').resolves();
     mod.collection = new Users();
 
     mod.find();
@@ -68,22 +68,26 @@ test('collections/modules/Users: find()', t => {
 test('collections/modules/Users: saveModel()', t => {
     const mod  = new Module();
     const req  = sand.stub(Radio, 'request');
-    const save = sand.stub(ModuleOrig.prototype, 'saveModel').returns(Promise.resolve());
+    sand.stub(ModuleOrig.prototype, 'saveModel').resolves();
 
     mod.saveModel({})
     .then(() => {
-        t.equal(req.calledWith('models/Encryption', 'readUserKey'), false,
+        t.equal(req.calledWith('components/Encryption', 'readUserKey'), false,
             'does not add a users key to the array of public keys');
 
         req.withArgs('collections/Configs', 'findConfig').returns('---private key---');
         return mod.saveModel({});
     })
     .then(() => {
-        t.equal(req.calledWith('models/Encryption', 'readUserKey'), true,
+        t.equal(req.calledWith('components/Encryption', 'readUserKey'), true,
             'adds a users key to the array of public keys');
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -92,7 +96,7 @@ test('collections/modules/Users: remove()', t => {
     const model    = new User({username: 'bob'});
     mod.collection = new Users([model]);
 
-    const destroy = sand.stub(User.prototype, 'destroy').returns(Promise.resolve());
+    const destroy = sand.stub(User.prototype, 'destroy').resolves();
     sand.spy(mod.collection, 'remove');
 
     return mod.remove({model})
@@ -101,6 +105,10 @@ test('collections/modules/Users: remove()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -108,7 +116,7 @@ test('collections/modules/Users: acceptInvite()', t => {
     const mod   = new Module();
     const model = new User({username: 'bob', pendingAccept: true, pendingInvite: true});
     const req   = sand.stub(Radio, 'request');
-    sand.stub(mod, 'saveModel').returns(Promise.resolve());
+    sand.stub(mod, 'saveModel').resolves();
 
     mod.acceptInvite({model})
     .then(() => {
@@ -123,13 +131,17 @@ test('collections/modules/Users: acceptInvite()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Users: acceptIfPending()', t => {
     const mod   = new Module();
     const model = new User({pendingInvite: false});
-    const find  = sand.stub(mod, 'findModel').returns(Promise.resolve(model));
+    const find  = sand.stub(mod, 'findModel').resolves(model);
     sand.stub(mod, 'acceptInvite');
 
     mod.acceptIfPending({username: 'bob'})
@@ -146,6 +158,10 @@ test('collections/modules/Users: acceptIfPending()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -214,7 +230,7 @@ test('collections/modules/Users: invite()', t => {
     const user = {username: 'bob', fingerprint: 'print', publicKey: 'pubKey'};
     const req  = sand.stub(Radio, 'request');
     sand.stub(mod, 'checkKey').returns(false);
-    sand.stub(mod, 'addUser').returns(Promise.resolve());
+    sand.stub(mod, 'addUser').resolves();
 
     mod.invite({user})
     .then(res => {
@@ -232,6 +248,10 @@ test('collections/modules/Users: invite()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -243,7 +263,7 @@ test('collections/modules/Users: saveInvite() -> autoAcceptInvite()', t => {
     sand.stub(openpgp.key, 'readArmored').returns({
         keys: [{primaryKey: {fingerprint: 'print'}}],
     });
-    sand.stub(mod, 'findModel').returns(Promise.resolve(model));
+    sand.stub(mod, 'findModel').resolves(model);
     sand.stub(mod, 'autoAcceptInvite');
     sand.stub(mod, 'removeServerInvite');
 
@@ -262,7 +282,7 @@ test('collections/modules/Users: saveInvite() -> autoAcceptInvite()', t => {
             'automatically accepts the invite if the user exists in the DB');
 
         model.set('pendingAccept', false);
-        mod.saveInvite(options)
+        mod.saveInvite(options);
     })
     .then(() => {
         t.equal(mod.removeServerInvite.calledWith(model), true,
@@ -270,6 +290,10 @@ test('collections/modules/Users: saveInvite() -> autoAcceptInvite()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -280,7 +304,7 @@ test('collections/modules/Users: saveInvite() -> saveNewInvite()', t => {
     sand.stub(openpgp.key, 'readArmored').returns({
         keys: [{primaryKey: {fingerprint: 'print'}}],
     });
-    sand.stub(mod, 'findModel').returns(Promise.reject('error'));
+    sand.stub(mod, 'findModel').rejects('error');
     sand.stub(mod, 'saveNewInvite');
 
     mod.saveInvite(options)
@@ -296,6 +320,10 @@ test('collections/modules/Users: saveInvite() -> saveNewInvite()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -305,7 +333,7 @@ test('collections/modules/Users: autoAcceptInvite()', t => {
     const model   = new User({username: 'bob', pendingInvite: true});
 
     sand.stub(mod, 'acceptInvite');
-    sand.stub(mod, 'checkInviteSignature').returns(Promise.resolve(false));
+    sand.stub(mod, 'checkInviteSignature').resolves(false);
 
     mod.autoAcceptInvite(options, ['pubKey'], model)
     .then(() => {
@@ -314,7 +342,7 @@ test('collections/modules/Users: autoAcceptInvite()', t => {
         t.equal(mod.acceptInvite.notCalled, true,
             'does not accept the invite if the signature is incorrect');
 
-        mod.checkInviteSignature.returns(Promise.resolve(true));
+        mod.checkInviteSignature.resolves(true);
         return mod.autoAcceptInvite(options, ['pubKey'], model);
     })
     .then(() => {
@@ -328,14 +356,18 @@ test('collections/modules/Users: autoAcceptInvite()', t => {
         t.equal(mod.acceptInvite.calledWith({model}), true, 'accepts the invite');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Users: saveNewInvite()', t => {
     const mod     = new Module();
     const options = {username: 'bob', fingerprint: 'print', publicKey: 'pubKey'};
-    sand.stub(mod, 'checkInviteSignature').returns(Promise.resolve(false));
-    sand.stub(mod, 'addUser').returns(Promise.resolve());
+    sand.stub(mod, 'checkInviteSignature').resolves(false);
+    sand.stub(mod, 'addUser').resolves();
 
     mod.saveNewInvite(options, ['pubKey'])
     .then(res => {
@@ -343,7 +375,7 @@ test('collections/modules/Users: saveNewInvite()', t => {
             'checks the invite signature');
         t.equal(res, false, 'resolves with "false" if the signature is incorrect');
 
-        mod.checkInviteSignature.returns(Promise.resolve(true));
+        mod.checkInviteSignature.resolves(true);
         return mod.saveNewInvite(options, ['pubKey']);
     })
     .then(res => {
@@ -353,6 +385,10 @@ test('collections/modules/Users: saveNewInvite()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -361,10 +397,10 @@ test('collections/modules/Users: checkInviteSignature()', t => {
     const options   = {username: 'bob', fingerprint: 'print', publicKey: 'pubKey'};
     const data      = JSON.stringify({from: options.username, to: 'alice'});
     const signature = {valid: true};
-    sand.stub(Radio, 'request').returns(Promise.resolve({
+    sand.stub(Radio, 'request').resolves({
         data,
         signatures: [signature],
-    }));
+    });
     Object.defineProperty(mod, 'user', {get: () => {
         return {username: 'alice'};
     }});
@@ -381,5 +417,9 @@ test('collections/modules/Users: checkInviteSignature()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });

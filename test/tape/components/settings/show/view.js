@@ -6,14 +6,14 @@ import test from 'tape';
 import sinon from 'sinon';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/settings/show/View';
-import Content from '../../../../../app/scripts/behaviors/Content';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/settings/show/View';
+import Content from '../../../../../src/scripts/behaviors/Content';
 /* eslint-enable */
 
 let sand;
 test('settings/show/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -48,8 +48,8 @@ test('settings/show/View: events()', t => {
 test('settings/show/View: triggers()', t => {
     const triggers = View.prototype.triggers();
     t.equal(typeof triggers, 'object');
-    t.equal(triggers['click .settings--cancel'], 'cancel',
-        'triggers cancel event if the buttons is clicked');
+    t.equal(triggers['click .settings--close'], 'close',
+        'triggers close event when the buttons is clicked');
     t.end();
 });
 

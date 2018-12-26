@@ -5,17 +5,17 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../../app/scripts/utils/underscore';
+import _ from '../../../../../src/scripts/utils/underscore';
 import localforage from 'localforage';
 
 // eslint-disable-next-line
-const Controller = require('../../../../../app/scripts/components/importExport/migrate/Controller').default;
+const Controller = require('../../../../../src/scripts/components/importExport/migrate/Controller').default;
 // eslint-disable-next-line
-const Encryption = require('../../../../../app/scripts/components/importExport/migrate/Encryption').default;
+const Encryption = require('../../../../../src/scripts/components/importExport/migrate/Encryption').default;
 
 let sand;
 test('importExport/migrate/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -32,6 +32,10 @@ test('importExport/migrate/Controller: init()', t => {
         t.equal(con.check.called, true, 'checks if migration is needed');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -41,7 +45,8 @@ test('importExport/migrate/Controller: check()', t => {
     sand.stub(con, 'requiresMigration').resolves(false);
     sand.stub(con, 'destroy');
     const conf = [{name: 'encrypt'}];
-    sand.stub(con, 'findOldData').withArgs('configs').resolves(conf);
+    sand.stub(con, 'findOldData').withArgs('configs')
+    .resolves(conf);
     sand.stub(con, 'show');
 
     con.check()
@@ -56,6 +61,10 @@ test('importExport/migrate/Controller: check()', t => {
         t.equal(con.show.calledWith(conf), true, 'renders the view');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -81,6 +90,10 @@ test('importExport/migrate/Controller: requiresMigration()', t => {
         t.equal(res, false, 'returns "false" if the old database is also empty');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -102,6 +115,10 @@ test('importExport/migrate/Controller: findOldData()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -167,6 +184,10 @@ test('importExport/migrate/Controller: startMigration()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -205,6 +226,10 @@ test('importExport/migrate/Controller: migrateCollections()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -222,6 +247,10 @@ test('importExport/migrate/Controller: migrateCollection()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -232,7 +261,7 @@ test('importExport/migrate/Controller: migrateModel()', t => {
     con.encrypt      = new Encryption({encrypt: 1});
     const decrypt    = sand.stub(con.encrypt, 'decryptModel').resolves(attributes);
 
-    const res = con.migrateModel({attributes})
+    const res = con.migrateModel({attributes});
     t.equal(typeof res.then, 'function', 'returns a promise');
     t.equal(decrypt.calledWith({attributes}), true, 'decrypts the attributes');
 

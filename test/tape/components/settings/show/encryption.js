@@ -8,17 +8,17 @@ import * as openpgp from 'openpgp';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/settings/show/encryption/View';
-import Behavior from '../../../../../app/scripts/components/settings/show/Behavior';
-import Configs from '../../../../../app/scripts/collections/Configs';
-import Profile from '../../../../../app/scripts/models/Profile';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/settings/show/encryption/View';
+import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
+import Configs from '../../../../../src/scripts/collections/Configs';
+import Profile from '../../../../../src/scripts/models/Profile';
 /* eslint-enable */
 
 let sand;
 const user = new Profile({username: 'alice', publicKey: 'pub', privateKey: 'priv'});
 test('settings/show/encryption/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -86,8 +86,10 @@ test('settings/show/encryption/View: showPrivateKey()', t => {
 test('settings/show/encryption/View: showKey()', t => {
     const view = new View();
     const req  = sand.stub(Radio, 'request');
-    view.collection = {get: sand.stub().withArgs('publicKeys')
-    .returns({})};
+    req.withArgs('components/Encryption', 'getUserKeys')
+    .returns({
+        privateKey: '',
+    });
 
     view.showKey('pub', true);
     t.equal(req.calledWithMatch('Layout', 'show', {
@@ -144,24 +146,17 @@ test('settings/show/encryption/View: useEncryption()', async t => {
 
 test('settings/show/encryption/View: serializeData()', t => {
     const coll = new Configs();
-    coll.resetFromObject(coll.configNames);
     const view = new View({collection: coll});
-    view.user  = user;
 
-    const read = sand.stub(openpgp.key, 'readArmored');
-    read.withArgs('priv').returns({keys: ['privTest']});
-    read.withArgs('pub').returns({keys: ['pubTest']});
+    sand.stub(Radio, 'request').returns({
+        privateKey: 'privTest',
+    });
 
     t.deepEqual(view.serializeData(), {
         models: view.collection.getConfigs(),
         privateKey : 'privTest',
     });
 
-    sand.restore();
-    t.end();
-});
-
-test('settings/show/encryption/View: templateContext()', t => {
     sand.restore();
     t.end();
 });

@@ -6,13 +6,13 @@ import test from 'tape';
 import sinon from 'sinon';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import Behavior from '../../../../../app/scripts/components/settings/show/Behavior';
+import _ from '../../../../../src/scripts/utils/underscore';
+import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
 /* eslint-enable */
 
 let sand;
 test('settings/show/Behavior: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -40,7 +40,8 @@ test('settings/show/Behavior: triggerChange()', t => {
         is   : sand.stub().returns(true),
     };
     behavior.view  = {
-        $: sand.stub().withArgs('#test').returns(jq),
+        $: sand.stub().withArgs('#test')
+        .returns(jq),
         trigger: sand.stub(),
     };
     jq.attr.withArgs('name').returns('editor');

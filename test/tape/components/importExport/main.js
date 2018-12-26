@@ -5,15 +5,15 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import main from '../../../../app/scripts/components/importExport/main';
-import Import from '../../../../app/scripts/components/importExport/Import';
-import Export from '../../../../app/scripts/components/importExport/Export';
+import main from '../../../../src/scripts/components/importExport/main';
+import Import from '../../../../src/scripts/components/importExport/Import';
+import Export from '../../../../src/scripts/components/importExport/Export';
 
 let sand;
 test('importExport/Main: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     main();
     t.end();
 });

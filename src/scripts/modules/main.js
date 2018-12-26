@@ -11,8 +11,6 @@ import Files from './Files';
 import Notebooks from './Notebooks';
 import Notes from './Notes';
 import Tags from './Tags';
-// import Shadows from './Shadows';
-// import Edits from './Edits';
 
 /**
  * Instantiate all collection modules

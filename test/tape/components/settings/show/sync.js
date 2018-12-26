@@ -7,15 +7,15 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/settings/show/sync/View';
-import Behavior from '../../../../../app/scripts/components/settings/show/Behavior';
-import Configs from '../../../../../app/scripts/collections/Configs';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/settings/show/sync/View';
+import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
+import Configs from '../../../../../src/scripts/collections/Configs';
 /* eslint-enable */
 
 let sand;
 test('settings/show/sync/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -90,7 +90,8 @@ test('settings/show/sync/View: showSync()', t => {
     t.equal(show.calledWith('content'), true, 'renders the view in "content" region');
 
     const empty = sand.stub();
-    sand.stub(view, 'getRegion').withArgs('content').returns({empty});
+    sand.stub(view, 'getRegion').withArgs('content')
+    .returns({empty});
     view.showSync('sync');
     t.equal(empty.called, true, 'empties "content" region');
     t.equal(show.callCount, 1, 'calls showChildView() only 1 time');

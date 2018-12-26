@@ -1,5 +1,5 @@
 'use strict';
-var expect = require('chai').expect,
+let expect = require('chai').expect,
     notebookCount;
 
 /**
@@ -7,7 +7,7 @@ var expect = require('chai').expect,
  */
 module.exports = {
 
-    before: function(client, done) {
+    before(client, done) {
         client.closeWelcome();
 
         client.urlHash('notes')
@@ -16,13 +16,13 @@ module.exports = {
         client.urlHash('notebooks');
 
         client.expect.element('#header--add').to.be.visible.before(5000);
-        client.elements('css selector', '#notebooks .list--item', (res) => {
+        client.elements('css selector', '#notebooks .list--item', res => {
             notebookCount = res.value.length;
             done();
         });
     },
 
-    after: function(client) {
+    after(client) {
         client.end();
     },
 
@@ -87,13 +87,13 @@ module.exports = {
         client.expect.element('#notebooks').text.to.contain('1.RemoveNested').before(5000);
     },
 
-    'cleanup': function(client) {
+    cleanup(client) {
         client
         .urlHash('notes')
         .pause(100)
         .urlHash('notebooks');
 
-        for (var i = 0, len = 2; i <= len; i++) {
+        for (let i = 0, len = 2; i <= len; i++) {
             if (i === 2) {
                 return;
             }
@@ -118,7 +118,7 @@ module.exports = {
         .urlHash('notebooks');
 
         client.perform((client, done) => {
-            client.elements('css selector', '#notebooks .list--item', (res) => {
+            client.elements('css selector', '#notebooks .list--item', res => {
                 expect(notebookCount).to.be.equal(res.value.length);
                 done();
             });

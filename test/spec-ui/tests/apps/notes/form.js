@@ -1,12 +1,12 @@
 'use strict';
 
-var notebookId;
+let notebookId;
 module.exports = {
-    before: function(client) {
+    before(client) {
         client.closeWelcome();
     },
 
-    after: function(client) {
+    after(client) {
         client.end();
     },
 
@@ -61,10 +61,10 @@ module.exports = {
         client
         .setValue('.modal--input[name=name]', ['Nightwatch', client.Keys.ENTER])
         .pause(1000)
-        .perform(function(client, done) {
-            client.getValue('[name="notebookId"]', function(res) {
+        .perform((client, done) => {
+            client.getValue('[name="notebookId"]', res => {
                 notebookId = res.value;
-                client.assert.containsText('option[value="' + notebookId + '"]', 'Nightwatch');
+                client.assert.containsText(`option[value="${notebookId}"]`, 'Nightwatch');
                 done();
             });
         });
@@ -109,7 +109,7 @@ module.exports = {
 
     'makes previously selected notebook active': function(client) {
         client
-        .urlHash('/notes/f/notebook/q/' + notebookId)
+        .urlHash(`/notes/f/notebook/q/${notebookId}`)
         .expect.element('#sidebar--content').to.be.visible.before(50000);
 
         client
@@ -152,9 +152,9 @@ module.exports = {
     },
 
     'opens an edit page': function(client) {
-        client.getAttribute('.list--item', 'data-id', function(res) {
+        client.getAttribute('.list--item', 'data-id', res => {
             client
-            .urlHash('/notes/edit/' + res.value)
+            .urlHash(`/notes/edit/${res.value}`)
             .expect.element('.layout--body.-form').to.be.visible.before(1500);
         });
     },

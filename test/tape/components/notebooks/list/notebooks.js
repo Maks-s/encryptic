@@ -5,10 +5,10 @@
 import test from 'tape';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/notebooks/list/views/Notebooks';
-import Notebook from '../../../../../app/scripts/components/notebooks/list/views/Notebook';
-import Navigate from '../../../../../app/scripts/behaviors/Navigate';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/notebooks/list/views/Notebooks';
+import Notebook from '../../../../../src/scripts/components/notebooks/list/views/Notebook';
+import Navigate from '../../../../../src/scripts/behaviors/Navigate';
 /* eslint-enable */
 
 test('notebooks/list/views/Notebooks: className', t => {

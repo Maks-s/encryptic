@@ -6,13 +6,13 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import Backbone from 'backbone';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import Controller from '../../../../app/scripts/components/fileDialog/Controller';
+import Controller from '../../../../src/scripts/components/fileDialog/Controller';
 
 let sand;
 test('fileDialog/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -148,7 +148,7 @@ test('fileDialog/Controller: saveFiles()', t => {
     sand.stub(model, 'set');
     sand.stub(con, 'attachFiles');
 
-    req.withArgs('collections/Files').returns(Promise.resolve(['2']));
+    req.withArgs('collections/Files').resolves(['2']);
     req.withArgs('utils/Url').returns('test');
 
     const res = con.saveFiles();
@@ -165,6 +165,10 @@ test('fileDialog/Controller: saveFiles()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

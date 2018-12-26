@@ -4,9 +4,9 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import {default as BModel} from '../../../app/scripts/models/Model';
-import Sync from '../../../app/scripts/models/Sync';
-import Db from '../../../app/scripts/models/Db';
+import {default as BModel} from '../../../src/scripts/models/BaseModel';
+import Sync from '../../../src/scripts/components/Sync';
+import Db from '../../../src/scripts/components/Db';
 
 class Model extends BModel {
     constructor() {
@@ -18,13 +18,13 @@ class Model extends BModel {
 
 let sand;
 test('Sync: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
 test('Sync: db()', t => {
     const sync = new Sync();
-    t.equal(sync.db instanceof Db, true, 'creates an instance of models/Db');
+    t.equal(sync.db instanceof Db, true, 'creates an instance of components/Db');
     t.end();
 });
 
@@ -107,7 +107,8 @@ test('Sync: find()', t => {
     res.then(res => {
         t.equal(res, coll, 'returns collection');
         t.end();
-    });
+    })
+    .catch(() => t.end('resolve promise'));
 });
 
 test('Sync: create() + update()', t => {
@@ -142,6 +143,10 @@ test('Sync: save()', t => {
             'sets new attributes');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -156,6 +161,10 @@ test('Sync: find()', t => {
         t.equal(coll.add.called, true, 'adds found models to the collection');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -167,7 +176,9 @@ test('Sync: delete()', t => {
 
     const stub  = sand.stub();
     Object.defineProperty(sync, 'db', {
-        get: () => {return {processRequest: stub};},
+        get: () => {
+            return {processRequest: stub};
+        },
     });
 
     sync.delete(model, opt);

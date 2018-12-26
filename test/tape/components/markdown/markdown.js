@@ -5,13 +5,13 @@
 import test from 'tape';
 import Radio from 'backbone.radio';
 import sinon from 'sinon';
-import Markdown from '../../../../app/scripts/components/markdown/Markdown';
-import Module from '../../../../app/scripts/workers/Module';
+import Markdown from '../../../../src/scripts/components/markdown/Markdown';
+import Module from '../../../../src/scripts/workers/Module';
 import Prism from 'prismjs';
 
 let sand;
 test('markdown/Markdown: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -150,6 +150,10 @@ test('markdown/Markdown: parse()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

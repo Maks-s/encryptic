@@ -4,11 +4,11 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import ModuleObj from '../../../../app/scripts/collections/modules/Module';
-import Notes from '../../../../app/scripts/collections/Notes';
-import Edit from '../../../../app/scripts/models/Edit';
-import Profile from '../../../../app/scripts/models/Profile';
-import _ from '../../../../app/scripts/utils/underscore';
+import ModuleObj from '../../../../src/scripts/modules/Module';
+import Notes from '../../../../src/scripts/collections/Notes';
+// import Edit from '../../../../src/scripts/models/Edit';
+import Profile from '../../../../src/scripts/models/Profile';
+import _ from '../../../../src/scripts/utils/underscore';
 
 class Module extends ModuleObj {
     get Collection() {
@@ -18,7 +18,7 @@ class Module extends ModuleObj {
 
 let sand;
 test('collections/modules/Module: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -95,6 +95,10 @@ test('collections/modules/Module: findModel() - no ID', t => {
         t.equal(model.id, undefined);
         mod.channel.stopReplying();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        t.end('resolve promise');
     });
 });
 
@@ -109,12 +113,16 @@ test('collections/modules/Module: findModel() - finds a cached model', t => {
 
         mod.channel.stopReplying();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Module: findModel() - fetches a model', t => {
     const mod     = new Module();
-    const fetch   = sand.stub(mod.Model.prototype, 'fetch').returns(Promise.resolve(''));
+    const fetch   = sand.stub(mod.Model.prototype, 'fetch').resolves('');
     const decrypt = sand.stub(mod, 'decryptModel');
 
     mod.findModel({id: '1', profileId: 'test'})
@@ -125,13 +133,18 @@ test('collections/modules/Module: findModel() - fetches a model', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Module: find()', t => {
     const mod  = new Module();
     const coll = new mod.Collection();
-    sand.stub(mod, 'fetch').returns(Promise.resolve(coll));
+    sand.stub(mod, 'fetch').resolves(coll);
     sand.stub(coll, 'filterList');
     sand.stub(coll, 'paginate');
 
@@ -155,13 +168,18 @@ test('collections/modules/Module: find()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Module: fetch()', t => {
     const mod   = new Module();
     const fetch = sand.stub(mod.Collection.prototype, 'fetch');
-    fetch.returns(Promise.resolve());
+    fetch.resolves();
     sand.stub(mod, 'decryptCollection').returns(mod.collection);
 
     const opt = {profileId: 'test'};
@@ -176,6 +194,11 @@ test('collections/modules/Module: fetch()', t => {
         sand.restore();
         mod.channel.stopReplying();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        mod.channel.stopReplying();
+        t.end('resolve promise');
     });
 });
 
@@ -201,7 +224,7 @@ test('collections/modules/Module: saveModel()', t => {
     sand.stub(mod, 'setSharedBy');
     sand.spy(model, 'setEscape');
     sand.spy(model, 'validate');
-    sand.stub(mod, 'encryptModel').returns(Promise.resolve());
+    sand.stub(mod, 'encryptModel').resolves();
     sand.stub(model, 'save');
     sand.stub(mod.channel, 'trigger');
     sand.stub(mod, 'onSaveModel');
@@ -226,6 +249,11 @@ test('collections/modules/Module: saveModel()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -247,11 +275,6 @@ test('collections/modules/Module: setSharedBy()', t => {
     mod.setSharedBy(model);
     t.equal(model.get('sharedBy'), 'bob',
         'does not change sharedBy if it was already set');
-
-    const edit = new Edit();
-    t.equal(mod.setSharedBy(edit), false,
-        'returns false if the model does not use sharedBy');
-    t.equal(edit.get('sharedBy'), undefined, 'does not set "sharedBy"');
 
     sand.restore();
     t.end();
@@ -303,7 +326,7 @@ test('collections/modules/Module: save()', t => {
     const mod        = new Module();
     const collection = new mod.Collection([{id: '1'}, {id: '2'}, {id: '3'}]);
 
-    sand.stub(mod, 'saveModel').returns(Promise.resolve());
+    sand.stub(mod, 'saveModel').resolves();
     sand.stub(mod.channel, 'trigger');
 
     const res = mod.save({collection});
@@ -321,6 +344,11 @@ test('collections/modules/Module: save()', t => {
         sand.restore();
         mod.channel.stopReplying();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        mod.channel.stopReplying();
+        t.end('resolve promise');
     });
 });
 
@@ -329,8 +357,8 @@ test('collections/modules/Module: saveModelObject()', t => {
     const data = {id: '1', title: 'Test'};
 
     const trigger = sand.stub(mod.channel, 'trigger');
-    sand.stub(mod, 'decryptModel').returns(Promise.resolve());
-    sand.stub(mod, 'saveModel').returns(Promise.resolve());
+    sand.stub(mod, 'decryptModel').resolves();
+    sand.stub(mod, 'saveModel').resolves();
 
     const res = mod.saveModelObject({data, profileId: 'test'});
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -348,6 +376,11 @@ test('collections/modules/Module: saveModelObject()', t => {
         sand.restore();
         mod.channel.stopReplying();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        mod.channel.stopReplying();
+        t.end('resolve promise');
     });
 });
 
@@ -358,7 +391,7 @@ test('collections/modules/Module: saveFromArray()', t => {
         {id: '2', title: 'Test 2'},
     ];
 
-    const stub = sand.stub(mod, 'saveModelObject').returns(Promise.resolve());
+    const stub = sand.stub(mod, 'saveModelObject').resolves();
     const res  = mod.saveFromArray({values, profileId: 'test'});
     t.equal(typeof res.then, 'function', 'returns a promise');
 
@@ -368,41 +401,42 @@ test('collections/modules/Module: saveFromArray()', t => {
         sand.restore();
         mod.channel.stopReplying();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        mod.channel.stopReplying();
+        t.end('resolve promise');
     });
 });
 
-test('collections/modules/Module: remove() - model', t => {
-    const mod   = new Module();
+test('collections/modules/Module: remove()', t => {
+    const mod      = new Module();
+    mod.collection = new mod.Collection([{id: '1'}, {id: '2'}, {id: '3'}]);
+    const stub     = sand.stub();
     const model = {id: '1'};
 
-    sand.stub(mod, 'saveModel').returns(Promise.resolve());
+    sand.stub(mod.collection, 'sync').get(() => {
+        return stub;
+    });
     sand.stub(mod.channel, 'trigger');
 
     const res = mod.remove({model});
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(() => {
-        t.equal(mod.saveModel.calledWithMatch({model, data: {trash: 2}}), true,
-            'changes trash status');
+        t.equal(mod.collection.sync.calledWithMatch('delete', model), true,
+            'call collection.sync with right arguments');
         t.equal(mod.channel.trigger.calledWithMatch('destroy:model', {model}), true,
             'triggers destroy:model event');
 
         sand.restore();
         mod.channel.stopReplying();
         t.end();
-    });
-});
-
-test('collections/modules/Module: remove() - ID', t => {
-    const mod = new Module();
-    sand.stub(mod, 'saveModel').returns(Promise.resolve());
-
-    mod.remove({id: '1'})
-    .then(() => {
-        t.equal(mod.saveModel.called, true);
-        mod.channel.stopReplying();
+    })
+    .catch(e => {
         sand.restore();
-        t.end();
+        mod.channel.stopReplying();
+        t.end(e);
     });
 });
 
@@ -431,7 +465,7 @@ test('collections/modules/Module: isEncryptEnabled()', t => {
 
 test('collections/modules/Module: decryptModel()', t => {
     const mod   = new Module();
-    const req   = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const req   = sand.stub(Radio, 'request').resolves();
     const model = {id: '1'};
     sand.stub(mod, 'isEncryptEnabled').returns(false);
 
@@ -440,8 +474,8 @@ test('collections/modules/Module: decryptModel()', t => {
 
     mod.isEncryptEnabled.returns(true);
     mod.decryptModel(model);
-    t.equal(req.calledWith('models/Encryption', 'decryptModel', {model}), true,
-        'decrypts the model');
+    t.equal(req.calledWith('components/Encryption', 'decryptModel', {model}), true,
+        'call components/Encryption to decrypt model');
 
     mod.channel.stopReplying();
     sand.restore();
@@ -450,7 +484,7 @@ test('collections/modules/Module: decryptModel()', t => {
 
 test('collections/modules/Module: decryptCollection()', t => {
     const mod  = new Module();
-    const req  = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const req  = sand.stub(Radio, 'request').resolves();
     const coll = new Notes();
     sand.stub(mod, 'isEncryptEnabled').returns(false);
 
@@ -459,10 +493,11 @@ test('collections/modules/Module: decryptCollection()', t => {
 
     mod.isEncryptEnabled.returns(true);
     const res = mod.decryptCollection(coll);
+    t.equal(typeof res.then, 'function', 'returns a promise');
 
-    t.equal(req.calledWith('models/Encryption', 'decryptCollection', {
+    t.equal(req.calledWith('components/Encryption', 'decryptCollection', {
         collection: coll,
-    }), true, 'decrypts the collection');
+    }), true, 'call components/Encryption to decrypt the collection');
 
     res.then(res => {
         t.equal(res, coll, 'resolves with the collection the collection');
@@ -470,12 +505,17 @@ test('collections/modules/Module: decryptCollection()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Module: encryptModel()', t => {
     const mod  = new Module();
-    const req  = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const req  = sand.stub(Radio, 'request').resolves();
     sand.stub(mod, 'isEncryptEnabled').returns(false);
     const model = {id: '1'};
 
@@ -484,17 +524,10 @@ test('collections/modules/Module: encryptModel()', t => {
 
     mod.isEncryptEnabled.returns(true);
     mod.encryptModel(model);
-    t.equal(req.calledWith('models/Encryption', 'encryptModel', {
+    t.equal(req.calledWith('components/Encryption', 'encryptModel', {
         model,
         username: undefined,
     }), true, 'encrypts the model');
-
-    const model2 = new Edit({id: '2', username: 'alice'});
-    mod.encryptModel(model2);
-    t.equal(req.calledWith('models/Encryption', 'encryptModel', {
-        model    : model2,
-        username : 'alice',
-    }), true, 'encrypts "edit" model with another user\'s public key');
 
     mod.channel.stopReplying();
     sand.restore();

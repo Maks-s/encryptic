@@ -4,14 +4,14 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import '../../../../../app/scripts/utils/underscore';
+import '../../../../../src/scripts/utils/underscore';
 
-import View from '../../../../../app/scripts/components/encryption/auth/View';
-import Profiles from '../../../../../app/scripts/collections/Profiles';
+import View from '../../../../../src/scripts/components/encryption/auth/View';
+import Profiles from '../../../../../src/scripts/collections/Profiles';
 
 let sand;
 test('encryption/auth/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

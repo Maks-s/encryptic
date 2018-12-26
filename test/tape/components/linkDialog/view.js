@@ -5,14 +5,14 @@
 import test from 'tape';
 import sinon from 'sinon';
 // import Radio from 'backbone.radio';
-import _ from '../../../../app/scripts/utils/underscore';
+import _ from '../../../../src/scripts/utils/underscore';
 
-import View from '../../../../app/scripts/components/linkDialog/views/View';
-import ModalForm from '../../../../app/scripts/behaviors/ModalForm';
+import View from '../../../../src/scripts/components/linkDialog/views/View';
+import ModalForm from '../../../../src/scripts/behaviors/ModalForm';
 
 let sand;
 test('linkDialog/views/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -108,7 +108,7 @@ test('linkDialog/views/View: handleUrl()', t => {
     sand.stub(_, 'debounce').callsFake(method => method);
     const view = new View();
     view.ui    = {
-        url     : {val: () => 'https://laverna.cc'},
+        url     : {val: () => 'https://encryptic.org'},
         create  : {toggleClass: sand.stub()},
     };
     sand.stub(view, 'onAttachLink');

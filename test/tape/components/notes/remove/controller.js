@@ -6,13 +6,13 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import Note from '../../../../../app/scripts/models/Note';
-import Controller from '../../../../../app/scripts/components/notes/remove/Controller';
-import _ from '../../../../../app/scripts/utils/underscore';
+import Note from '../../../../../src/scripts/models/Note';
+import Controller from '../../../../../src/scripts/components/notes/remove/Controller';
+import _ from '../../../../../src/scripts/utils/underscore';
 
 let sand;
 test('notes/remove/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -68,7 +68,7 @@ test('notes/remove/Controller: remove()', t => {
 test('notes/remove/Controller: removeById()', t => {
     const con   = new Controller();
     const model = new Note({id: '1'});
-    const req   = sand.stub(Radio, 'request').returns(Promise.resolve(model));
+    const req   = sand.stub(Radio, 'request').resolves(model);
     sand.stub(con, 'removeModel');
 
     const res = con.removeById({id: '1'});
@@ -85,6 +85,10 @@ test('notes/remove/Controller: removeById()', t => {
         con.channel.stopListening();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -92,7 +96,7 @@ test('notes/remove/Controller: removeModel()', t => {
     const con   = new Controller();
     const model = new Note({id: '1'});
     const req   = sand.stub(Radio, 'request');
-    sand.stub(con, 'showConfirm').returns(Promise.resolve('reject'));
+    sand.stub(con, 'showConfirm').resolves('reject');
 
     con.removeModel({model: {id: '2'}})
     .then(() => {
@@ -107,7 +111,7 @@ test('notes/remove/Controller: removeModel()', t => {
         t.equal(req.calledWith('collections/Notes', 'remove', {model}), true,
             'makes "remove" request');
 
-        con.showConfirm.returns(Promise.resolve('resolve'));
+        con.showConfirm.resolves('resolve');
         return con.removeModel({model});
     })
     .then(() => {
@@ -117,6 +121,11 @@ test('notes/remove/Controller: removeModel()', t => {
         con.channel.stopListening();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        con.channel.stopListening();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

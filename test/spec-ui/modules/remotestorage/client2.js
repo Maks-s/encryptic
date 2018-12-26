@@ -1,25 +1,25 @@
 /* global describe, before, after, it */
 'use strict';
 
-describe('RemoteStorage: client 2', function() {
+describe('RemoteStorage: client 2', () => {
 
-    before(function(client, done) {
+    before((client, done) => {
         done();
     });
 
-    after(function(client, done) {
-        client.end(function() {
+    after((client, done) => {
+        client.end(() => {
             done();
         });
     });
 
-    it('wait', function(client) {
+    it('wait', client => {
         client
         .urlHash('notes')
         .expect.element('.list').to.be.present.before(50000);
     });
 
-    it('creates new data', function(client) {
+    it('creates new data', client => {
         client
         .addNote({title: 'Note from client 2'})
         .pause(500)
@@ -31,7 +31,7 @@ describe('RemoteStorage: client 2', function() {
     // Try to login to a RemoteStorage first
     require('./auth.js');
 
-    it('fetches notes from Remotestorage', function(client) {
+    it('fetches notes from Remotestorage', client => {
         client.urlHash('notes');
         client.expect.element('#header--add').to.be.present.before(50000);
 
@@ -40,7 +40,7 @@ describe('RemoteStorage: client 2', function() {
         .before(50000);
     });
 
-    it('fetches notebooks & tags from Remotestorage', function(client) {
+    it('fetches notebooks & tags from Remotestorage', client => {
         client.urlHash('notebooks');
 
         client.expect

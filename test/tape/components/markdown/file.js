@@ -4,11 +4,11 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import file from '../../../../app/scripts/components/markdown/file';
+import file from '../../../../src/scripts/components/markdown/file';
 
 let sand;
 test('markdown/file: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

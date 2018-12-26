@@ -3,14 +3,14 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import _ from '../../../app/scripts/utils/underscore';
-import Configs from '../../../app/scripts/collections/Configs';
-import {configNames} from '../../../app/scripts/collections/configNames';
-import Config from '../../../app/scripts/models/Config';
+import _ from '../../../src/scripts/utils/underscore';
+import Configs from '../../../src/scripts/collections/Configs';
+import {configNames} from '../../../src/scripts/collections/configNames';
+import Config from '../../../src/scripts/models/Config';
 
 let sand;
 test('collections/Configs: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -25,20 +25,13 @@ test('collections/Configs: model', t => {
     t.end();
 });
 
-test('collections/Configs: configNames', t => {
-    const configs = new Configs();
-    t.equal(typeof configs.configNames, 'object', 'is an object');
-    t.equal(Object.keys(configs.configNames).length > 10, true, 'is not empty');
-    t.end();
-});
-
 test('collections/Configs: hasNewConfigs()', t => {
     const configs = new Configs();
 
     t.equal(configs.hasNewConfigs(), true, 'returns true if there are new configs');
 
     // Create the same amount of models
-    Object.keys(configs.configNames).forEach(name => configs.add({name}));
+    Object.keys(configNames).forEach(name => configs.add({name}));
     t.equal(configs.hasNewConfigs(), false,
         'returns false if there are not any new configs');
 
@@ -47,16 +40,20 @@ test('collections/Configs: hasNewConfigs()', t => {
 
 test('collections/Configs: createDefault()', t => {
     const configs = new Configs();
-    const spy     = sand.spy(configs.model.prototype, 'save');
+    const req     = sand.stub(configs.model.prototype, 'save');
     configs.add({name: 'appVersion', value: '1.0'});
 
     const res = configs.createDefault();
     t.equal(typeof res.then, 'function', 'returns a promise');
 
     res.then(() => {
-        t.equal(spy.called, true, 'saves new configs');
+        t.equal(req.called, true, 'saves new configs');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -97,29 +94,21 @@ test('collections/Configs: getDefault()', t => {
     const configs = new Configs();
     const model   = configs.getDefault('pagination');
 
-    t.equal(model.get('value'), configs.configNames.pagination,
+    t.equal(model.get('value'), configNames.pagination,
         'uses the default config values');
 
     t.end();
 });
 
-test('collections/Configs: resetFromObject()', t => {
-    const configs = new Configs();
-    const spy     = sand.spy(configs, 'reset');
-    const res     = configs.resetFromObject(configs.configNames);
-
-    t.equal(res, configs, 'returns itself');
-    t.equal(spy.called, true, 'resets with new models');
-    t.equal(configs.length, Object.keys(configs.configNames).length,
-        'creates new models');
-
-    t.end();
-});
+/**
+ * configNames doesn't even have keybindings
+ * this will probably be removed soon
+ *
 
 test('collections/Configs: keybindings()', t => {
     const configs = new Configs();
-    configs.resetFromObject(configs.configNames);
     const res     = configs.keybindings();
+    console.log(configNames);
 
     t.equal(configs.length > 10, true, 'collection is not empty');
     t.equal(Array.isArray(res), true, 'returns an array');
@@ -131,7 +120,6 @@ test('collections/Configs: keybindings()', t => {
 
 test('collections/Configs: appShortcuts()', t => {
     const configs = new Configs();
-    configs.resetFromObject(configs.configNames);
     const res     = configs.appShortcuts();
 
     t.equal(Array.isArray(res), true, 'returns an array');
@@ -140,9 +128,11 @@ test('collections/Configs: appShortcuts()', t => {
     t.end();
 });
 
+ */
+
 test('collections/Configs: filterByName()', t => {
     const configs = new Configs();
-    configs.resetFromObject(configs.configNames);
+    configs.createDefault();
     const res     = configs.filterByName('actions');
 
     t.equal(Array.isArray(res), true, 'returns an array');

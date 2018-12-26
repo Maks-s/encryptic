@@ -5,11 +5,11 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import View from '../../../../app/scripts/components/setup/View';
+import View from '../../../../src/scripts/components/setup/View';
 
 let sand;
 test('setup/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

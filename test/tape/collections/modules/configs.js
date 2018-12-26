@@ -5,14 +5,14 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import _ from '../../../../app/scripts/utils/underscore';
-import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
-import Configs from '../../../../app/scripts/collections/Configs';
-import Module from '../../../../app/scripts/collections/modules/Configs';
+import _ from '../../../../src/scripts/utils/underscore';
+import ModuleOrig from '../../../../src/scripts/modules/Module';
+import Configs from '../../../../src/scripts/collections/Configs';
+import Module from '../../../../src/scripts/modules/Configs';
 
 let sand;
 test('collections/modules/Configs: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -42,7 +42,7 @@ test('collections/modules/Configs: findModel()', t => {
     const mod  = new Module();
     const find = sand.stub(ModuleOrig.prototype, 'findModel');
     const get  = sand.spy(Configs.prototype, 'getDefault');
-    find.returns(Promise.resolve(new mod.Model()));
+    find.resolves(new mod.Model());
 
     const opt = {name: 'test', profileId: 'test'};
     mod.findModel(opt)
@@ -59,6 +59,11 @@ test('collections/modules/Configs: findModel()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(e => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end(e);
     });
 });
 
@@ -86,6 +91,11 @@ test('collections/modules/Configs: find()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -112,6 +122,10 @@ test('collections/modules/Configs: saveModel()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -170,6 +184,11 @@ test('collections/modules/Configs: checkOrCreate()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -217,7 +236,7 @@ test('collections/modules/Configs: saveConfig()', t => {
             'tries to find the config model');
         t.equal(save.notCalled, true, 'does not save if the model was not found');
 
-        find.returns(Promise.resolve({id: 'yes'}));
+        find.resolves({id: 'yes'});
         return mod.saveConfig({config, profileId: 'test'});
     })
     .then(res => {
@@ -228,6 +247,11 @@ test('collections/modules/Configs: saveConfig()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -252,6 +276,11 @@ test('collections/modules/Configs: saveConfigs() - object', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -272,18 +301,23 @@ test('collections/modules/Configs: saveConfigs() - array', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Configs: createDeviceId()', t => {
     const mod = new Module();
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve('rand'));
+    const req = sand.stub(Radio, 'request').resolves('rand');
     sand.stub(mod, 'saveConfig');
 
     mod.createDeviceId()
     .then(() => {
-        t.equal(req.calledWith('models/Encryption', 'random', {number: 6}), true,
-            'generates random string');
+        t.equal(req.calledWith('components/Encryption', 'random', {number: 6}), true,
+            'call components/Encryption to generate random string');
 
         t.equal(mod.saveConfig.calledWith({
             config: {name: 'deviceId', value: 'rand'},
@@ -291,6 +325,10 @@ test('collections/modules/Configs: createDeviceId()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -300,7 +338,7 @@ test('collections/modules/Configs: updatePeer()', t => {
     const model    = new Configs.prototype.model({
         value: [{lastSeen, username: 'bob', deviceId: '2'}],
     });
-    sand.stub(mod, 'findModel').returns(Promise.resolve(model));
+    sand.stub(mod, 'findModel').resolves(model);
     sand.stub(mod, 'saveModel');
 
     mod.updatePeer({username: null, deviceId: null});
@@ -325,5 +363,9 @@ test('collections/modules/Configs: updatePeer()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });

@@ -7,13 +7,13 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import View from '../../../../../app/scripts/components/settings/sidebar/views/View';
-import Sidebar from '../../../../../app/scripts/behaviors/Sidebar';
+import View from '../../../../../src/scripts/components/settings/sidebar/views/View';
+import Sidebar from '../../../../../src/scripts/behaviors/Sidebar';
 /* eslint-enable */
 
 let sand;
 test('settings/sidebar/views/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -67,7 +67,7 @@ test('settings/sidebar/views/View: confirm()', t => {
     const view = new View();
     const evt  = {preventDefault: sand.stub(), currentTarget: '#test'};
     sand.stub(view, '$').withArgs('#test')
-        .returns({attr: () => '/url'});
+    .returns({attr: () => '/url'});
     const request = sand.stub(Radio, 'request');
 
     view.confirm(evt);

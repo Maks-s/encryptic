@@ -6,19 +6,19 @@ import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 import md5 from 'js-md5';
 
-import '../../../../app/scripts/utils/underscore';
-import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
-import Files from '../../../../app/scripts/collections/Files';
-import File from '../../../../app/scripts/models/File';
+import '../../../../src/scripts/utils/underscore';
+import ModuleOrig from '../../../../src/scripts/modules/Module';
+import Files from '../../../../src/scripts/collections/Files';
+import File from '../../../../src/scripts/models/File';
 
 const toBlob = sinon.stub().returns('blob');
-const Module  = proxyquire('../../../../app/scripts/collections/modules/Files', {
+const Module  = proxyquire('../../../../src/scripts/modules/Files', {
     'blueimp-canvas-to-blob': toBlob,
 }).default;
 
 let sand;
 test('collections/modules/Files: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -87,12 +87,17 @@ test('collections/modules/Files: findFiles()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Files: addFiles()', t => {
     const mod  = new Module();
-    const save = sand.stub(mod, 'saveModel').returns(Promise.resolve());
+    const save = sand.stub(mod, 'saveModel').resolves();
 
     mod.addFiles({files: [{src: 'test1'}, {src: 'test2'}], profileId: 'test'})
     .then(models => {
@@ -107,6 +112,11 @@ test('collections/modules/Files: addFiles()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

@@ -5,15 +5,15 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../../app/scripts/utils/underscore';
+import '../../../../../src/scripts/utils/underscore';
 
-import Controller from '../../../../../app/scripts/components/encryption/auth/Controller';
-import View from '../../../../../app/scripts/components/encryption/auth/View';
-import Profiles from '../../../../../app/scripts/collections/Profiles';
+import Controller from '../../../../../src/scripts/components/encryption/auth/Controller';
+import View from '../../../../../src/scripts/components/encryption/auth/View';
+import Profiles from '../../../../../src/scripts/collections/Profiles';
 
 let sand;
 test('encryption/auth/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -47,6 +47,10 @@ test('encryption/auth/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -66,6 +70,10 @@ test('encryption/auth/Controller: fetchShow()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -123,7 +131,7 @@ test('encryption/auth/Controller: onSubmit()', t => {
     const configs = {privateKey: 'priv', publicKeys: 'pub'};
     Object.defineProperty(con, 'configs', {get: () => configs});
 
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const req = sand.stub(Radio, 'request').resolves();
     sand.stub(con, 'onSuccess');
 
     const res = con.onSubmit();
@@ -131,7 +139,7 @@ test('encryption/auth/Controller: onSubmit()', t => {
         username: 'bob',
     }), true, 'sets the user');
 
-    t.equal(req.calledWith('models/Encryption', 'readKeys', {
+    t.equal(req.calledWith('components/Encryption', 'readKeys', {
         passphrase: 'test',
     }), true, 'tries to decrypt the private key');
 
@@ -151,6 +159,10 @@ test('encryption/auth/Controller: onSubmit()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -168,6 +180,10 @@ test('encryption/auth/Controller: onSetup()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

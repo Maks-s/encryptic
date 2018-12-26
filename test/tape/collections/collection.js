@@ -3,13 +3,13 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import '../../../app/scripts/utils/underscore';
-import Collection from '../../../app/scripts/collections/Collection';
-import Note from '../../../app/scripts/models/Note';
+import '../../../src/scripts/utils/underscore';
+import Collection from '../../../src/scripts/collections/BaseCollection';
+import Note from '../../../src/scripts/models/Note';
 
 let sand;
 test('collections/Collection: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

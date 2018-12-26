@@ -41,7 +41,7 @@ export default class Adapter {
          *
          * @prop {Object}
          */
-        this.dbx = new Dropbox({clientId: this.configs.clientKey});
+        this.dbx = new Dropbox({clientId: this.configs.clientKey, fetch});
     }
 
     /**

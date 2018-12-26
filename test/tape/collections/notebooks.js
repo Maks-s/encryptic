@@ -3,13 +3,13 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Notebooks from '../../../app/scripts/collections/Notebooks';
-import Pageable from '../../../app/scripts/collections/Pageable';
-import Notebook from '../../../app/scripts/models/Notebook';
+import Notebooks from '../../../src/scripts/collections/Notebooks';
+import Pageable from '../../../src/scripts/collections/Pageable';
+import Notebook from '../../../src/scripts/models/Notebook';
 
 let sand;
 test('collections/Notebooks: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

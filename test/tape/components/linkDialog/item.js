@@ -3,9 +3,9 @@
  * @file
  */
 import test from 'tape';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import View from '../../../../app/scripts/components/linkDialog/views/Item';
+import View from '../../../../src/scripts/components/linkDialog/views/Item';
 
 test('linkDialog/views/Item: tagName()', t => {
     t.equal(View.prototype.tagName, 'li');

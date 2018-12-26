@@ -2,8 +2,8 @@
  * @file Test collections/Files
  */
 import test from 'tape';
-import Files from '../../../app/scripts/collections/Files';
-import File from '../../../app/scripts/models/File';
+import Files from '../../../src/scripts/collections/Files';
+import File from '../../../src/scripts/models/File';
 
 test('collections/Files: sync', t => {
     const coll = new Files();

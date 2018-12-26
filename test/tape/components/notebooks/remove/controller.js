@@ -7,15 +7,15 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import Notebook from '../../../../../app/scripts/models/Notebook';
-import Tag from '../../../../../app/scripts/models/Tag';
-import Controller from '../../../../../app/scripts/components/notebooks/remove/Controller';
-import _ from '../../../../../app/scripts/utils/underscore';
+import Notebook from '../../../../../src/scripts/models/Notebook';
+import Tag from '../../../../../src/scripts/models/Tag';
+import Controller from '../../../../../src/scripts/components/notebooks/remove/Controller';
+import _ from '../../../../../src/scripts/utils/underscore';
 /* eslint-enable */
 
 let sand;
 test('notebooks/remove/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -56,6 +56,11 @@ test('notebooks/remove/Controller: remove()', t => {
         sand.restore();
         con.channel.stopListening();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        con.channel.stopListening();
+        t.end('resolve promise');
     });
 });
 

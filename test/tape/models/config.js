@@ -4,7 +4,7 @@
  */
 import test from 'tape';
 
-import Config from '../../../app/scripts/models/Config';
+import Config from '../../../src/scripts/models/Config';
 
 test('Config: idAttribute()', t => {
     const config = new Config();

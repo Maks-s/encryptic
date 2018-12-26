@@ -1,17 +1,17 @@
 'use strict';
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
 module.exports = {
 
-    before: function(client) {
+    before(client) {
         client.closeWelcome();
     },
 
-    after: function(client) {
+    after(client) {
         client.end();
     },
 
-    'wait': function(client) {
+    wait(client) {
         client
         .urlHash('notes')
         .expect.element('.list').to.be.present.before(50000);
@@ -125,8 +125,8 @@ module.exports = {
         client.expect.element('.modal-dialog .btn-success').to.be.present.before(2000);
 
         client
-        .perform(function(cli, done) {
-            cli.getAttribute('.list--group:first-child .list--item', 'data-id', function(res) {
+        .perform((cli, done) => {
+            cli.getAttribute('.list--group:first-child .list--item', 'data-id', res => {
                 client
                 .pause(500)
                 .click('.modal-dialog .btn-success')
@@ -135,7 +135,7 @@ module.exports = {
                 client.expect.element('.list--group:first-child .list--item').to.be.present.before(2000);
 
                 cli
-                .getAttribute('.list--group:first-child .list--item', 'data-id', function(newRes) {
+                .getAttribute('.list--group:first-child .list--item', 'data-id', newRes => {
                     expect(newRes.value).not.to.be.equal(res.value);
                     done();
                 });

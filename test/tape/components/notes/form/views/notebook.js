@@ -5,11 +5,11 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import '../../../../../../app/scripts/utils/underscore';
+import '../../../../../../src/scripts/utils/underscore';
 
 /* eslint-disable */
-import View from '../../../../../../app/scripts/components/notes/form/views/Notebook';
-import Notebook from '../../../../../../app/scripts/models/Notebook';
+import View from '../../../../../../src/scripts/components/notes/form/views/Notebook';
+import Notebook from '../../../../../../src/scripts/models/Notebook';
 /* eslint-enable */
 
 test('notes/form/Notebook: tagName', t => {

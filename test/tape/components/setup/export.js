@@ -5,12 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import '../../../../app/scripts/utils/underscore';
-import View from '../../../../app/scripts/components/setup/export/View';
+import '../../../../src/scripts/utils/underscore';
+import View from '../../../../src/scripts/components/setup/export/View';
 
 let sand;
 test('setup/export/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

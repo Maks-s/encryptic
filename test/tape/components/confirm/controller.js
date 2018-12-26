@@ -5,12 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import Controller from '../../../../app/scripts/components/confirm/Controller';
-// import View from '../../../../app/scripts/components/confirm/View';
+import Controller from '../../../../src/scripts/components/confirm/Controller';
+// import View from '../../../../src/scripts/components/confirm/View';
 
 let sand;
 test('confirm/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -48,13 +48,17 @@ test('confirm/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('confirm/Controller: show()', t => {
     const con = new Controller();
     const req = sand.stub(Radio, 'request');
-    req.withArgs('components/markdown').returns(Promise.resolve('Test!'));
+    req.withArgs('components/markdown').resolves('Test!');
     req.withArgs('Layout').returns('');
     sand.stub(con, 'listenToView');
 
@@ -75,6 +79,10 @@ test('confirm/Controller: show()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

@@ -12,11 +12,7 @@
 module.exports = function(gulp, $) {
 
     gulp.task('tape', $.shell.task([
-        'babel-node ./test/tape/index.js | faucet',
-    ]));
-
-    gulp.task('tape:debug', $.shell.task([
-        'set TAP_DIAG=1 && babel-node ./test/tape/index.js',
+        'babel-node --presets env ./test/tape/index.js | tap-bail | faucet',
     ]));
 
     gulp.task('test:run', gulp.series('lint', 'tape'));

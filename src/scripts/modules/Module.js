@@ -202,7 +202,7 @@ export default class Module {
      * @fires channel#update:model - after saving a model
      * @returns {Promise} - resolves with a model
      */
-    async saveModel(options) { //eslint-disable-line
+    async saveModel(options) {
         const {model} = options;
         const data    = options.data  || model.attributes;
 
@@ -326,8 +326,7 @@ export default class Module {
     }
 
     /**
-     * Remove a model from database. It doesn't actually remove a model.
-     * Instead, it changes a model's attributes to the default ones.
+     * Remove a model from database.
      *
      * @param {Object} options
      * @param {Object} [options.model] - Backbone.model

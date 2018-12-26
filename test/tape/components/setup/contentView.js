@@ -5,12 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import _ from '../../../../app/scripts/utils/underscore';
-import View from '../../../../app/scripts/components/setup/ContentView';
+import _ from '../../../../src/scripts/utils/underscore';
+import View from '../../../../src/scripts/components/setup/ContentView';
 
 let sand;
 test('setup/ContentView: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

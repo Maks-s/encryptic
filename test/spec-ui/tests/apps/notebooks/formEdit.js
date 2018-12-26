@@ -1,5 +1,5 @@
 'use strict';
-var expect = require('chai').expect,
+let expect = require('chai').expect,
     ids    = [];
 
 /**
@@ -7,24 +7,24 @@ var expect = require('chai').expect,
  */
 module.exports = {
 
-    before: function(client) {
+    before(client) {
         client.closeWelcome();
     },
 
-    after: function(client) {
+    after(client) {
         client.end();
     },
 
-    'load': function(client) {
+    load(client) {
         client.addNotebook({name: 'notebook 1', parentId: 0});
         client.addNotebook({name: 'Sub-notebook', parentId: 'notebook 1'});
 
-        client.perform(function(client, done) {
+        client.perform((client, done) => {
             client
             .urlHash('notebooks');
 
             // Get all rendered notebooks
-            client.findAll('#notebooks .list--item', 'data-id', (res) => {
+            client.findAll('#notebooks .list--item', 'data-id', res => {
                 expect(typeof res).to.be.equal('object');
                 expect(res.length).to.be.equal(2);
                 ids = res;

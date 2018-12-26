@@ -6,17 +6,17 @@ import test from 'tape';
 import _ from 'underscore';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../../app/scripts/utils/underscore';
+import '../../../../../src/scripts/utils/underscore';
 
 /* eslint-disable */
-import Controller from '../../../../../app/scripts/components/encryption/encrypt/Controller';
-import View from '../../../../../app/scripts/components/encryption/encrypt/View';
-import Notes from '../../../../../app/scripts/collections/Notes';
+import Controller from '../../../../../src/scripts/components/encryption/encrypt/Controller';
+import View from '../../../../../src/scripts/components/encryption/encrypt/View';
+import Notes from '../../../../../src/scripts/collections/Notes';
 /* eslint-enable */
 
 let sand;
 test('encryption/encrypt/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -149,6 +149,10 @@ test('encryption/encrypt/Controller: proceed()', t => {
             sand.restore();
             t.end();
         }, 350);
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -188,5 +192,9 @@ test('encryption/encrypt/Controller: saveCollection()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });

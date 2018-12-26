@@ -4,11 +4,11 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Notify from '../../../app/scripts/utils/Notify';
+import Notify from '../../../src/scripts/utils/Notify';
 
 let sand;
 test('utils/Notify: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

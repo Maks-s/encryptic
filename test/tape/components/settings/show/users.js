@@ -7,14 +7,14 @@ import sinon from 'sinon';
 
 /* eslint-disable */
 import Radio from 'backbone.radio';
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/settings/show/sync/Users';
-import Users from '../../../../../app/scripts/collections/Users';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/settings/show/sync/Users';
+import Users from '../../../../../src/scripts/collections/Users';
 /* eslint-enable */
 
 let sand;
 test('settings/show/sync/Users: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -58,13 +58,17 @@ test('settings/show/sync/Users: showConfirm()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('settings/show/sync/Users: rejectInvite()', t => {
     const view     = new View();
     const model    = {id: 1};
-    sand.stub(view, 'showConfirm').returns(Promise.resolve(['reject', model]));
+    sand.stub(view, 'showConfirm').resolves(['reject', model]);
     const e        = {currentTarget: '1'};
     model.channel  = {request: sand.stub()};
 
@@ -74,7 +78,7 @@ test('settings/show/sync/Users: rejectInvite()', t => {
             true, 'shows a confirmation dialog');
         t.equal(model.channel.request.notCalled, true, 'does not reject the invite');
 
-        view.showConfirm.returns(Promise.resolve(['confirm', model]));
+        view.showConfirm.resolves(['confirm', model]);
         return view.rejectInvite(e);
     })
     .then(() => {
@@ -83,13 +87,17 @@ test('settings/show/sync/Users: rejectInvite()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('settings/show/sync/Users: acceptInvite()', t => {
     const view     = new View();
     const model    = {id: 1};
-    sand.stub(view, 'showConfirm').returns(Promise.resolve(['reject', model]));
+    sand.stub(view, 'showConfirm').resolves(['reject', model]);
     const e        = {currentTarget: '1'};
     model.channel  = {request: sand.stub()};
 
@@ -99,7 +107,7 @@ test('settings/show/sync/Users: acceptInvite()', t => {
             true, 'shows a confirmation dialog');
         t.equal(model.channel.request.notCalled, true, 'does not accept the invite');
 
-        view.showConfirm.returns(Promise.resolve(['confirm', model]));
+        view.showConfirm.resolves(['confirm', model]);
         return view.acceptInvite(e);
     })
     .then(() => {
@@ -108,13 +116,17 @@ test('settings/show/sync/Users: acceptInvite()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('settings/show/sync/Users: removeFromTrust()', t => {
     const view     = new View();
     const model    = {id: 1};
-    sand.stub(view, 'showConfirm').returns(Promise.resolve(['reject', model]));
+    sand.stub(view, 'showConfirm').resolves(['reject', model]);
     const e        = {preventDefault: sand.stub()};
     model.channel  = {request: sand.stub()};
 
@@ -126,7 +138,7 @@ test('settings/show/sync/Users: removeFromTrust()', t => {
         t.equal(model.channel.request.notCalled, true,
             'does not remove the user from trust');
 
-        view.showConfirm.returns(Promise.resolve(['confirm', model]));
+        view.showConfirm.resolves(['confirm', model]);
         return view.removeFromTrust(e);
     })
     .then(() => {
@@ -135,6 +147,10 @@ test('settings/show/sync/Users: removeFromTrust()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

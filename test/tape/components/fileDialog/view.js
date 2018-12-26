@@ -6,14 +6,14 @@ import test from 'tape';
 import sinon from 'sinon';
 import $ from 'jquery';
 // import Radio from 'backbone.radio';
-import _ from '../../../../app/scripts/utils/underscore';
+import _ from '../../../../src/scripts/utils/underscore';
 
-import View from '../../../../app/scripts/components/fileDialog/View';
-import ModalForm from '../../../../app/scripts/behaviors/ModalForm';
+import View from '../../../../src/scripts/components/fileDialog/View';
+import ModalForm from '../../../../src/scripts/behaviors/ModalForm';
 
 let sand;
 test('fileDialog/views/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -114,7 +114,7 @@ test('fileDialog/View: attachFile()', t => {
     const preventDefault = sand.stub();
     sand.stub(view, 'trigger');
 
-    view.attachFile({preventDefault})
+    view.attachFile({preventDefault});
     t.equal(preventDefault.called, true, 'prevents the default behavior');
     t.equal(view.trigger.calledWith('save', {isFile: true}), true,
         'triggers "save" event');

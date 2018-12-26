@@ -1,16 +1,16 @@
 'use strict';
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
 /**
  * Add notebook form test
  */
 module.exports = {
 
-    before: function(client) {
+    before(client) {
         client.closeWelcome();
     },
 
-    after: function(client) {
+    after(client) {
         client.end();
     },
 
@@ -51,7 +51,7 @@ module.exports = {
     'redirects to notebooks list on save': function(client) {
         client
         .pause(500)
-        .url(function(data) {
+        .url(data => {
             expect(data.value).to.contain('#notebooks');
             expect(data.value).not.to.contain('/add');
         });
@@ -72,11 +72,11 @@ module.exports = {
         .setValue('#modal input[name="name"]', ['Sub-notebook'])
         // Change parentId of a notebook
         .perform((client, done) => {
-            client.execute(function(filter) {
-                var ops = document.querySelectorAll('#modal select[name="parentId"] option'),
+            client.execute(filter => {
+                let ops = document.querySelectorAll('#modal select[name="parentId"] option'),
                     res = false;
 
-                for (var i = 0, len = ops.length; i < len; i++) {
+                for (let i = 0, len = ops.length; i < len; i++) {
                     if (ops[i].text.indexOf(filter) > -1) {
                         document
                         .querySelector('#modal select[name="parentId"]')
@@ -87,7 +87,7 @@ module.exports = {
                 }
 
                 return res;
-            }, ['Nightwatch'], function(res) {
+            }, ['Nightwatch'], res => {
                 expect(res.value).to.be.equal(true);
                 done();
             });

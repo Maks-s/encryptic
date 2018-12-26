@@ -4,8 +4,8 @@
  */
 import test from 'tape';
 
-import Router from '../../../../app/scripts/components/notes/Router.js';
-import controller from '../../../../app/scripts/components/notes/controller.js';
+import Router from '../../../../src/scripts/components/notes/Router.js';
+import controller from '../../../../src/scripts/components/notes/controller.js';
 
 test('notes/Router: controller()', t => {
     t.equal(typeof Router.prototype.controller, 'object',

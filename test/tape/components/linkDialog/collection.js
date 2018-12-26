@@ -5,14 +5,14 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import View from '../../../../app/scripts/components/linkDialog/views/Collection';
-import Item from '../../../../app/scripts/components/linkDialog/views/Item';
+import View from '../../../../src/scripts/components/linkDialog/views/Collection';
+import Item from '../../../../src/scripts/components/linkDialog/views/Item';
 
 let sand;
 test('linkDialog/views/Collection: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -23,11 +23,6 @@ test('linkDialog/views/Collection: tagName', t => {
 
 test('linkDialog/views/Collection: className', t => {
     t.equal(View.prototype.className, 'dropdown-menu');
-    t.end();
-});
-
-test('linkDialog/views/Collection: childViewContainer', t => {
-    t.equal(View.prototype.childViewContainer, '.dropdown-menu');
     t.end();
 });
 

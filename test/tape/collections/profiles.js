@@ -2,9 +2,9 @@
  * @file Test collections/Profiles
  */
 import test from 'tape';
-import '../../../app/scripts/utils/underscore';
-import Profiles from '../../../app/scripts/collections/Profiles';
-import Profile from '../../../app/scripts/models/Profile';
+import '../../../src/scripts/utils/underscore';
+import Profiles from '../../../src/scripts/collections/Profiles';
+import Profile from '../../../src/scripts/models/Profile';
 
 test('collections/Profiles: model', t => {
     t.equal(Profiles.prototype.model, Profile);

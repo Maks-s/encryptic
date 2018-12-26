@@ -7,11 +7,11 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 // eslint-disable-next-line
-import {default as Delegator, initializer} from '../../../app/scripts/workers/Delegator';
+import {default as Delegator, initializer} from '../../../src/scripts/workers/Delegator';
 
 let sand;
 test('workers/Delegator: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -165,7 +165,7 @@ test('workers/Delegator: getWorker()', t => {
         'returns the first worker if there is only 1 worker');
 
     con.workers.push({instance: '1', unresolved: 2});
-    t.equal(con.getWorker({file: 'models/Db'}), con.workers[0],
+    t.equal(con.getWorker({file: 'components/Db'}), con.workers[0],
         'returns the first worker if it is an indexedDB operation');
 
     con.workers.push({instance: '2', unresolved: 0});

@@ -5,15 +5,15 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../app/scripts/utils/underscore';
+import _ from '../../../../src/scripts/utils/underscore';
 import codemirror from 'codemirror';
 
-import Controller from '../../../../app/scripts/components/codemirror/Editor';
+import Controller from '../../../../src/scripts/components/codemirror/Editor';
 
 let sand;
 test('codemirror/Controller: before()', t => {
     Radio.reply('collections/Configs', 'findConfigs', {});
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -193,11 +193,12 @@ test('codemirror/Controller: replaceRange()', t => {
     const con    = new Controller();
     con.instance = {replaceRange: sand.stub(), focus: sand.stub()};
 
-    con.replaceRange('test', 1);
+    const testStr = 'test';
+    con.replaceRange(testStr, 1);
     const called = con.instance.replaceRange.calledWith(
-        'test',
+        testStr,
         {line: 1, ch: 0},
-        {line: 1, ch: 99999999999999}
+        {line: 1, ch: testStr.length}
     );
     t.equal(called, true, 'replace text on an entire line');
     t.equal(con.instance.focus.called, true, 'focuses on the editor');
@@ -217,7 +218,7 @@ test('codemirror/Controller: attachmentAction()', t => {
         model: con.options.model,
     }), true, 'shows a file dialog');
 
-    req.returns(Promise.resolve('link'));
+    req.resolves('link');
     con.attachmentAction()
     .then(()     => {
         t.equal(con.instance.replaceSelection.calledWith('link', true), true,
@@ -226,6 +227,10 @@ test('codemirror/Controller: attachmentAction()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -241,7 +246,7 @@ test('codemirror/Controller: linkAction()', t => {
         focus            : sand.stub(),
     };
 
-    req.returns(Promise.resolve('link'));
+    req.resolves('link');
     con.linkAction()
     .then(() => {
         t.equal(req.calledWith('components/linkDialog', 'show'), true,
@@ -256,6 +261,10 @@ test('codemirror/Controller: linkAction()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

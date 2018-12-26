@@ -6,14 +6,14 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import Note from '../../../../../app/scripts/models/Note';
-import Controller from '../../../../../app/scripts/components/notes/show/Controller';
-import View from '../../../../../app/scripts/components/notes/show/View';
-import _ from '../../../../../app/scripts/utils/underscore';
+import Note from '../../../../../src/scripts/models/Note';
+import Controller from '../../../../../src/scripts/components/notes/show/Controller';
+import View from '../../../../../src/scripts/components/notes/show/View';
+import _ from '../../../../../src/scripts/utils/underscore';
 
 let sand;
 test('notes/show/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -30,7 +30,7 @@ test('notes/show/Controller: configs', t => {
 test('notes/show/Controller: init()', t => {
     const con = new Controller();
     const req = sand.stub(Radio, 'request');
-    sand.stub(con, 'fetch').returns(Promise.resolve({id: '1'}));
+    sand.stub(con, 'fetch').resolves({id: '1'});
     sand.stub(con, 'show');
     sand.stub(con, 'listenToEvents');
 
@@ -48,12 +48,16 @@ test('notes/show/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('notes/show/Controller: fetch()', t => {
     const con     = new Controller({test: '1'});
-    const request = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const request = sand.stub(Radio, 'request').resolves();
 
     const res = con.fetch();
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -142,7 +146,7 @@ test('notes/show/Controller: onSaveObject()', t => {
         htmlContent : 'html content',
         attributes  : {title: 'Test'},
     };
-    const fetch = sand.stub(con, 'fetch').returns(Promise.resolve(modelNew));
+    const fetch = sand.stub(con, 'fetch').resolves(modelNew);
     const set   = sand.spy(con.view.model, 'set');
     sand.stub(con.view.model, 'trigger');
 
@@ -159,6 +163,10 @@ test('notes/show/Controller: onSaveObject()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -192,7 +200,7 @@ test('notes/show/Controller: toggleTask()', async t => {
 
 test('notes/show/Controller: restoreModel()', t => {
     const con     = new Controller();
-    const request = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const request = sand.stub(Radio, 'request').resolves();
     con.view      = {model: new Note({id: '1'})};
 
     const res = con.restoreModel();

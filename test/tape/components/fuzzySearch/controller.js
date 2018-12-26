@@ -5,14 +5,14 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import Controller from '../../../../app/scripts/components/fuzzySearch/Controller';
-import Notes from '../../../../app/scripts/collections/Notes';
+import Controller from '../../../../src/scripts/components/fuzzySearch/Controller';
+import Notes from '../../../../src/scripts/collections/Notes';
 
 let sand;
 test('fuzzySearch/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -37,7 +37,7 @@ test('fuzzySearch/Controller: onDestroy()', t => {
 
 test('fuzzySearch/Controller: init()', t => {
     const con = new Controller();
-    sand.stub(con, 'fetch').returns(Promise.resolve(2));
+    sand.stub(con, 'fetch').resolves(2);
     sand.stub(con, 'onFetch');
     sand.stub(con, 'listenToEvents');
 
@@ -52,12 +52,16 @@ test('fuzzySearch/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('fuzzySearch/Controller: fetch()', t => {
     const con = new Controller();
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const req = sand.stub(Radio, 'request').resolves();
 
     t.equal(typeof con.fetch().then, 'function', 'returns a promise');
     t.equal(req.calledWith('collections/Notes', 'find'), true, 'makes "find" request');

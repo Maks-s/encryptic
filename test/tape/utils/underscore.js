@@ -4,12 +4,12 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import _ from '../../../app/scripts/utils/underscore';
+import _ from '../../../src/scripts/utils/underscore';
 import i18next from 'i18next';
 
 let sand;
 test('underscore: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -41,7 +41,7 @@ test('underscore: templateSettings', t => {
 });
 
 test('underscore: cleanXSS() - sanitize', t => {
-    const safeTags   = '<b>Bold</b><a href="https://laverna.cc"></a>';
+    const safeTags   = '<b>Bold</b><a href="https://encryptic.org"></a>';
     const unsafeTags = '<b onclick="alert("yes")">Hello</b>';
     const text = `<script>alert("yes")</script>${safeTags}${unsafeTags}`;
 
@@ -110,7 +110,7 @@ test('Underscore: countWords()', t => {
 		한국어, Marathi, Norsk bokmål, Nederlands, Norsk nynorsk, Occitan, Lietuvių,
 		Latviešu, Polski, Portugisich, Русский, Svenska, Shqip, Türkçe`), 29);
 
-	t.equal(_.countWords(''), 0, 'returns 0 if it found no words');
+    t.equal(_.countWords(''), 0, 'returns 0 if it found no words');
 
     t.end();
 });

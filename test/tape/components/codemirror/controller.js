@@ -5,16 +5,16 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../app/scripts/utils/underscore';
+import _ from '../../../../src/scripts/utils/underscore';
 
-import Note from '../../../../app/scripts/models/Note';
-import Controller from '../../../../app/scripts/components/codemirror/Controller';
-import Editor from '../../../../app/scripts/components/codemirror/Editor';
+import Note from '../../../../src/scripts/models/Note';
+import Controller from '../../../../src/scripts/components/codemirror/Controller';
+import Editor from '../../../../src/scripts/components/codemirror/Editor';
 
 let sand;
 test('codemirror/Controller: before()', t => {
     Radio.reply('collections/Configs', 'findConfigs', {});
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -42,7 +42,7 @@ test('codemirror/Controller: initialize()', t => {
     sand.spy(_, 'debounce');
 
     new Controller();
-    t.equal(_.debounce.calledWith(Controller.prototype.autoSave, 1000), true,
+    t.equal(_.debounce.calledWith(Controller.prototype.autoSave, 200), true,
         'creates a debounced version of autoSave method');
     t.equal(_.debounce.calledWith(Controller.prototype.onScroll, 10), true,
         'creates a debounced version of onScroll method');
@@ -154,9 +154,10 @@ test('codemirror/Controller: updatePreview()', t => {
         model   : {attributes : {}, fileModels : []},
     };
     con.editor = {instance: {getValue: () => 'Test'}};
-    const req  = sand.stub(Radio, 'request').returns(Promise.resolve('Test!'));
+    const req  = sand.stub(Radio, 'request').resolves('Test!');
 
-    con.updatePreview().then(() => {
+    con.updatePreview()
+    .then(() => {
         t.equal(req.calledWith('components/markdown', 'render'), true,
             'renders markdown content');
         t.equal(con.view.trigger.calledWith('change:editor', {content: 'Test!'}), true,
@@ -164,6 +165,10 @@ test('codemirror/Controller: updatePreview()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -236,22 +241,10 @@ test('codemirror/Controller: onChange()', t => {
 test('codemirror/Controller: autoSave()', t => {
     const con        = new Controller();
     sand.stub(con, 'autoSave').callsFake(Controller.prototype.autoSave);
-    con.editor       = {instance: {getValue: () => 'test'}};
-    con.view         = {model: {set: sand.stub()}};
-    let cloudStorage = 'p2p';
     const trig       = sand.stub(con.formChannel, 'trigger');
-
-    Object.defineProperty(con, 'configs', {get: () => {
-        return {cloudStorage};
-    }});
 
     con.autoSave();
     t.equal(trig.calledWith('save:auto'), true, 'triggers save:auto event');
-    t.equal(con.view.model.set.notCalled, true, 'does not set new value');
-
-    cloudStorage = 'dropbox';
-    con.autoSave();
-    t.equal(con.view.model.set.calledWith('content', 'test'), true, 'sets a new value');
 
     sand.restore();
     t.end();
@@ -267,7 +260,7 @@ test('codemirror/Controller: onScroll()', t => {
     t.equal(scrollTop.called, true,
         'changes the preview scroll position to 0');
 
-    const req  = sand.stub(Radio, 'request').returns(Promise.resolve('Test'));
+    const req  = sand.stub(Radio, 'request').resolves('Test');
     const sync = sand.stub(con, 'syncPreviewScroll');
     con.editor = {instance: {
         getScrollInfo : sand.stub().returns({top: 10}),
@@ -285,6 +278,10 @@ test('codemirror/Controller: onScroll()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -345,7 +342,7 @@ test('codemirror/Controller: onCursorActivity()', t => {
 
 test('codemirror/Controller: getData()', t => {
     const con  = new Controller();
-    const req  = sand.stub(Radio, 'request').returns(Promise.resolve({}));
+    const req  = sand.stub(Radio, 'request').resolves({});
     con.editor = {instance: {getValue: () => 'test'}};
 
     con.getData()
@@ -357,6 +354,10 @@ test('codemirror/Controller: getData()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

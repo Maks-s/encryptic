@@ -7,10 +7,10 @@ import sinon from 'sinon';
 import Mn from 'backbone.marionette';
 import Mousetrap from 'mousetrap';
 import $ from 'jquery';
-import '../../../app/scripts/utils/underscore';
+import '../../../src/scripts/utils/underscore';
 
-import Navigate from '../../../app/scripts/behaviors/Navigate';
-import Notes from '../../../app/scripts/collections/Notes';
+import Navigate from '../../../src/scripts/behaviors/Navigate';
+import Notes from '../../../src/scripts/collections/Notes';
 
 class View extends Mn.View {
     get useNavigateKeybindings() {
@@ -24,7 +24,7 @@ class View extends Mn.View {
 
 let sand;
 test('behaviors/Navigate: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

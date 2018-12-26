@@ -7,14 +7,14 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import controller from '../../../../app/scripts/components/help/controller';
-import About from '../../../../app/scripts/components/help/about/Controller';
-import Keybindings from '../../../../app/scripts/components/help/keybindings/Controller';
+import controller from '../../../../src/scripts/components/help/controller';
+import About from '../../../../src/scripts/components/help/about/Controller';
+import Keybindings from '../../../../src/scripts/components/help/keybindings/Controller';
 /* eslint-enable */
 
 let sand;
 test('help/controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

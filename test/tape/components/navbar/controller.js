@@ -5,12 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import Controller from '../../../../app/scripts/components/navbar/Controller';
-import View from '../../../../app/scripts/components/navbar/View';
+import Controller from '../../../../src/scripts/components/navbar/Controller';
+import View from '../../../../src/scripts/components/navbar/View';
 
 let sand;
 test('navbar/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -59,7 +59,7 @@ test('navbar/Controller: onShowRequest()', t => {
 test('Controller: changeTitle()', t => {
     const con          = new Controller();
     const titleOptions = {section: 'Test'};
-    sand.stub(con, 'changeDocumentTitle').returns(Promise.resolve(titleOptions));
+    sand.stub(con, 'changeDocumentTitle').resolves(titleOptions);
     con.view           = {triggerMethod: sand.stub()};
 
     const res = con.changeTitle({filter: 'test'});
@@ -72,12 +72,16 @@ test('Controller: changeTitle()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('navbar/Controller: init()', t => {
     const con = new Controller();
-    sand.stub(con, 'fetch').returns(Promise.resolve());
+    sand.stub(con, 'fetch').resolves();
     sand.stub(con, 'listenToEvents');
 
     const res = con.init();
@@ -90,6 +94,10 @@ test('navbar/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -117,6 +125,10 @@ test('navbar/Controller: fetch()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

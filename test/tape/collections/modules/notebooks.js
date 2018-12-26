@@ -4,13 +4,13 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import Module from '../../../../app/scripts/collections/modules/Notebooks';
-import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
-import Notebooks from '../../../../app/scripts/collections/Notebooks';
+import Module from '../../../../src/scripts/modules/Notebooks';
+import ModuleOrig from '../../../../src/scripts/modules/Module';
+import Notebooks from '../../../../src/scripts/collections/Notebooks';
 
 let sand;
 test('collections/modules/Notebooks: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -23,7 +23,7 @@ test('collections/modules/Notebooks: Collection', t => {
 test('collections/modules/Notebooks: remove()', t => {
     const mod = new Module();
 
-    sand.stub(mod, 'updateChildren').returns(Promise.resolve());
+    sand.stub(mod, 'updateChildren').resolves();
     const remove = sand.stub(ModuleOrig.prototype, 'remove');
     const reply  = sand.stub();
     Radio.replyOnce('collections/Notes', 'changeNotebookId', reply);
@@ -48,6 +48,11 @@ test('collections/modules/Notebooks: remove()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -55,7 +60,7 @@ test('collections/modules/Notebooks: updateChildren()', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1', parentId: 0}, {profileId: 'test'});
     const coll  = new Notebooks([{id: '1'}, {id: '2'}]);
-    sand.stub(mod, 'getChildren').returns(Promise.resolve(coll));
+    sand.stub(mod, 'getChildren').resolves(coll);
     sand.stub(mod, 'saveModel');
 
     const res = mod.updateChildren(model);
@@ -71,12 +76,17 @@ test('collections/modules/Notebooks: updateChildren()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Notebooks: getChildren()', t => {
     const mod  = new Module();
-    const stub = sand.stub(mod, 'find').returns(Promise.resolve());
+    const stub = sand.stub(mod, 'find').resolves();
 
     mod.collection = new mod.Collection([
         {id: '1', parentId: '0'},
@@ -100,6 +110,11 @@ test('collections/modules/Notebooks: getChildren()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -124,5 +139,10 @@ test('collections/modules/Notebooks: find()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });

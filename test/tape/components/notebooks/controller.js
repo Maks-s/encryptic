@@ -6,15 +6,15 @@ import test from 'tape';
 import sinon from 'sinon';
 
 /* eslint-disable */
-import controller from '../../../../app/scripts/components/notebooks/controller';
-import List from '../../../../app/scripts/components/notebooks/list/Controller';
-import NotebookForm from '../../../../app/scripts/components/notebooks/form/notebook/Controller';
-import TagForm from '../../../../app/scripts/components/notebooks/form/tag/Controller';
+import controller from '../../../../src/scripts/components/notebooks/controller';
+import List from '../../../../src/scripts/components/notebooks/list/Controller';
+import NotebookForm from '../../../../src/scripts/components/notebooks/form/notebook/Controller';
+import TagForm from '../../../../src/scripts/components/notebooks/form/tag/Controller';
 /* eslint-enable */
 
 let sand;
 test('notebooks/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

@@ -1,5 +1,5 @@
 'use strict';
-var keys;
+let keys;
 
 /**
  * Notebook list test

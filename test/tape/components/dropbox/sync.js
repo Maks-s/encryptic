@@ -5,14 +5,14 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import '../../../../app/scripts/utils/underscore';
-import Notes from '../../../../app/scripts/collections/Notes';
-import Sync from '../../../../app/scripts/components/dropbox/Sync';
-import Adapter from '../../../../app/scripts/components/dropbox/Adapter';
+import '../../../../src/scripts/utils/underscore';
+import Notes from '../../../../src/scripts/collections/Notes';
+import Sync from '../../../../src/scripts/components/dropbox/Sync';
+import Adapter from '../../../../src/scripts/components/dropbox/Adapter';
 
 let sand;
 test('components/dropbox/Sync: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -94,6 +94,10 @@ test('components/dropbox/Sync: init()', t => {
         t.equal(sync.start.called, true, 'starts synchronization');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -138,9 +142,9 @@ test('components/dropbox/Sync: getInterval() - increases the value until it reac
     do {
         prev = sync.getInterval();
     }
-    while (prev < sync.stat.intervalMax) {
+    while (prev < sync.stat.intervalMax); {
         t.end();
-    };
+    }
 });
 
 test('components/dropbox/Sync: getInterval() - decreases the value until it reaches the min', t => {
@@ -153,9 +157,9 @@ test('components/dropbox/Sync: getInterval() - decreases the value until it reac
     do {
         prev = sync.getInterval();
     }
-    while (prev > sync.stat.intervalMin) {
+    while (prev > sync.stat.intervalMin); {
         t.end();
-    };
+    }
 });
 
 test('components/dropbox/Sync: stopWatch', t => {
@@ -192,6 +196,10 @@ test('components/dropbox/Sync: sync()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -221,6 +229,10 @@ test('components/dropbox/Sync: syncCollection()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -248,6 +260,10 @@ test('components/dropbox/Sync: syncRemoteChanges()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -274,5 +290,9 @@ test('components/dropbox/Sync: syncLocalChanges()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });

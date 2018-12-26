@@ -1,12 +1,12 @@
 'use strict';
-var expect = require('chai').expect;
+const expect = require('chai').expect;
 
 module.exports = {
-    before: function(client) {
+    before(client) {
         client.closeWelcome();
     },
 
-    after: function(client) {
+    after(client) {
         client.end();
     },
 
@@ -17,8 +17,8 @@ module.exports = {
     },
 
     'renders new notes': function(client) {
-        for (var i = 1; i <= 15; i++) {
-            client.addNote({title: i + '. Note', content: 'Nightwatch test content ' + i + '.'});
+        for (let i = 1; i <= 15; i++) {
+            client.addNote({title: `${i}. Note`, content: `Nightwatch test content ${i}.`});
         }
 
         client
@@ -57,7 +57,7 @@ module.exports = {
         client.expect.element('#prevPage').to.have.attribute('class').which.contains('disabled');
         client.expect.element('#nextPage').to.have.attribute('class').which.does.not.contain('disabled');
 
-        for (var i = 0; i < 14; i++) {
+        for (let i = 0; i < 14; i++) {
             client
             .pause(300)
             .keys(['j']);
@@ -72,7 +72,7 @@ module.exports = {
         client.expect.element('#prevPage').to.have.attribute('class').which.does.not.contain('disabled').before(2000);
         client.expect.element('#nextPage').to.have.attribute('class').which.contains('disabled').before(2000);
 
-        for (var i = 0; i < 10; i++) {
+        for (let i = 0; i < 10; i++) {
             client
             .pause(300)
             .keys(['k']);
@@ -125,7 +125,7 @@ module.exports = {
         client
         .keys('gi')
         .pause(300)
-        .url(function(url) {
+        .url(url => {
             expect(url.value.search('notes/f/trashed') !== -1).not.to.be.equal(true);
             expect(url.value.search('notes/f/favorite') !== -1).not.to.be.equal(true);
             expect(url.value.search('notes') !== -1).to.be.equal(true);
@@ -140,10 +140,10 @@ module.exports = {
     },
 
     'can filter notes by a notebook name': function(client) {
-        var note = {
-            title    : 'A note with a notebook:' + Math.floor((Math.random() * 10) + 1),
+        const note = {
+            title    : `A note with a notebook:${Math.floor((Math.random() * 10) + 1)}`,
             content  : 'A note content with a notebook.',
-            notebook : 'Notebook:' + Math.floor((Math.random() * 10) + 1)
+            notebook : `Notebook:${Math.floor((Math.random() * 10) + 1)}`,
         };
 
         client.addNote(note);
@@ -157,7 +157,7 @@ module.exports = {
             this.assert.equal(typeof res.value !== 'undefined', true);
 
             client
-            .urlHash('notes/f/notebook/q/' + res.value)
+            .urlHash(`notes/f/notebook/q/${res.value}`)
             .expect.element('.list').to.be.present.before(50000);
 
             client.expect.element('#sidebar--content').to.have.text.that.contains(note.title).before(5000);
@@ -168,9 +168,9 @@ module.exports = {
     },
 
     'can filter notes by a tag': function(client) {
-        var note = {
-            title   : 'A note with a tag:' + Math.floor((Math.random() * 10) + 1),
-            content : [client.Keys.SHIFT, '3', client.Keys.SHIFT, 'tagname']
+        const note = {
+            title   : `A note with a tag:${Math.floor((Math.random() * 10) + 1)}`,
+            content : [client.Keys.SHIFT, '3', client.Keys.SHIFT, 'tagname'],
         };
 
         client
@@ -190,15 +190,15 @@ module.exports = {
     },
 
     'can search notes': function(client) {
-        var note = {
-            title   : 'A unique note title:' + Math.floor((Math.random() * 10) + 1),
-            content : 'A unique note content'
+        const note = {
+            title   : `A unique note title:${Math.floor((Math.random() * 10) + 1)}`,
+            content : 'A unique note content',
         };
         client.addNote(note);
 
         client
         .pause(300)
-        .urlHash('notes/f/search/q/' + note.title)
+        .urlHash(`notes/f/search/q/${note.title}`)
         .expect.element('.list').to.be.present.before(50000);
 
         client.pause(500);

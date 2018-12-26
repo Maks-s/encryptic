@@ -3,8 +3,8 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Notes from '../../../app/scripts/collections/Notes';
-import Note from '../../../app/scripts/models/Note';
+import Notes from '../../../src/scripts/collections/Notes';
+import Note from '../../../src/scripts/models/Note';
 
 const lorem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
     Sed maximus sem nisi, quis semper erat mollis quis. Nam ultrices
@@ -12,7 +12,7 @@ const lorem = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 let sand;
 test('collections/Notes: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

@@ -7,21 +7,21 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import _ from '../../../../../../app/scripts/utils/underscore';
-import Notebooks from '../../../../../../app/scripts/collections/Notebooks';
-import Controller from '../../../../../../app/scripts/components/notebooks/form/notebook/Controller';
-import View from '../../../../../../app/scripts/components/notebooks/form/notebook/View';
+import _ from '../../../../../../src/scripts/utils/underscore';
+import Notebooks from '../../../../../../src/scripts/collections/Notebooks';
+import Controller from '../../../../../../src/scripts/components/notebooks/form/notebook/Controller';
+import View from '../../../../../../src/scripts/components/notebooks/form/notebook/View';
 /* eslint-enable */
 
 let sand;
 test('notebooks/form/notebook/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
 test('notebooks/form/notebook/Controller: init()', t => {
     const con = new Controller();
-    sand.stub(con, 'fetch').returns(Promise.resolve([1, 2]));
+    sand.stub(con, 'fetch').resolves([1, 2]);
     sand.stub(con, 'show');
     sand.stub(con, 'listenToEvents');
 
@@ -34,6 +34,10 @@ test('notebooks/form/notebook/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -106,7 +110,7 @@ test('notebooks/form/notebook/Controller: listenToEvents()', t => {
 
 test('notebooks/form/notebook/Controller: save()', t => {
     const con   = new Controller();
-    const req   = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const req   = sand.stub(Radio, 'request').resolves();
     con.view    = new View();
     con.view.ui = {
         name     : {val : sand.stub().returns({trim : () => 'test'})},
@@ -126,6 +130,10 @@ test('notebooks/form/notebook/Controller: save()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

@@ -6,15 +6,20 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 import Backbone from 'backbone';
-import Dropbox from 'dropbox';
-import _ from '../../../../app/scripts/utils/underscore';
-import Adapter from '../../../../app/scripts/components/dropbox/Adapter';
-import Notes from '../../../../app/scripts/collections/Notes';
+import {Dropbox} from 'dropbox';
+import _ from '../../../../src/scripts/utils/underscore';
+import Adapter from '../../../../src/scripts/components/dropbox/Adapter';
+import Notes from '../../../../src/scripts/collections/Notes';
 
-const configs = {dropboxKey: '', dropboxAccessToken: ''};
+const configs = {
+    dropboxKey         : '',
+    dropboxAccessToken : '',
+};
+
 let sand;
 test('components/dropbox/Adapter: before()', t => {
-    sand = sinon.sandbox.create();
+    global.fetch = () => {};
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -59,6 +64,10 @@ test('components/dropbox/Adapter: checkAuth()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -86,7 +95,7 @@ test('components/dropbox/Adapter: parseHash()', t => {
 test('components/dropbox/Adapter: authenticate()', t => {
     const adapter = new Adapter(configs);
     const wind    = window;
-    window        = {cordova: null}
+    window        = {cordova: null};
     sand.stub(adapter, 'authCordova');
     sand.stub(adapter, 'authBrowser');
 
@@ -135,6 +144,11 @@ test('components/dropbox/Adapter: authBrowser()', t => {
         window = wind;
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        window = wind;
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -148,7 +162,7 @@ test('components/dropbox/Adapter: authElectron()', t => {
     const res = adapter.authElectron();
     t.equal(typeof res.then, 'function', 'returns a promise');
     t.equal(once.calledWith('lav:dropbox:oauth'), true,
-            'starts listening to lav:dropbox:oauth event');
+        'starts listening to lav:dropbox:oauth event');
 
     setTimeout(() => {
         callback('lav', {url: 'http://localhost/#access_token=1'});
@@ -169,6 +183,11 @@ test('components/dropbox/Adapter: authElectron()', t => {
         window.electron = undefined;
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        window.electron = undefined;
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -191,6 +210,10 @@ test('components/dropbox/Adapter: authCordova()', t => {
         t.equal(res, false, 'resolves with "false"');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -210,6 +233,10 @@ test('components/dropbox/Adapter: saveAccessToken()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -218,7 +245,9 @@ test('components/dropbox/Adapter: find()', t => {
     const resp = {entries: [
         {name: '1.json', path_lower: '/1.json'}, {name: '2', path_lower: '/2'},
     ]};
-    sand.stub(adapter, 'readDir').withArgs({path: '/default/notes'}).resolves(resp);
+    sand.stub(adapter, 'readDir').withArgs({path: '/default/notes'})
+    .resolves(resp);
+
     sand.stub(adapter, 'readFile');
 
     adapter.find({profileId: 'default', type: 'notes'})
@@ -229,6 +258,10 @@ test('components/dropbox/Adapter: find()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -238,13 +271,18 @@ test('components/dropbox/Adapter: readDir()', t => {
     sand.stub(adapter.dbx, 'filesListFolder').withArgs({
         path            : '/notes',
         include_deleted : false,
-    }).resolves(res);
+    })
+    .resolves(res);
 
     adapter.readDir({path: '/notes'})
     .then(resp => {
         t.equal(resp, res);
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -258,15 +296,16 @@ test('components/dropbox/Adapter: readFile()', t => {
 
     // adapter.readFile({path: '/notes/1.json'})
     // .then(() => {
-        sand.restore();
-        t.end();
+    sand.restore();
+    t.end();
     // });
 });
 
 test('components/dropbox/Adapter: findModel()', t => {
     const adapter = new Adapter(configs);
     const read    = sand.stub(adapter, 'readFile');
-    sand.stub(adapter, 'getModelPath').withArgs({id: '1'}).returns('/1.json');
+    sand.stub(adapter, 'getModelPath').withArgs({id: '1'})
+    .returns('/1.json');
 
     adapter.findModel({model: {}});
     t.equal(read.notCalled, true, 'does nothing if the model does not have ID');
@@ -281,14 +320,17 @@ test('components/dropbox/Adapter: findModel()', t => {
 test('components/dropbox/Adapter: saveModel()', t => {
     const adapter = new Adapter(configs);
     const upload  = sand.stub(adapter.dbx, 'filesUpload');
-    sand.stub(adapter, 'getModelPath').withArgs({id: '1'}).returns('/1.json');
+    sand.stub(adapter, 'getModelPath').withArgs({id: '1'})
+    .returns('/1.json');
 
     adapter.saveModel({model: {}});
     t.equal(upload.notCalled, true, 'does nothing if the model does not have ID');
 
     adapter.saveModel({model: {
         id: '1',
-        getData: () => {return {}},
+        getData: () => {
+            return {};
+        },
     }});
     t.equal(upload.called, true, 'saves the file on Dropbox');
 

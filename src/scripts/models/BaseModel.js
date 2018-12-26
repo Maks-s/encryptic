@@ -78,10 +78,6 @@ import Radio from 'backbone.radio';
      * @returns {(Array|Undefined)} - array of errors if there are any
      */
     validate(attrs) {
-        // It's not neccessary to validate when a model is about to be removed
-        if (attrs.trash && Number(attrs.trash) === 2) {
-            return;
-        }
         const errors = [];
         // Validate attributes
         _.each(this.validateAttributes, field => {

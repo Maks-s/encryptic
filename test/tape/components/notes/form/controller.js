@@ -5,20 +5,20 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../../app/scripts/utils/underscore';
-import Note from '../../../../../app/scripts/models/Note';
+import _ from '../../../../../src/scripts/utils/underscore';
+import Note from '../../../../../src/scripts/models/Note';
 
 // Fix mousetrap bug
 const Mousetrap     = require('mousetrap');
 global.Mousetrap    = Mousetrap;
 
 // eslint-disable-next-line
-const Controller = require('../../../../../app/scripts/components/notes/form/Controller').default;
-const View       = require('../../../../../app/scripts/components/notes/form/views/Form').default;
+const Controller = require('../../../../../src/scripts/components/notes/form/Controller').default;
+const View       = require('../../../../../src/scripts/components/notes/form/views/Form').default;
 
 let sand;
 test('notes/form/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -43,7 +43,7 @@ test('notes/form/Controller: ignoreKeys', t => {
 
 test('notes/form/Controller: init()', t => {
     const con = new Controller();
-    sand.stub(con, 'fetch').returns(Promise.resolve([1, 2]));
+    sand.stub(con, 'fetch').resolves([1, 2]);
     sand.stub(con, 'show');
     sand.stub(con, 'listenToEvents');
 
@@ -58,6 +58,10 @@ test('notes/form/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -155,7 +159,7 @@ test('notes/form/Controller: save()', t => {
 
     const req      = sand.stub(Radio, 'request');
     const notesReq = sand.stub(con.notesChannel, 'request');
-    sand.stub(con, 'getData').returns(Promise.resolve({title: 'Ok'}));
+    sand.stub(con, 'getData').resolves({title: 'Ok'});
     sand.spy(con, 'checkTitle');
     sand.stub(con, 'redirect');
 
@@ -183,6 +187,10 @@ test('notes/form/Controller: save()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -194,7 +202,7 @@ test('notes/form/Controller: getData()', t => {
         ui: {notebookId: {val: () => 'Test'}},
     });
 
-    const reply = sand.stub().returns(Promise.resolve({content: 'Test'}));
+    const reply = sand.stub().resolves({content: 'Test'});
     Radio.replyOnce('components/editor', 'getData', reply);
 
     const res = con.getData();
@@ -206,6 +214,10 @@ test('notes/form/Controller: getData()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -229,9 +241,9 @@ test('notes/form/Controller: checkChanges()', t => {
     con.model = new Note({title: 'Test', content: 'Content'});
     con.dataBeforeChange = _.omit(con.model.attributes, con.ignoreKeys);
 
-    sand.stub(con, 'getData').returns(Promise.resolve({
+    sand.stub(con, 'getData').resolves({
         title: 'Test', content: 'Content', encryptedData: 'hello',
-    }));
+    });
     sand.stub(con, 'redirect');
     sand.stub(con, 'showCancelConfirm');
 
@@ -242,7 +254,7 @@ test('notes/form/Controller: checkChanges()', t => {
         t.equal(con.redirect.calledWith(false), true,
             'redirect to the previous page if there are no changes');
 
-        con.getData.returns(Promise.resolve({title: 'Test 1'}));
+        con.getData.resolves({title: 'Test 1'});
         return con.checkChanges();
     })
     .then(() => {
@@ -251,6 +263,10 @@ test('notes/form/Controller: checkChanges()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -281,7 +297,7 @@ test('notes/form/Controller: showCancelConfirm()', t => {
     sand.stub(con, 'redirect');
     sand.stub(con, 'onRejectCancel');
 
-    const req = sand.stub(Radio, 'request').returns(Promise.resolve('confirm'));
+    const req = sand.stub(Radio, 'request').resolves('confirm');
 
     con.showCancelConfirm()
     .then(() => {
@@ -289,7 +305,7 @@ test('notes/form/Controller: showCancelConfirm()', t => {
             'shows the confirmation dialog');
         t.equal(con.redirect.called, true, 'redirects to the previous');
 
-        req.returns(Promise.resolve('reject'));
+        req.resolves('reject');
         return con.showCancelConfirm();
     })
     .then(() => {
@@ -298,6 +314,10 @@ test('notes/form/Controller: showCancelConfirm()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -305,7 +325,7 @@ test('notes/form/Controller: redirect()', t => {
     const con = new Controller({});
     con.view  = new View();
     const req = sand.stub(Radio, 'request');
-    sand.stub(con, 'preRedirect').returns(Promise.resolve());
+    sand.stub(con, 'preRedirect').resolves();
     sand.spy(con.view, 'destroy');
 
     const res = con.redirect(false);
@@ -328,14 +348,18 @@ test('notes/form/Controller: redirect()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('notes/form/Controller: preRedirect()', t => {
     const con      = new Controller({});
     con.model      = new Note();
-    const req      = sand.stub(Radio, 'request').returns(Promise.resolve());
-    const notesReq = sand.stub(con.notesChannel, 'request').returns(Promise.resolve());
+    const req      = sand.stub(Radio, 'request').resolves();
+    const notesReq = sand.stub(con.notesChannel, 'request').resolves();
     sand.stub(con.model, 'set');
 
     t.equal(typeof con.preRedirect().then, 'function', 'returns a promise');

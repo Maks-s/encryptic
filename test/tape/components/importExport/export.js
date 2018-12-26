@@ -5,18 +5,18 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../app/scripts/utils/underscore';
+import _ from '../../../../src/scripts/utils/underscore';
 
-import Export from '../../../../app/scripts/components/importExport/Export';
-import Profile from '../../../../app/scripts/models/Profile';
-import Notes from '../../../../app/scripts/collections/Notes';
-import Files from '../../../../app/scripts/collections/Files';
-import Tags from '../../../../app/scripts/collections/Tags';
+import Export from '../../../../src/scripts/components/importExport/Export';
+import Profile from '../../../../src/scripts/models/Profile';
+import Notes from '../../../../src/scripts/collections/Notes';
+import Files from '../../../../src/scripts/collections/Files';
+import Tags from '../../../../src/scripts/collections/Tags';
 
 const user = new Profile({username: 'alice', privateKey: 'private key'});
 let sand;
 test('importExport/Export: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -63,7 +63,7 @@ test('importExport/Export: init()', t => {
 test('importExport/Export: exportData()', t => {
     const con = new Export({data: []});
     sand.stub(con, 'exportCollections').resolves();
-    sand.stub(con, 'saveToFile').returns(Promise.resolve());
+    sand.stub(con, 'saveToFile').resolves();
 
     const res = con.exportData();
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -78,6 +78,10 @@ test('importExport/Export: exportData()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -90,8 +94,8 @@ test('importExport/Export: exportKey()', t => {
 
     con.exportKey();
     t.equal(con.saveAs.calledWith(['blob']), true);
-    t.equal(con.saveAs.calledWith(['blob'], 'laverna-key-alice.asc'), true,
-        'exports the private key');
+    t.equal(con.saveAs.calledWith(['blob'], 'Encryptic-key-alice.asc'), true,
+        'saves the private key');
     t.equal(con.destroy.called, true, 'destroyes itself');
 
     sand.restore();
@@ -118,6 +122,10 @@ test('importExport/Export: export()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -138,6 +146,10 @@ test('importExport/Export: fetchExportCollection()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -148,7 +160,7 @@ test('importExport/Export: exportProfile()', t => {
     const str = JSON.stringify([con.user]);
 
     con.exportProfile();
-    t.equal(con.zip.file.calledWith('laverna-backups/profiles.json', str), true);
+    t.equal(con.zip.file.calledWith('Encryptic-backups/profiles.json', str), true);
 
     sand.restore();
     t.end();
@@ -169,6 +181,7 @@ test('importExport/Export: exportCollections()', t => {
     t.end();
 });
 
+// eslint-disable-next-line max-statements
 test('importExport/Export: exportCollection()', t => {
     const con = new Export();
     Object.defineProperty(con, 'profileId', {get: () => 'bob'});
@@ -179,7 +192,7 @@ test('importExport/Export: exportCollection()', t => {
     col.fullCollection = col.clone();
     col.fullCollection.add(mod);
     con.exportCollection(col);
-    t.equal(con.exportNote.calledWith('laverna-backups/testdb', mod), true,
+    t.equal(con.exportNote.calledWith('Encryptic-backups/testdb', mod), true,
         'exports every model from notes collection');
 
     sand.stub(con, 'exportFile');
@@ -187,13 +200,13 @@ test('importExport/Export: exportCollection()', t => {
     const file  = new Files.prototype.model({id: '1'});
     files.add(file);
     con.exportCollection(files);
-    t.equal(con.exportFile.calledWith('laverna-backups/testdb', file), true,
+    t.equal(con.exportFile.calledWith('Encryptic-backups/testdb', file), true,
         'exports every model from files collection');
 
     const tags = new Tags();
     con.zip    = {file: sand.stub()};
     con.exportCollection(tags);
-    t.equal(con.zip.file.calledWith('laverna-backups/bob/tags.json'),
+    t.equal(con.zip.file.calledWith('Encryptic-backups/bob/tags.json'),
         true, 'exports data to a JSON file');
 
     sand.restore();
@@ -255,7 +268,7 @@ test('importExport/Export: exportFile()', t => {
 
 test('importExport/Export: saveToFile()', t => {
     const con = new Export();
-    con.zip   = {generateAsync: sand.stub().returns(Promise.resolve('test'))};
+    con.zip   = {generateAsync: sand.stub().resolves('test')};
     Object.defineProperty(con, 'user', {get: () => user.attributes});
     sand.stub(con, 'destroy');
     sand.stub(con, 'saveAs');
@@ -264,10 +277,14 @@ test('importExport/Export: saveToFile()', t => {
     .then(() => {
         t.equal(con.zip.generateAsync.calledWith({type: 'blob'}), true,
             'generates ZIP blob');
-        t.equal(con.saveAs.calledWith('test', 'laverna-backup-alice.zip'), true,
-            'saves the blob in laverna-backup.zip archive');
+        t.equal(con.saveAs.calledWith('test', 'Encryptic-backup-alice.zip'), true,
+            'saves the blob in Encryptic-backup.zip archive');
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });

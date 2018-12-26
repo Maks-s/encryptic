@@ -1,18 +1,19 @@
 exports.command = function(selector, attr, callback) {
-    this.execute(function(selector, attr) {
-        var els = document.querySelectorAll(selector),
+    this.execute((selector, attr) => {
+        const els = document.querySelectorAll(selector),
             param = [];
 
-        for (var i = 0, len = els.length; i < len; i++) {
+        for (let i = 0, len = els.length; i < len; i++) {
             if (attr) {
                 param.push(els[i].getAttribute(attr));
-            } else {
+            }
+            else {
                 param.push(els[i]);
             }
         }
 
         return param;
-    }, [selector, attr], function(res) {
+    }, [selector, attr], res => {
         callback(res.value);
     });
 

@@ -6,7 +6,7 @@ import test from 'tape';
 import sinon from 'sinon';
 import Mn from 'backbone.marionette';
 
-import ModalForm from '../../../app/scripts/behaviors/ModalForm';
+import ModalForm from '../../../src/scripts/behaviors/ModalForm';
 
 class View extends Mn.View {
     behaviors() {
@@ -16,7 +16,7 @@ class View extends Mn.View {
 
 let sand;
 test('behaviors/ModalForm: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

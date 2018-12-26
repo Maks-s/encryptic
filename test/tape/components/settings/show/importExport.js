@@ -7,15 +7,15 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/settings/show/importExport/View';
-import Behavior from '../../../../../app/scripts/components/settings/show/Behavior';
-import Configs from '../../../../../app/scripts/collections/Configs';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/settings/show/importExport/View';
+import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
+import Configs from '../../../../../src/scripts/collections/Configs';
 /* eslint-enable */
 
 let sand;
 test('settings/show/importExport/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -82,7 +82,7 @@ test('settings/show/importExport/View: exportData()', t => {
     const req  = sand.stub(view.channel, 'request');
 
     view.exportData();
-    t.equal(req.calledWith('export'), true, 'exports everything from Laverna');
+    t.equal(req.calledWith('export'), true, 'exports everything from Encryptic');
 
     sand.restore();
     t.end();

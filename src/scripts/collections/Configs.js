@@ -27,16 +27,6 @@ export default class Configs extends BaseCollection {
     }
 
     /**
-     * Default config names and values.
-     *
-     * @returns {Object}
-     */
-    /*
-    get configNames() {
-        return flattenConfigs();
-    }
-    */
-    /**
      * If current length of models is not equal to the length of
      * keys in configs property, there are new configs.
      *
@@ -114,26 +104,6 @@ export default class Configs extends BaseCollection {
         const value = configNames[name];
         return new this.model({name, value});
     }
-
-
-
-    /**
-     * Reset the collection with the values from key=value object.
-     *
-     * @param {Object} configs - key=value object
-     * @returns {Object} this
-     */
-    // Commented out.  Will remove if nothing breaks  08-26 -BA
-    /*
-    resetFromObject(configs) {
-        const models = [];
-
-        _.each(configs, (value, name) => models.push({name, value}));
-        this.reset(models);
-
-        return this;
-    }
-    */
 
     /**
      * Filter the collection to have only keybinding related models.

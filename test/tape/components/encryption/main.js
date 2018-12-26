@@ -5,15 +5,15 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import initialize from '../../../../app/scripts/components/encryption/main';
-import Auth from '../../../../app/scripts/components/encryption/auth/Controller';
-import Encrypt from '../../../../app/scripts/components/encryption/encrypt/Controller';
+import initialize from '../../../../src/scripts/components/encryption/main';
+import Auth from '../../../../src/scripts/components/encryption/auth/Controller';
+import Encrypt from '../../../../src/scripts/components/encryption/encrypt/Controller';
 
 let sand;
 test('encryption/main: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

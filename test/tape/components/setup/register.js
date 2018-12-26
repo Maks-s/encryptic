@@ -5,13 +5,13 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import '../../../../app/scripts/utils/underscore';
-import ContentView from '../../../../app/scripts/components/setup/ContentView';
-import View from '../../../../app/scripts/components/setup/register/View';
+import '../../../../src/scripts/utils/underscore';
+import ContentView from '../../../../src/scripts/components/setup/ContentView';
+import View from '../../../../src/scripts/components/setup/register/View';
 
 let sand;
 test('setup/register/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

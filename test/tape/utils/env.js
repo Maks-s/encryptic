@@ -4,7 +4,7 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Env from '../../../app/scripts/utils/Env';
+import Env from '../../../src/scripts/utils/Env';
 import device from 'device-detect.js';
 
 const Modernizr  = {};
@@ -12,7 +12,7 @@ global.Modernizr = Modernizr;
 
 let sand;
 test('Env: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
 
     t.end();
 });

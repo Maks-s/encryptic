@@ -4,16 +4,16 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import _ from '../../../../../app/scripts/utils/underscore';
+import _ from '../../../../../src/scripts/utils/underscore';
 
 /* eslint-disable */
-import View from '../../../../../app/scripts/components/encryption/encrypt/View';
-import Notes from '../../../../../app/scripts/collections/Notes';
+import View from '../../../../../src/scripts/components/encryption/encrypt/View';
+import Notes from '../../../../../src/scripts/collections/Notes';
 /* eslint-enable */
 
 let sand;
 test('encryption/encrypt/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

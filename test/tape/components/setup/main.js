@@ -6,12 +6,12 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import initialize from '../../../../app/scripts/components/setup/main';
-import Controller from '../../../../app/scripts/components/setup/Controller';
+import initialize from '../../../../src/scripts/components/setup/main';
+import Controller from '../../../../src/scripts/components/setup/Controller';
 
 let sand;
 test('setup/main: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

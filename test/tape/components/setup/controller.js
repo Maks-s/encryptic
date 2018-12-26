@@ -7,15 +7,15 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import * as openpgp from 'openpgp';
 
-import _ from '../../../../app/scripts/utils/underscore';
-import Controller from '../../../../app/scripts/components/setup/Controller';
-import View from '../../../../app/scripts/components/setup/View';
-import Profiles from '../../../../app/scripts/collections/Profiles';
+import _ from '../../../../src/scripts/utils/underscore';
+import Controller from '../../../../src/scripts/components/setup/Controller';
+import View from '../../../../src/scripts/components/setup/View';
+import Profiles from '../../../../src/scripts/collections/Profiles';
 
 const profiles = new Profiles();
 let sand;
 test('setup/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -127,7 +127,7 @@ test('setup/Controller: onViewDestroy()', t => {
 
 test('setup/Controller: checkUser()', t => {
     const con     = new Controller();
-    const req     = sand.stub(Radio, 'request').returns(Promise.resolve({}));
+    const req     = sand.stub(Radio, 'request').resolves({});
     Object.defineProperty(con, 'profiles', {get: () => profiles});
 
     const user    = {username: 'test'};
@@ -140,18 +140,18 @@ test('setup/Controller: checkUser()', t => {
     };
 
     profiles.add({username: 'bob'});
-    con.checkUser({username: 'bob', signalServer: 'https://laverna.cc'})
+    con.checkUser({username: 'bob', signalServer: 'https://encryptic.org'})
     .then(() => {
-        t.equal(con.options.signalServer, 'https://laverna.cc',
+        t.equal(con.options.signalServer, 'https://encryptic.org',
             'creates "this.options.signalServer"');
         t.equal(trigger.calledWith('name:taken', {user: profiles.get('bob')}), true,
             'triggers "name:taken" event if a user is in "profiles"');
 
-        return con.checkUser({username: 'test', signalServer: 'https://laverna.cc'});
+        return con.checkUser({username: 'test', signalServer: 'https://encryptic.org'});
     })
     .then(() => {
         t.equal(req.calledWith('models/Signal', 'changeServer', {
-            signal: 'https://laverna.cc',
+            signal: 'https://encryptic.org',
         }), true, 'changes the signaling server address');
 
         t.equal(con.view.showRegister.calledWith({username: 'test'}), true,
@@ -160,23 +160,37 @@ test('setup/Controller: checkUser()', t => {
         t.equal(con.options.username, 'test',
             'creates "this.options.username"');
 
-        req.returns(Promise.resolve(user));
-        return con.checkUser({username: 'test'});
-    })
-    .then(() => {
-        t.equal(trigger.calledWith('name:taken', {user}), true,
-            'triggers "name:taken" event');
-
-        req.returns(Promise.reject('error'));
-        return con.checkUser({username: 'test'});
-    })
-    .catch(() => {
-        t.equal(trigger.calledWith('signalServer:error', {err: 'error'}), true,
-            'triggers "signalServer:error"');
+        // Removed, see below
+        // req.resolves(user);
+        // return con.checkUser(user);
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
+    /**
+    * Removed, see 2018-09-21 note in components/setup/Controller
+    * 
+
+   .then(() => {
+       t.equal(trigger.calledWith('name:taken', {user}), true,
+           'triggers "name:taken" event');
+
+       req.rejects('error');
+       return con.checkUser({username: 'test'});
+   })
+   .catch(() => {
+       t.equal(trigger.calledWith('signalServer:error', {err: 'error'}), true,
+           'triggers "signalServer:error"');
+
+       sand.restore();
+       t.end();
+   });
+
+    */
 });
 
 test('setup/Controller: readKey()', t => {
@@ -223,6 +237,10 @@ test('setup/Controller: readKey()', t => {
         global.FileReader = null;
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -231,7 +249,7 @@ test('setup/Controller: save()', t => {
     const view = {triggerMethod: sand.stub()};
     con.view   = {getChildView: () => view, triggerMethod: sand.stub()};
 
-    sand.stub(con, 'generateKeyPair').returns(Promise.resolve('keys'));
+    sand.stub(con, 'generateKeyPair').resolves('keys');
     sand.stub(con, 'register');
     sand.stub(con, 'saveConfigs');
 
@@ -254,13 +272,20 @@ test('setup/Controller: save()', t => {
 
         t.equal(con.generateKeyPair.calledWith(opt.keyData), true,
             'generates a new key pair');
-        t.equal(con.register.calledWith({username: opt.username, register: true}),
-            true, 'registers a new account on the signaling server');
+
+        // Break registration for now
+        // t.equal(con.register.calledWith({username: opt.username, register: true}),
+        //     true, 'registers a new account on the signaling server');
+
         t.equal(con.saveConfigs.calledWith({username: opt.username}), true,
             'saves configs');
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -269,7 +294,7 @@ test('setup/Controller: generateKeyPair()', t => {
     const req = sand.stub(Radio, 'request');
 
     con.generateKeyPair({passphrase: '1', username: 'test'});
-    t.equal(req.calledWith('models/Encryption', 'generateKeys', {
+    t.equal(req.calledWith('components/Encryption', 'generateKeys', {
         passphrase: '1',
         userIds: [{name: 'test'}],
     }), true, 'makes "generateKeys" request');
@@ -337,6 +362,10 @@ test('setup/Controller: saveConfigs()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -358,11 +387,15 @@ test('setup/Controller: export()', t => {
             type: 'text/plain',
         }), true, 'creates a blob of the private key');
 
-        t.equal(con.fileSaver.calledWithMatch({}, 'laverna-key-alice.asc'), true,
+        t.equal(con.fileSaver.calledWithMatch({}, 'Encryptic-key-alice.asc'), true,
             'offers the user to save their private key');
         t.equal(con.view.destroy.called, true, 'destroyes the view');
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });

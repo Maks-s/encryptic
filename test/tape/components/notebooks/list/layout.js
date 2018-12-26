@@ -8,16 +8,16 @@ import Radio from 'backbone.radio';
 import Mousetrap from 'mousetrap';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/notebooks/list/views/Layout';
-import Notebooks from '../../../../../app/scripts/collections/Notebooks';
-import Tags from '../../../../../app/scripts/collections/Tags';
-import Sidebar from '../../../../../app/scripts/behaviors/Sidebar';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/notebooks/list/views/Layout';
+import Notebooks from '../../../../../src/scripts/collections/Notebooks';
+import Tags from '../../../../../src/scripts/collections/Tags';
+import Sidebar from '../../../../../src/scripts/behaviors/Sidebar';
 /* eslint-enable */
 
 let sand;
 test('notebooks/list/views/Layout: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

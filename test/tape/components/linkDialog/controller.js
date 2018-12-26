@@ -5,13 +5,13 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import Controller from '../../../../app/scripts/components/linkDialog/Controller';
+import Controller from '../../../../src/scripts/components/linkDialog/Controller';
 
 let sand;
 test('linkDialog/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -49,13 +49,17 @@ test('linkDialog/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('linkDialog/Controller: show()', t => {
     const con = new Controller();
     const req = sand.stub(Radio, 'request');
-    sand.stub(con, 'renderDropdown').returns(Promise.resolve());
+    sand.stub(con, 'renderDropdown').resolves();
 
     con.show();
     t.equal(req.calledWith('Layout', 'show', {
@@ -105,6 +109,10 @@ test('linkDialog/Controller: renderDropdown()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -150,6 +158,10 @@ test('linkDialog/Controller: search()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -157,7 +169,7 @@ test('linkDialog/Controller: createNote()', t => {
     const con  = new Controller();
     con.view   = {ui: {url: {val: () => 'Test'}}};
     const save = sand.stub(con.notesChannel, 'request');
-    save.returns(Promise.resolve({id: '1'}));
+    save.resolves({id: '1'});
     const req  = sand.stub(Radio, 'request').returns('/note/1');
     sand.stub(con, 'resolve');
 
@@ -175,5 +187,9 @@ test('linkDialog/Controller: createNote()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });

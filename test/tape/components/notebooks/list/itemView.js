@@ -7,10 +7,10 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/notebooks/list/views/ItemView';
-import ModelFocus from '../../../../../app/scripts/behaviors/ModelFocus';
-import Model from '../../../../../app/scripts/models/Tag';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/notebooks/list/views/ItemView';
+import NavModel from '../../../../../src/scripts/behaviors/NavModel';
+import Model from '../../../../../src/scripts/models/Tag';
 /* eslint-enable */
 
 test('notebooks/list/views/ItemView: className', t => {
@@ -28,7 +28,7 @@ test('notebooks/list/views/ItemView: events()', t => {
 test('notebooks/list/views/ItemView: behaviors()', t => {
     const behaviors = View.prototype.behaviors();
     t.equal(Array.isArray(behaviors), true, 'returns an array');
-    t.equal(behaviors.indexOf(ModelFocus) !== -1, true, 'uses ModelFocus behavior');
+    t.equal(behaviors.indexOf(NavModel) !== -1, true, 'uses NavModel behavior');
     t.end();
 });
 

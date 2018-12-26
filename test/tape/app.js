@@ -6,14 +6,14 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import Backbone from 'backbone';
-import App from '../../app/scripts/App.js';
+import App from '../../src/scripts/App.js';
 
 const view = {render: sinon.stub()};
 Object.defineProperty(App.prototype, 'layout', {get: () => view});
 
 let sand;
 test('App: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -56,7 +56,7 @@ test('App: onStart()', t => {
 test('App: lazyStart() - success', t => {
     const app  = new App();
     const stub = sand.stub(app, 'start');
-    const init = sand.stub().returns(Promise.resolve());
+    const init = sand.stub().resolves();
     Radio.replyOnce('utils/Initializer', 'start', (...args) => {
         return new Promise(resolve => {
             setTimeout(() => {
@@ -72,19 +72,24 @@ test('App: lazyStart() - success', t => {
     res.then(() => {
         t.equal(init.calledWith(
             {names: ['App:core', 'App:utils', 'App:components', 'App:auth', 'App:last']}),
-            true,
-            'starts initializers'
+        true,
+        'starts initializers'
         );
+
         t.equal(stub.calledAfter(init), true, 'eventually calls start()');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('App: lazyStart() - reject', t => {
     const app  = new App();
     const stub = sand.stub(app, 'start');
-    const init = sand.stub().returns(Promise.reject());
+    const init = sand.stub().rejects();
     Radio.replyOnce('utils/Initializer', 'start', init);
 
     app.lazyStart()
@@ -93,6 +98,10 @@ test('App: lazyStart() - reject', t => {
         t.equal(init.called, true, 'handles rejects');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

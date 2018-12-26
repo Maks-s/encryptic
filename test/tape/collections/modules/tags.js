@@ -4,14 +4,14 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../app/scripts/utils/underscore';
-import Module from '../../../../app/scripts/collections/modules/Tags';
-import ModuleOrig from '../../../../app/scripts/collections/modules/Module';
-import Tags from '../../../../app/scripts/collections/Tags';
+import '../../../../src/scripts/utils/underscore';
+import Module from '../../../../src/scripts/modules/Tags';
+import ModuleOrig from '../../../../src/scripts/modules/Module';
+import Tags from '../../../../src/scripts/collections/Tags';
 
 let sand;
 test('collections/modules/Tags: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -48,13 +48,18 @@ test('collections/modules/Tags: addTags()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Tags: addTag()', t => {
     const mod  = new Module();
     const save = sand.stub(ModuleOrig.prototype, 'saveModel');
-    sand.stub(mod, 'getId').returns(Promise.resolve('testId'));
+    sand.stub(mod, 'getId').resolves('testId');
 
     const data = {name: 'test', profileId: 'test'};
     mod.addTag(data)
@@ -68,6 +73,11 @@ test('collections/modules/Tags: addTag()', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -90,8 +100,8 @@ test('collections/modules/Tags: saveModel() - compute ID', t => {
     const mod   = new Module();
     const model = new mod.Model({id: 'testId', name: 'test'});
     const save  = sand.stub(ModuleOrig.prototype, 'saveModel');
-    sand.stub(mod, 'remove').returns(Promise.resolve());
-    sand.stub(mod, 'getId').returns(Promise.resolve('testId'));
+    sand.stub(mod, 'remove').resolves();
+    sand.stub(mod, 'getId').resolves('testId');
     sand.spy(model, 'set');
 
     mod.saveModel({model})
@@ -105,7 +115,7 @@ test('collections/modules/Tags: saveModel() - compute ID', t => {
         t.equal(model.set.calledWith({id: 'testId'}), true, 'sets a new ID');
         t.equal(save.calledWithMatch({model}), true, 'saves the model');
 
-        mod.getId.returns(Promise.resolve('testingId'));
+        mod.getId.resolves('testingId');
         return mod.saveModel({model, data: {name: 'testing'}});
     })
     .then(() => {
@@ -118,28 +128,38 @@ test('collections/modules/Tags: saveModel() - compute ID', t => {
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('collections/modules/Tags: getId()', t => {
     const mod   = new Module();
     const model = new mod.Model({name: 'testing'});
-    const req   = sand.stub(Radio, 'request').returns(Promise.resolve(['t', 'e']));
+    const req   = sand.stub(Radio, 'request').resolves(['t', 'e']);
 
     mod.getId({data: {name: 'test'}})
     .then(res => {
         t.equal(res, 'te', 'returns a string');
-        t.equal(req.calledWith('models/Encryption', 'sha256', {text: 'test'}),
-            true, 'computes SHA256 of a tag\'s name');
+        t.equal(req.calledWith('components/Encryption', 'sha256', {text: 'test'}),
+            true, 'call components/Encryption to computes SHA256 of a tag\'s name');
 
         return mod.getId({model});
     })
     .then(() => {
-        t.equal(req.calledWith('models/Encryption', 'sha256', {text: 'testing'}),
-            true, 'computes SHA256 of a tag\'s name');
+        t.equal(req.calledWith('components/Encryption', 'sha256', {text: 'testing'}),
+            true, 'call components/Encryption to computes SHA256 of a tag\'s name');
 
         mod.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        mod.channel.stopReplying();
+        sand.restore();
+        t.end('resolve promise');
     });
 });

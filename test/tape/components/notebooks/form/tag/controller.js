@@ -7,14 +7,14 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import _ from '../../../../../../app/scripts/utils/underscore';
-import Tag from '../../../../../../app/scripts/models/Tag';
-import Controller from '../../../../../../app/scripts/components/notebooks/form/tag/Controller';
+import _ from '../../../../../../src/scripts/utils/underscore';
+import Tag from '../../../../../../src/scripts/models/Tag';
+import Controller from '../../../../../../src/scripts/components/notebooks/form/tag/Controller';
 /* eslint-enable */
 
 let sand;
 test('notebooks/form/tag/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -31,7 +31,7 @@ test('notebooks/form/tag/Controller: onDestroy()', t => {
 
 test('notebooks/form/tag/Controller: init()', t => {
     const con = new Controller();
-    sand.stub(con, 'fetch').returns(Promise.resolve({id: '1'}));
+    sand.stub(con, 'fetch').resolves({id: '1'});
     sand.stub(con, 'show');
     sand.stub(con, 'listenToEvents');
 
@@ -44,6 +44,10 @@ test('notebooks/form/tag/Controller: init()', t => {
         t.equal(con.listenToEvents.called, true, 'starts listening to events');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -97,7 +101,7 @@ test('notebooks/form/tag/Controller: save()', t => {
         model   : new Tag({id: '1'}),
         ui      : {name: {val: sand.stub().returns({trim})}},
     };
-    const req  = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const req  = sand.stub(Radio, 'request').resolves();
 
     const res = con.save();
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -110,6 +114,10 @@ test('notebooks/form/tag/Controller: save()', t => {
         t.equal(con.view.destroy.called, true, 'destroyes the view');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

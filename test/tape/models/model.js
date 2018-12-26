@@ -4,8 +4,8 @@
  */
 import test from 'tape';
 
-import '../../../app/scripts/utils/underscore';
-import Model from '../../../app/scripts/models/Model';
+import '../../../src/scripts/utils/underscore';
+import Model from '../../../src/scripts/models/BaseModel';
 
 test('models/Model: sync()', t => {
     const model = new Model();
@@ -33,18 +33,6 @@ test('models/Model: profileId() - set', t => {
     t.end();
 });
 
-test('models/Model: validateAttributes()', t => {
-    const model = new Model();
-    t.equal(Array.isArray(model.validateAttributes), true, 'is an array');
-    t.end();
-});
-
-test('models/Model: escapeAttributes()', t => {
-    const model = new Model();
-    t.equal(Array.isArray(model.escapeAttributes), true, 'is an array');
-    t.end();
-});
-
 test('models/Model: channel', t => {
     const model     = new Model();
     model.storeName = 'notes';
@@ -59,9 +47,6 @@ test('models/Model: validate()', t => {
             return ['title'];
         },
     });
-
-    t.equal(model.validate({trash: 2}), undefined,
-        'returns undefined if trash is equal to 2');
 
     t.equal(Array.isArray(model.validate({title: ''})), true,
         'returns an array if validation failed');

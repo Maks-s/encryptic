@@ -7,14 +7,14 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
 /* eslint-disable */
-import controller from '../../../../app/scripts/components/settings/controller';
-import Sidebar from '../../../../app/scripts/components/settings/sidebar/Controller';
-import Show from '../../../../app/scripts/components/settings/show/Controller';
+import controller from '../../../../src/scripts/components/settings/controller';
+import Sidebar from '../../../../src/scripts/components/settings/sidebar/Controller';
+import Show from '../../../../src/scripts/components/settings/show/Controller';
 /* eslint-enable */
 
 let sand;
 test('settings/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

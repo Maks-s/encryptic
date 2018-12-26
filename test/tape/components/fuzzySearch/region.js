@@ -4,13 +4,13 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import Region from '../../../../app/scripts/components/fuzzySearch/views/Region';
+import Region from '../../../../src/scripts/components/fuzzySearch/views/Region';
 
 let sand;
 test('fuzzySearch/views/Region: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

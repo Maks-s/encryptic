@@ -15,11 +15,11 @@ global.self     = {
     postMessage: () => {},
 };
 
-const {delegator, onMessage} = require('../../../app/scripts/workers/worker');
+const {delegator, onMessage} = require('../../../src/scripts/workers/worker');
 
 let sand;
 test('worker: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -64,11 +64,11 @@ test('Worker: delegator.postResponse()', t => {
 });
 
 test('Worker: delegator.execute() - resolve', t => {
-    const save = sand.stub(delegator.modules['models/Db'], 'save');
-    save.returns(Promise.resolve('data'));
+    const save = sand.stub(delegator.modules['components/Db'], 'save');
+    save.resolves('data');
     const postr = sand.stub(delegator, 'postResponse');
 
-    const data = {file: 'models/Db', method: 'save', args: ['yes']};
+    const data = {file: 'components/Db', method: 'save', args: ['yes']};
     const res  = delegator.execute('test-id', data);
 
     t.equal(typeof res.then, 'function', 'returns a promise');
@@ -79,15 +79,19 @@ test('Worker: delegator.execute() - resolve', t => {
             'posts a resolve response');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
 test('Worker: delegator.execute() - reject', t => {
-    const save = sand.stub(delegator.modules['models/Db'], 'save');
+    const save = sand.stub(delegator.modules['components/Db'], 'save');
     save.returns(Promise.reject('err'));
     const postr = sand.stub(delegator, 'postResponse');
 
-    const data = {file: 'models/Db', method: 'save', args: ['yes']};
+    const data = {file: 'components/Db', method: 'save', args: ['yes']};
     delegator.execute('test-id', data)
     .then(() => {
         t.equal(postr.calledWith('test-id', 'err', 'reject'), true,
@@ -95,6 +99,10 @@ test('Worker: delegator.execute() - reject', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -112,7 +120,7 @@ test('Worker: delegator.execute() - class does not exist', t => {
 test('Worker: delegator.execute() - method does not exist', t => {
     const postr = sand.stub(delegator, 'postResponse');
 
-    delegator.execute('test-id', {file: 'models/Db', method: 's404'});
+    delegator.execute('test-id', {file: 'components/Db', method: 's404'});
     t.equal(postr.calledWith('test-id', 'Method does not exist', 'reject'), true,
         'posts a reject response if a method does not exist');
 

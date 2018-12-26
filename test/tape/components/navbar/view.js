@@ -7,13 +7,13 @@ import sinon from 'sinon';
 import _ from 'underscore';
 import Radio from 'backbone.radio';
 
-import View from '../../../../app/scripts/components/navbar/View';
-import Sidemenu from '../../../../app/scripts/behaviors/Sidemenu';
-import Notebooks from '../../../../app/scripts/collections/Notebooks';
+import View from '../../../../src/scripts/components/navbar/View';
+import Sidemenu from '../../../../src/scripts/behaviors/Sidemenu';
+import Notebooks from '../../../../src/scripts/collections/Notebooks';
 
 let sand;
 test('navbar/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -39,10 +39,12 @@ test('navbar/View: ui()', t => {
 
 test('navbar/View: events()', t => {
     const events = View.prototype.events();
-    t.equal(typeof events, 'object', 'returns an object');
 
-    t.equal(events['click #header--add'], 'navigateAdd',
-        'opens a form if the "add" button is clicked');
+    t.equal(typeof events, 'object', 'returns an object');
+    t.equal(events['click #header--add--notebook'], 'navigateAddNotebook',
+        'opens a form if the "add notebook" button is clicked');
+    t.equal(events['click #header--add--tag'], 'navigateAddTag',
+        'opens a form if the "add tag" button is clicked');
     t.equal(events['click #header--about'], 'showAbout',
         'shows "about" page');
     t.equal(events['click #header--sync'], 'triggerSync',
@@ -103,11 +105,11 @@ test('navbar/View: onDestroy()', t => {
 
 test('navbar/View: navigateAdd()', t => {
     const view = new View({notebooks: new Notebooks()});
-    sand.stub(view.channel, 'trigger');
+    sand.stub(Radio, 'request');
 
     view.navigateAdd();
-    t.equal(view.channel.trigger.calledWith('show:form'), true,
-        'triggers "show:form" event');
+    t.equal(Radio.request.calledWith('components/notes', 'showForm', {}), true,
+        'calls showForm on components/note');
 
     view.destroy();
     sand.restore();

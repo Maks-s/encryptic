@@ -5,7 +5,7 @@
   "license": "MPL-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Encryptic/Encryptic"
+    "url": "https://github.com/encryptic-team/encryptic"
   },
   "scripts": {
     "start": "node ./server.js",
@@ -113,6 +113,7 @@
     "raf": "^3.4.1",
     "raw-loader": "^0.5.1",
     "sinon": "^7.1.1",
+    "tap-bail": "^1.0.0",
     "tape": "^4.8.0",
     "through2": "^3.0.0",
     "webpack": "^4.27.1",

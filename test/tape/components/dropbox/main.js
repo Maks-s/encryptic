@@ -5,14 +5,14 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import '../../../../app/scripts/utils/underscore';
-import initialize from '../../../../app/scripts/components/dropbox/main';
-import Sync from '../../../../app/scripts/components/dropbox/Sync';
-import View from '../../../../app/scripts/components/dropbox/settings/View';
+import '../../../../src/scripts/utils/underscore';
+import initialize from '../../../../src/scripts/components/dropbox/main';
+import Sync from '../../../../src/scripts/components/dropbox/Sync';
+import View from '../../../../src/scripts/components/dropbox/settings/View';
 
 let sand;
 test('components/dropbox/main: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

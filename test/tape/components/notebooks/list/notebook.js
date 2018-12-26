@@ -5,9 +5,9 @@
 import test from 'tape';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/notebooks/list/views/Notebook';
-import ItemView from '../../../../../app/scripts/components/notebooks/list/views/ItemView';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/notebooks/list/views/Notebook';
+import ItemView from '../../../../../src/scripts/components/notebooks/list/views/ItemView';
 /* eslint-enable */
 
 test('notebooks/list/views/Tag: extends from ItemView', t => {

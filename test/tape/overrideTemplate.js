@@ -10,7 +10,7 @@ import {readFileSync as read} from 'fs';
  * @param {String} path - the relative path to a template
  */
 export default function overrideTemplate(View, path) {
-    const tmpl = read(`${__dirname}/../../app/scripts/${path}`);
+    const tmpl = read(`${__dirname}/../../src/scripts/${path}`);
     Object.defineProperty(View.prototype, 'template', {
         get: () => _.template(tmpl),
     });

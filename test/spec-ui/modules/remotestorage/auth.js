@@ -4,7 +4,7 @@
 /**
  * It tests if it's possible to login to a RemoteStorage server.
  */
-it('creates a new user on RemoteStorage server', function(client) {
+it('creates a new user on RemoteStorage server', client => {
     client
     .url('http://localhost:9100/signup')
     .expect.element('input[type="password"]').to.be.present.before(50000);
@@ -16,13 +16,13 @@ it('creates a new user on RemoteStorage server', function(client) {
     .pause(300);
 });
 
-it('shows RemoteStorage widget', function(client) {
+it('shows RemoteStorage widget', client => {
     client
     .urlHash('notes')
     .expect.element('.remotestorage-initial').to.be.present.before(50000);
 });
 
-it('can login to a RemoteStorage server', function(client) {
+it('can login to a RemoteStorage server', client => {
     client
     .click('.rs-bubble')
     .setValue('.remotestorage-initial input[name="userAddress"]', 'test@localhost:9100')

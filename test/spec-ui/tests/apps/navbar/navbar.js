@@ -23,7 +23,7 @@ module.exports = {
         client.expect.element('#header--add').to.be.visible.before(5000);
 
         client.getTitle(function(title) {
-            this.assert.equal(title, 'All Notes - Laverna');
+            this.assert.equal(title, 'All Notes - Encryptic');
         });
     },
 
@@ -39,7 +39,7 @@ module.exports = {
         client.expect.element('#header--add').to.be.visible.before(5000);
 
         client.getTitle(function(title) {
-            this.assert.equal(title, 'Notebooks & Tags - Laverna');
+            this.assert.equal(title, 'Notebooks & Tags - Encryptic');
         });
     },
 
@@ -55,7 +55,7 @@ module.exports = {
         client.expect.element('#header--add').to.be.visible.before(5000);
 
         client.getTitle(function(title) {
-            this.assert.equal(title, 'Trashed - Laverna');
+            this.assert.equal(title, 'Trashed - Encryptic');
         });
     },
 
@@ -71,7 +71,7 @@ module.exports = {
         client.expect.element('#header--add').to.be.visible.before(5000);
 
         client.getTitle(function(title) {
-            this.assert.equal(title, 'Favorites - Laverna');
+            this.assert.equal(title, 'Favorites - Encryptic');
         });
     },
 

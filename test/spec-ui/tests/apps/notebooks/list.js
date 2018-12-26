@@ -1,5 +1,5 @@
 'use strict';
-var expect = require('chai').expect,
+let expect = require('chai').expect,
     ids;
 
 /**
@@ -7,7 +7,7 @@ var expect = require('chai').expect,
  */
 module.exports = {
 
-    before: function(client, done) {
+    before(client, done) {
         client.closeWelcome();
 
         client.urlHash('notes');
@@ -21,14 +21,14 @@ module.exports = {
         client.addNotebook({name: 'notebook 4', parentId: 0});
         client.addNotebook({name: 'notebook 5', parentId: 'notebook 4'});
 
-        client.findAll('#notebooks .list--item', 'data-id', (res) => {
+        client.findAll('#notebooks .list--item', 'data-id', res => {
             ids = res;
             expect(ids.length).to.be.equal(3);
             done();
         });
     },
 
-    after: function(client) {
+    after(client) {
         client.end();
     },
 
@@ -84,12 +84,12 @@ module.exports = {
     },
 
     'navigation keybindings work': function(client) {
-        client.getValue('#notebooks .list--item.active', function(value) {
+        client.getValue('#notebooks .list--item.active', value => {
             client.keys('k');
             client.expect.element('#notebooks .list--item.active').value.not.to.be.equal(value).before(5000);
         });
 
-        client.getValue('#notebooks .list--item.active', function(value) {
+        client.getValue('#notebooks .list--item.active', value => {
             client.keys('j');
             client.expect.element('#notebooks .list--item.active').value.not.to.be.equal(value).before(5000);
         });
@@ -183,7 +183,7 @@ module.exports = {
 
     'can filter notes by a notebook name': function(client) {
         client.perform((client, done) => {
-            client.getText('#notebooks .list--item.-notebook', (res) => {
+            client.getText('#notebooks .list--item.-notebook', res => {
                 client.click('#notebooks .list--item.-notebook');
 
                 client
@@ -205,7 +205,7 @@ module.exports = {
 
     'can filter notes by a notebook name with a keybinding': function(client) {
         client.perform((client, done) => {
-            client.getText('#notebooks .list--item.-notebook', (res) => {
+            client.getText('#notebooks .list--item.-notebook', res => {
                 client.keys('j');
                 client.expect.element('#notebooks .list--item.active').to.be.present.before(5000);
 

@@ -6,11 +6,11 @@ import test from 'tape';
 import sinon from 'sinon';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/notebooks/list/views/Tags';
-import Tag from '../../../../../app/scripts/components/notebooks/list/views/Tag';
-import Navigate from '../../../../../app/scripts/behaviors/Navigate';
-import Tags from '../../../../../app/scripts/collections/Tags';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/notebooks/list/views/Tags';
+import Tag from '../../../../../src/scripts/components/notebooks/list/views/Tag';
+import Navigate from '../../../../../src/scripts/behaviors/Navigate';
+import Tags from '../../../../../src/scripts/collections/Tags';
 /* eslint-enable */
 
 test('tags/list/views/Tags: className', t => {

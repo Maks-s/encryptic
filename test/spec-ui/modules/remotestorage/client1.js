@@ -1,42 +1,43 @@
 /* global describe, before, after, it */
 'use strict';
-var exec = require('child_process').exec;
+const exec = require('child_process').exec;
 
 /**
  * Remove reStore's files.
  */
 try {
     exec('rm -rf /tmp/reStore/rs.sync');
-} catch (e) {
+}
+catch (e) {
     console.log('Unable to remove reStore files', e);
 }
 
-describe('RemoteStorage: client 1', function() {
-    var data = {};
+describe('RemoteStorage: client 1', () => {
+    let data = {};
 
-    before(function(client, done) {
+    before((client, done) => {
         data = {
             note     : {title: 'Note from client 1'},
             notebook : {name: 'Notebook from client 1'},
-            tag      : {name: 'Tag from client 1'}
+            tag      : {name: 'Tag from client 1'},
         };
 
         done();
     });
 
-    after(function(client, done) {
-        client.end(function() {
+    after((client, done) => {
+        client.end(() => {
             done();
         });
     });
 
-    it('wait', function(client) {
+    it('wait', client => {
         client
         .urlHash('notes')
         .expect.element('.list').to.be.present.before(50000);
     });
 
-    it('creates new data', function(client) {
+    it('creates new data', client => {
         client
         .addNote(data.note)
         .pause(500)
@@ -45,7 +46,7 @@ describe('RemoteStorage: client 1', function() {
         .addTag(data.tag);
 
         client.pause(1000);
-        setTimeout(function() {
+        setTimeout(() => {
             console.log('start client 2');
         }, 500);
     });
@@ -53,7 +54,7 @@ describe('RemoteStorage: client 1', function() {
     // Try to login to a RemoteStorage first
     require('./auth.js');
 
-    it('fetches notes from Remotestorage', function(client) {
+    it('fetches notes from Remotestorage', client => {
         client.urlHash('notes');
         client.expect.element('#header--add').to.be.present.before(50000);
 
@@ -62,7 +63,7 @@ describe('RemoteStorage: client 1', function() {
         .before(50000);
     });
 
-    it('fetches notebooks & tags from Remotestorage', function(client) {
+    it('fetches notebooks & tags from Remotestorage', client => {
         client.urlHash('notebooks');
 
         client.expect

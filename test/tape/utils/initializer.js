@@ -4,11 +4,11 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Initializer from '../../../app/scripts/utils/Initializer';
+import Initializer from '../../../src/scripts/utils/Initializer';
 
 let sand;
 test('Initializer: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -45,10 +45,8 @@ test('Initializer: add()', t => {
 test('Initializer: start() - object as argument', t => {
     const init = new Initializer();
     sand.spy(init, 'startInit');
-    const stub  = sand.stub().returns(Promise.resolve());
-    const stub2 = sand.stub().returns(Promise.resolve());
-
-    t.plan(4);
+    const stub  = sand.stub().resolves();
+    const stub2 = sand.stub().resolves();
 
     init.add({name: 'test', callback: stub});
     init.add({name: 'test2', callback: stub2});
@@ -67,24 +65,32 @@ test('Initializer: start() - object as argument', t => {
             'executes the second initializer\'s callback after the first');
 
         sand.restore();
+        t.end();
     })
-    .catch(err => t.comment(`error ${err}`));
+    .catch(err => {
+        t.comment(`error ${err}`);
+        t.end();
+    });
 });
 
 test('Initializer: start() - string as argument', t => {
     const init = new Initializer();
-    const stub  = sand.stub().returns(Promise.resolve());
+    const stub  = sand.stub().resolves();
     init.add({name: 'test', callback: stub});
 
     t.plan(1);
     init.start('test')
-    .then(() => t.equal(stub.called, true));
+    .then(() => t.equal(stub.called, true))
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
+    });
 });
 
 test('Initializer: startInit()', t => {
     const init  = new Initializer();
     const stub  = sand.stub().returns('');
-    const stub2 = sand.stub().returns(Promise.resolve());
+    const stub2 = sand.stub().resolves();
     t.plan(3);
 
     init.add({name: 'test', callback: stub});
@@ -97,5 +103,9 @@ test('Initializer: startInit()', t => {
 
         t.equal(typeof init.startInit('test2').then, 'function',
             'returns a promise even if there are no initilizers with a key');
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });

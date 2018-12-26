@@ -6,22 +6,22 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import '../../../../../../app/scripts/utils/underscore';
-import Note from '../../../../../../app/scripts/models/Note';
+import '../../../../../../src/scripts/utils/underscore';
+import Note from '../../../../../../src/scripts/models/Note';
 
 // Fix mousetrap bug
 const Mousetrap     = require('mousetrap');
 global.Mousetrap    = Mousetrap;
 
 /* eslint-disable */
-const View      = require('../../../../../../app/scripts/components/notes/form/views/Form').default;
-const Notebooks = require('../../../../../../app/scripts/components/notes/form/views/Notebooks').default;
-const Content = require('../../../../../../app/scripts/behaviors/Content').default;
+const View      = require('../../../../../../src/scripts/components/notes/form/views/Form').default;
+const Notebooks = require('../../../../../../src/scripts/components/notes/form/views/Notebooks').default;
+const Content = require('../../../../../../src/scripts/behaviors/Content').default;
 /* eslint-enable */
 
 let sand;
 test('notes/form/views/Form: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

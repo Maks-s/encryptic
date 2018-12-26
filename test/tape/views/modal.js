@@ -5,12 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import Modal from '../../../app/scripts/views/Modal';
+import Modal from '../../../src/scripts/views/Modal';
 const modal = Modal.prototype;
 
 let sand;
 test('views/Modal: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

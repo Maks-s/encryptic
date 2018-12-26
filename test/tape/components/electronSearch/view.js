@@ -4,13 +4,13 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import View from '../../../../app/scripts/components/electronSearch/View';
+import View from '../../../../src/scripts/components/electronSearch/View';
 
 let sand;
 test('electronSearch/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

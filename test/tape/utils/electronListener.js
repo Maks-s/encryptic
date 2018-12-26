@@ -5,11 +5,11 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import listener from '../../../app/scripts/utils/electronListener';
+import listener from '../../../src/scripts/utils/electronListener';
 
 let sand;
 test('utils/electronListener: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

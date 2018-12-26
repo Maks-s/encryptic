@@ -5,12 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../app/scripts/utils/underscore';
-import Title from '../../../app/scripts/utils/Title';
+import _ from '../../../src/scripts/utils/underscore';
+import Title from '../../../src/scripts/utils/Title';
 
 let sand;
 test('Title: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -66,7 +66,7 @@ test('Title: options - get', t => {
 
 test('Title: set()', t => {
     const title = new Title();
-    sand.stub(title, 'setSection').returns(Promise.resolve(''));
+    sand.stub(title, 'setSection').resolves('');
     sand.stub(title, 'setTitle');
 
     title.set({title: 'Test'});
@@ -85,6 +85,10 @@ test('Title: set()', t => {
         title.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -94,10 +98,10 @@ test('Title: setTitle()', t => {
     title.setTitle({title: 'Test'});
     t.deepEqual(_.omit(title.options, 'title'), _.omit(title.opt, 'title'),
         'changes only title');
-    t.equal(document.title, 'Test - Laverna');
+    t.equal(document.title, 'Test - Encryptic');
 
     title.setTitle({section: 'Tag', title: 'Test 2'});
-    t.equal(document.title, 'Test 2 - Tag - Laverna');
+    t.equal(document.title, 'Test 2 - Tag - Encryptic');
 
     title.channel.stopReplying();
     t.end();
@@ -128,6 +132,10 @@ test('Title: setSection()', t => {
         title.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -150,9 +158,9 @@ test('Title: getTitleFromFilter()', t => {
 
 test('Title: notebookTitle()', t => {
     const title = new Title();
-    const req   = sand.stub(Radio, 'request').returns(Promise.resolve({
+    const req   = sand.stub(Radio, 'request').resolves({
         get: () => 'notebookname',
-    }));
+    });
 
     const res = title.notebookTitle({query: 'id-1', profileId: 'test'});
     t.equal(req.calledWith('collections/Notebooks', 'findModel', {
@@ -165,5 +173,9 @@ test('Title: notebookTitle()', t => {
         title.channel.stopReplying();
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });

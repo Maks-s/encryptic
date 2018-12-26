@@ -3,7 +3,7 @@
  * @file
  */
 import test from 'tape';
-import Tag from '../../../app/scripts/models/Tag';
+import Tag from '../../../src/scripts/models/Tag';
 
 test('Tag: storeName', t => {
     const tag = new Tag();

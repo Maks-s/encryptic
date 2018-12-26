@@ -5,9 +5,9 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../app/scripts/utils/underscore';
+import '../../../../src/scripts/utils/underscore';
 
-import initialize from '../../../../app/scripts/components/fileDialog/main';
+import initialize from '../../../../src/scripts/components/fileDialog/main';
 
 test('fileDialog/main', t => {
     const reply = sinon.stub();

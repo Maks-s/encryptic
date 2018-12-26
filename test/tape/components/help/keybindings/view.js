@@ -5,7 +5,7 @@
 import test from 'tape';
 
 /* eslint-disable */
-import View from '../../../../../app/scripts/components/help/keybindings/View';
+import View from '../../../../../src/scripts/components/help/keybindings/View';
 /* eslint-enable */
 
 test('help/keybindings/View: className', t => {

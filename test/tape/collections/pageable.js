@@ -4,15 +4,14 @@
 import test from 'tape';
 import sinon from 'sinon';
 import _ from 'underscore';
-import Pageable from '../../../app/scripts/collections/Pageable';
-import Collection from '../../../app/scripts/collections/Collection';
-import Note from '../../../app/scripts/models/Note';
-import '../../../app/scripts/utils/underscore';
+import Pageable from '../../../src/scripts/collections/Pageable';
+import Note from '../../../src/scripts/models/Note';
+import '../../../src/scripts/utils/underscore';
 
 let sand;
 test('collections/Pageable: before()', t => {
     Pageable.prototype.model = Note;
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

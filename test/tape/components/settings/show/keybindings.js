@@ -6,15 +6,15 @@ import test from 'tape';
 import sinon from 'sinon';
 
 /* eslint-disable */
-import _ from '../../../../../app/scripts/utils/underscore';
-import View from '../../../../../app/scripts/components/settings/show/keybindings/View';
-import Behavior from '../../../../../app/scripts/components/settings/show/Behavior';
-import Configs from '../../../../../app/scripts/collections/Configs';
+import _ from '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/settings/show/keybindings/View';
+import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
+import Configs from '../../../../../src/scripts/collections/Configs';
 /* eslint-enable */
 
 let sand;
 test('settings/show/keybindings/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

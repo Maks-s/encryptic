@@ -6,10 +6,10 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import sjcl from 'sjcl';
-import _ from '../../../../../app/scripts/utils/underscore';
+import _ from '../../../../../src/scripts/utils/underscore';
 
 // eslint-disable-next-line
-const Encryption = require('../../../../../app/scripts/components/importExport/migrate/Encryption').default;
+const Encryption = require('../../../../../src/scripts/components/importExport/migrate/Encryption').default;
 
 const encryptConfigs = {
     encrypt        : 1,
@@ -21,7 +21,7 @@ const encryptConfigs = {
 
 let sand;
 test('importExport/migrate/Encryption: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -36,7 +36,8 @@ test('importExport/migrate/Encryption: constructor()', t => {
 test('importExport/migrate/Encryption: auth()', t => {
     const encrypt = new Encryption({configs: {encrypt: 1}});
     const opt     = {password: '1'};
-    const check   = sand.stub(encrypt, 'checkPassword').withArgs(opt).resolves(false);
+    const check   = sand.stub(encrypt, 'checkPassword').withArgs(opt)
+    .resolves(false);
     const derive  = sand.stub(encrypt, 'deriveKey');
 
     encrypt.auth(opt)
@@ -53,6 +54,10 @@ test('importExport/migrate/Encryption: auth()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -61,7 +66,7 @@ test('importExport/migrate/Encryption: checkPassword()', t => {
     const encrypt     = new Encryption({configs: {encryptPass}});
 
     const req = sand.stub(Radio, 'request')
-    .withArgs('models/Encryption', 'sha256', {text: '1'})
+    .withArgs('components/Encryption', 'sha256', {text: '1'})
     .resolves(sjcl.hash.sha256.hash('2'));
 
     encrypt.checkPassword({password: '1'})
@@ -75,6 +80,10 @@ test('importExport/migrate/Encryption: checkPassword()', t => {
         t.equal(res, true, 'returns true if hashes match');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

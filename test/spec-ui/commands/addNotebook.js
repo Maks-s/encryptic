@@ -10,17 +10,17 @@ exports.command = function(item) {
 
     this.setValue('#modal input[name="name"]', item.name);
 
-    this.perform(function(client, done) {
-        client.execute(function(filter) {
-            var ops = document.querySelectorAll('#modal select[name="parentId"] option');
-            for (var i = 0, len = ops.length; i < len; i++) {
+    this.perform((client, done) => {
+        client.execute(filter => {
+            const ops = document.querySelectorAll('#modal select[name="parentId"] option');
+            for (let i = 0, len = ops.length; i < len; i++) {
                 if (filter && ops[i].text.indexOf(filter) > -1) {
                     document
                     .querySelector('#modal select[name="parentId"]')
                     .selectedIndex = ops[i].index;
                 }
             }
-        }, [item.parentId], function() {
+        }, [item.parentId], () => {
             done();
         });
     });

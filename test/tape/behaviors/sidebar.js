@@ -6,11 +6,11 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import Sidebar from '../../../app/scripts/behaviors/Sidebar';
+import Sidebar from '../../../src/scripts/behaviors/Sidebar';
 
 let sand;
 test('behaviors/Sidebar: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

@@ -189,17 +189,15 @@ export default class Encryption {
      *
      * @public
      * @param {Object} model - user model
-     * @returns {Object} key
+     * @returns {Promise<String>} key
      */
-    readUserKey({model}) {
+    async readUserKey({model}) {
         console.log("encryption: readUserKey()");
         // console.log(model.attributes);
         const pubkey = model.attributes.publicKey;
-        (async() => {
-            const key = (await this.openpgp.key.readArmored(pubkey).keys[0]);
-            this.keys.publicKeys[model.get('username')] = key;
-            return key;
-        })();
+        const key = (await this.openpgp.key.readArmored(pubkey)).keys[0];
+        this.keys.publicKeys[model.get('username')] = key;
+        return key;
     }
 
     /**
@@ -431,7 +429,7 @@ export default class Encryption {
             return model;
         }
 
-        const decrypted = this.decrypt({message, username})
+        return this.decrypt({message, username})
         .then(msg => {
             // console.log("decryptModel: this.decrypt returned: ");
             // console.log(msg);

@@ -6,11 +6,11 @@ import test from 'tape';
 import sinon from 'sinon';
 import localforage from 'localforage';
 
-import Db from '../../../app/scripts/models/Db';
+import Db from '../../../src/scripts/components/Db';
 
 let sand;
 test('Db: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     localStorage.clear();
     t.end();
 });
@@ -23,7 +23,7 @@ test('Db: constructor()', t => {
 
 test('Db: fileName()', t => {
     const db = new Db();
-    t.equal(db.fileName, 'models/Db', 'returns relative path');
+    t.equal(db.fileName, 'components/Db', 'returns relative path');
     t.end();
 });
 
@@ -59,7 +59,7 @@ test('Db: getDb() - old instance', t => {
 
 test('Db: findItem()', t => {
     const db   = new Db();
-    const stub = sand.stub().returns(Promise.resolve());
+    const stub = sand.stub().resolves();
     sand.stub(db, 'getDb').returns({getItem: stub});
 
     const opt = {storeName: 'findItem', profileId: 'test', id: 'test-id'};
@@ -87,6 +87,10 @@ test('Db: find()', t => {
         t.equal(val.length, 0, 'resolves with empty array');
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -103,6 +107,10 @@ test('Db: save()', t => {
     res.then(() => {
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 
@@ -115,7 +123,8 @@ test('Db: save() - generates ID if it is empty', t => {
         t.equal(typeof data.id, 'string', 'ID is not empty');
         t.equal(data.id.length >= 32, true, 'contains at least 32 characters');
         t.end();
-    });
+    })
+    .catch(() => t.end('resolve promise'));
 });
 
 test('Db: findItem() - can find', t => {
@@ -130,7 +139,8 @@ test('Db: findItem() - can find', t => {
         t.equal(res.title, 'Test', 'has a title');
         t.equal(res.id, '1', 'has an ID');
         t.end();
-    });
+    })
+    .catch(() => t.end('resolve promise'));
 });
 
 test('Db: find() - can find', t => {
@@ -148,7 +158,8 @@ test('Db: find() - can find', t => {
         t.equal(Array.isArray(res), true, 'resolves with an array');
         t.equal(res.length, 3, 'the array is not empty');
         t.end();
-    });
+    })
+    .catch(() => t.end('resolve promise'));
 });
 
 test('Db: find() - filters the results', t => {
@@ -170,7 +181,8 @@ test('Db: find() - filters the results', t => {
         t.equal(res[1].isFav, true, 'the second item has isFav === true');
 
         t.end();
-    });
+    })
+    .catch(() => t.end('resolve promise'));
 });
 
 test('Db: removeItem()', t => {

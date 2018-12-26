@@ -2,8 +2,8 @@
  * @file Test collections/Users
  */
 import test from 'tape';
-import Users from '../../../app/scripts/collections/Users';
-import User from '../../../app/scripts/models/User';
+import Users from '../../../src/scripts/collections/Users';
+import User from '../../../src/scripts/models/User';
 
 test('collections/Users: sync', t => {
     const coll = new Users();

@@ -5,12 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 import $ from 'jquery';
-import Markdown from '../../../../app/scripts/components/markdown/Markdown';
-import task from '../../../../app/scripts/components/markdown/task';
+import Markdown from '../../../../src/scripts/components/markdown/Markdown';
+import task from '../../../../src/scripts/components/markdown/task';
 
 let sand;
 test('markdown/task: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -153,7 +153,8 @@ test('markdown/task: render() - renders a task', t => {
         t.equal($task.length, 1, 'renders the task');
         t.equal($task.html(), 'A task!', 'shows the label of the task');
         t.end();
-    });
+    })
+    .catch(() => t.end('resolve promise'));
 });
 
 test('markdown/task: render() - renders tasks inside of lists', t => {
@@ -168,6 +169,7 @@ test('markdown/task: render() - renders tasks inside of lists', t => {
 
         t.end();
     })
+    .catch(() => t.end('resolve promise'));
 });
 
 test('markdown/task: render() - renders tasks inside of numbered lists', t => {
@@ -181,7 +183,8 @@ test('markdown/task: render() - renders tasks inside of numbered lists', t => {
         t.equal($($tasks.get(1)).html(), 'Task N2');
 
         t.end();
-    });
+    })
+    .catch(() => t.end('resolve promise'));
 });
 
 test('markdown/task: render() - shows tasks with the preformated HTML blocks', t => {
@@ -193,7 +196,8 @@ test('markdown/task: render() - shows tasks with the preformated HTML blocks', t
         t.equal($task.html(), 'Incorrect parsing <code>text</code> in check lists');
 
         t.end();
-    });
+    })
+    .catch(() => t.end('resolve promise'));
 });
 
 test('markdown/task: render() - shows inline tasks', t => {
@@ -208,7 +212,10 @@ test('markdown/task: render() - shows inline tasks', t => {
         const $last = $($tasks.get(1));
         t.equal($last.html(), 'Task N2');
 
-        t.equal($last.parent().parent().next().html(), '\nIt is not a task.');
+        t.equal($last.parent().parent()
+        .next()
+        .html(), '\nIt is not a task.');
         t.end();
-    });
+    })
+    .catch(() => t.end('resolve promise'));
 });

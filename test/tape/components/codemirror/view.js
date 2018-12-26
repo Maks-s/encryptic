@@ -5,13 +5,13 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../app/scripts/utils/underscore';
+import _ from '../../../../src/scripts/utils/underscore';
 
-import View from '../../../../app/scripts/components/codemirror/View';
+import View from '../../../../src/scripts/components/codemirror/View';
 
 let sand;
 test('codemirror/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

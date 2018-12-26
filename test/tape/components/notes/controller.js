@@ -12,15 +12,15 @@ const Mousetrap     = require('mousetrap');
 global.Mousetrap    = Mousetrap;
 
 /* eslint-disable */
-const controller = require('../../../../app/scripts/components/notes/controller').default;
-const List       = require('../../../../app/scripts/components/notes/list/Controller').default;
-const Show       = require('../../../../app/scripts/components/notes/show/Controller').default;
-const Form       = require('../../../../app/scripts/components/notes/form/Controller').default;
+const controller = require('../../../../src/scripts/components/notes/controller').default;
+const List       = require('../../../../src/scripts/components/notes/list/Controller').default;
+const Show       = require('../../../../src/scripts/components/notes/show/Controller').default;
+const Form       = require('../../../../src/scripts/components/notes/form/Controller').default;
 /* eslint-enable */
 
 let sand;
 test('notes/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

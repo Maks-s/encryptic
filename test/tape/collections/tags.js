@@ -2,8 +2,8 @@
  * @file Test collections/Tags
  */
 import test from 'tape';
-import Tags from '../../../app/scripts/collections/Tags';
-import Tag from '../../../app/scripts/models/Tag';
+import Tags from '../../../src/scripts/collections/Tags';
+import Tag from '../../../src/scripts/models/Tag';
 
 test('collections/Tags: model', t => {
     const tags = new Tags();

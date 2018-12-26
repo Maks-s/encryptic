@@ -5,15 +5,15 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import '../../../../app/scripts/utils/underscore';
-import Module from '../../../../app/scripts/collections/modules/Profiles';
+import '../../../../src/scripts/utils/underscore';
+import Module from '../../../../src/scripts/modules/Profiles';
 
-import Profiles from '../../../../app/scripts/collections/Profiles';
-import Profile from '../../../../app/scripts/models/Profile';
+import Profiles from '../../../../src/scripts/collections/Profiles';
+import Profile from '../../../../src/scripts/models/Profile';
 
 let sand;
 test('collections/modules/Profiles: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -33,6 +33,7 @@ test('collections/modules/Profiles: constructor()', t => {
         getUser          : mod.getUser,
         getProfile       : mod.getProfile,
         changePassphrase : mod.changePassphrase,
+        destroyProfile   : mod.destroyProfile,
     }), true, 'replies to requests');
 
     sand.restore();
@@ -41,7 +42,8 @@ test('collections/modules/Profiles: constructor()', t => {
 
 test('collections/modules/Profiles: createProfile()', t => {
     const mod  = new Module();
-    const save = sand.stub(mod, 'saveModel').callsFake(({model}) => Promise.resolve(model));
+    const save = sand.stub(mod, 'saveModel')
+    .callsFake(({model}) => Promise.resolve(model));
 
     mod.createProfile({username: 'bob', privateKey: 'priv', publicKey: 'pub'})
     .then(model => {
@@ -52,6 +54,10 @@ test('collections/modules/Profiles: createProfile()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

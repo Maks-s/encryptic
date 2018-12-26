@@ -5,18 +5,18 @@
 import test from 'tape';
 import sinon from 'sinon';
 import _ from 'underscore';
-import Configs from '../../../app/scripts/collections/Configs';
+import Configs from '../../../src/scripts/collections/Configs';
 import Radio from 'backbone.radio';
 
 const Mousetrap     = require('mousetrap');
 global.Mousetrap    = Mousetrap;
 
-const keybindings   = require('../../../app/scripts/utils/Keybindings');
+const keybindings   = require('../../../src/scripts/utils/Keybindings');
 const Keybindings   = keybindings.default;
 
 let sand;
 test('utils/Keybindings: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -59,7 +59,7 @@ test('utils/Keybindings: bind()', t => {
     sand.stub(key, 'bindApp');
     sand.stub(key, 'bindJump');
 
-    const find = sand.stub().returns(Promise.resolve(coll));
+    const find = sand.stub().resolves(coll);
     Radio.replyOnce('collections/Configs', 'find', find);
 
     const res = key.bind();
@@ -74,13 +74,22 @@ test('utils/Keybindings: bind()', t => {
         sand.restore();
         key.channel.stopReplying();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        key.channel.stopReplying();
+        t.end('resolve promise');
     });
 });
+
+/**
+ * Removed until keybindings for Application are brought back
+ *
 
 test('utils/Keybindings: bindApp()', t => {
     const key      = new Keybindings();
     key.collection = new Configs();
-    key.collection.resetFromObject(key.collection.configNames);
+    key.collection.createDefault();
 
     global.tlog = t.comment;
     const spy  = sand.spy(key.collection, 'appShortcuts');
@@ -91,21 +100,35 @@ test('utils/Keybindings: bindApp()', t => {
     t.equal(bind.callCount, key.collection.appShortcuts().length,
         'binds all shortcuts');
 
+    let channelLaunched = false;
     key.channel.once('appCreateNote', () => {
+        channelLaunched = true;
         sand.restore();
         key.channel.stopReplying();
         t.end();
     });
 
+    setTimeout(() => {
+        if (channelLaunched) {
+            return;
+        }
+
+        sand.restore();
+        key.channel.stopReplying();
+        t.end('launch appCreateNote from key.channel');
+    }, 500);
+
     Mousetrap.trigger('c');
 });
+
+ */
 
 test('utils/Keybindings: bindJump()', t => {
     const key      = new Keybindings();
     const bind     = sand.spy(Mousetrap, 'bind');
     const navigate = sand.stub(key, 'navigate');
     key.collection = new Configs();
-    key.collection.resetFromObject(key.collection.configNames);
+    key.collection.createDefault();
 
     key.bindJump();
     t.equal(bind.callCount, _.keys(key.jumpLinks).length, 'binds all jump shortcuts');

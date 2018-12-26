@@ -7,13 +7,13 @@ import sinon from 'sinon';
 // import $ from 'jquery';
 import _ from 'underscore';
 
-import Layout from '../../../app/scripts/views/Layout';
-import Loader from '../../../app/scripts/views/Loader';
+import Layout from '../../../src/scripts/views/Layout';
+import Loader from '../../../src/scripts/views/Loader';
 global.overrideTemplate(Layout, 'templates/layout.html');
 
 let sand;
 test('Layout: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     sinon.stub(Layout.prototype, 'template').returns(_.template(''));
     t.end();
 });
@@ -71,7 +71,8 @@ test('Layout: empty()', t => {
     const show  = sand.stub(view, 'showChildView');
 
     const empty = sand.stub();
-    sand.stub(view, 'getRegion').withArgs('content').returns({empty});
+    sand.stub(view, 'getRegion').withArgs('content')
+    .returns({empty});
 
     view.empty({region: 'content'});
     t.equal(empty.called, true, 'empties a region');
@@ -133,7 +134,8 @@ test('Layout: createRegionElement()', t => {
 test('Layout: toggle()', t => {
     const view        = new Layout();
     const toggleClass = sand.stub();
-    sand.stub(view, 'getRegion').withArgs('content').returns({$el: {toggleClass}});
+    sand.stub(view, 'getRegion').withArgs('content')
+    .returns({$el: {toggleClass}});
 
     view.toggle({region: 'content'});
     t.equal(toggleClass.calledWith('hidden'), true,
@@ -150,8 +152,10 @@ test('Layout: toggleContent()', t => {
     const toggleSide = sand.stub();
 
     sand.stub(view, 'getRegion')
-    .withArgs('content').returns({$el: {toggleClass: toggleCont}})
-    .withArgs('sidebar').returns({$el: {toggleClass: toggleSide}});
+    .withArgs('content')
+    .returns({$el: {toggleClass: toggleCont}})
+    .withArgs('sidebar')
+    .returns({$el: {toggleClass: toggleSide}});
 
     view.toggleContent({visible: true});
     t.equal(toggleCont.calledWith('hidden-xs', false), true,

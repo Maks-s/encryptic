@@ -5,12 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import Brand from '../../../app/scripts/views/Brand';
+import Brand from '../../../src/scripts/views/Brand';
 const brand = Brand.prototype;
 
 let sand;
 test('views/Brand: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 

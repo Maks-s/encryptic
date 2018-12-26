@@ -3,7 +3,7 @@
  * @file
  */
 import test from 'tape';
-import View from '../../../../../app/scripts/components/help/about/View';
+import View from '../../../../../src/scripts/components/help/about/View';
 
 test('View: className', t => {
     t.equal(View.prototype.className, 'modal fade');

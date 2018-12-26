@@ -1,27 +1,27 @@
 'use strict';
-var notes = [];
+const notes = [];
 
 module.exports = {
 
-    before: function(client) {
+    before(client) {
         client.closeWelcome();
     },
 
-    after: function(client) {
+    after(client) {
         client.end();
     },
 
-    'wait': function(client) {
+    wait(client) {
         client
         .urlHash('notes')
         .expect.element('.list').to.be.present.before(50000);
     },
 
     'shows encryption page': function(client) {
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             notes.push({
-                title   : 'Encrypted title ' + i,
-                content : 'Encrypted content ' + i
+                title   : `Encrypted title ${i}`,
+                content : `Encrypted content ${i}`,
             });
             client.addNote(notes[i]);
         }
@@ -64,7 +64,7 @@ module.exports = {
 
     'shows notes in unencrypted format': function(client) {
         client.pause(100);
-        notes.forEach(function(note) {
+        notes.forEach(note => {
             client.expect.element('.list').text.to.contain(note.title).before(5000);
             client.expect.element('.list').text.to.contain(note.content).before(5000);
         });
@@ -107,7 +107,7 @@ module.exports = {
     },
 
     'shows notes in decrypted format': function(client) {
-        notes.forEach(function(note) {
+        notes.forEach(note => {
             client.expect.element('.list').text.to.contain(note.title).before(5000);
             client.expect.element('.list').text.to.contain(note.content).before(5000);
         });
@@ -137,7 +137,7 @@ module.exports = {
         .click('#btn--next')
         .expect.element('.container.-auth').not.to.be.present.before(5000);
 
-        notes.forEach(function(note) {
+        notes.forEach(note => {
             client.expect.element('.list').text.to.contain(note.title).before(5000);
             client.expect.element('.list').text.to.contain(note.content).before(5000);
         });

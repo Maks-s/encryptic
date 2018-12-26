@@ -4,7 +4,7 @@
  */
 import test from 'tape';
 
-import File from '../../../app/scripts/models/File';
+import File from '../../../src/scripts/models/File';
 
 test('File: storeName', t => {
     const file = new File();

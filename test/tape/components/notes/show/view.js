@@ -1,16 +1,15 @@
 /**
  * Test: components/notes/show/View.js
- * @file
  */
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import Mousetrap from 'mousetrap';
 
-import Note from '../../../../../app/scripts/models/Note';
-import View from '../../../../../app/scripts/components/notes/show/View';
-import Content from '../../../../../app/scripts/behaviors/Content';
-import _ from '../../../../../app/scripts/utils/underscore';
+import Note from '../../../../../src/scripts/models/Note';
+import View from '../../../../../src/scripts/components/notes/show/View';
+import Content from '../../../../../src/scripts/behaviors/Content';
+import _ from '../../../../../src/scripts/utils/underscore';
 
 let sand;
 const configs = {
@@ -19,7 +18,7 @@ const configs = {
     actionsRotateStar : 's',
 };
 test('notes/show/View: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -122,7 +121,7 @@ test('notes/show/View: showShare()', t => {
 test('notes/show/View: toggleFavorite() - without throttle', t => {
     View.prototype.model = new Note({id: '1'});
     const toggle  = sand.spy(View.prototype.model, 'toggleFavorite');
-    const request = sand.stub(Radio, 'request').returns(Promise.resolve());
+    const request = sand.stub(Radio, 'request').resolves();
     const res     = View.prototype.toggleFavorite();
 
     t.equal(toggle.called, true, 'changes the favorite status of a note');
@@ -155,18 +154,11 @@ test('notes/show/View: toggleFavorite() - throttled', t => {
 
 test('notes/show/View: toggleTask() - without throttle', t => {
     const trigger   = sand.spy(View.prototype, 'trigger');
-    const jqReplace = {
+    sand.stub(View.prototype, '$').returns({
         attr : sand.stub().returns('1'),
-        is   : sand.stub().returns(true),
-        blur : sand.stub(),
-        prop : sand.stub(),
-    };
-    sand.stub(View.prototype, '$').returns(jqReplace);
+    });
 
     View.prototype.toggleTask({currentTarget: 'data-task'});
-    t.equal(jqReplace.blur.called, true, 'removes the focus from the checkbox');
-    t.equal(jqReplace.prop.calledWith('checked', false), true,
-        'changes the status of the task checkbox');
     t.equal(trigger.called, true, 'triggers "toggle:task" event');
 
     sand.restore();

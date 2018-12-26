@@ -61,7 +61,7 @@ export default class Controller extends MnObject {
             this.findOldData(),
         ])
         .then(([collection, oldData]) => {
-            return (collection.length === 0 && oldData.length !== 0);
+            return (collection && collection.length === 0 && oldData.length !== 0);
         });
     }
 

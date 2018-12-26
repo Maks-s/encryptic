@@ -6,13 +6,13 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import Notes from '../../../../../app/scripts/collections/Notes';
-import Controller from '../../../../../app/scripts/components/notes/list/Controller.js';
-import '../../../../../app/scripts/utils/underscore';
+import Notes from '../../../../../src/scripts/collections/Notes';
+import Controller from '../../../../../src/scripts/components/notes/list/Controller.js';
+import '../../../../../src/scripts/utils/underscore';
 
 let sand;
 test('notes/list/Controller: before()', t => {
-    sand = sinon.sandbox.create();
+    sand = sinon.createSandbox();
     t.end();
 });
 
@@ -30,7 +30,7 @@ test('notes/list/Controller: init()', t => {
         {id: '1', title: 'Test 1'},
         {id: '2', title: 'Test 2'},
     ]);
-    const find = sand.stub().returns(Promise.resolve(notes));
+    const find = sand.stub().resolves(notes);
     Radio.replyOnce('collections/Notes', 'find', find);
     const show   = sand.stub(con, 'show');
     const listen = sand.stub(con, 'listenToEvents');
@@ -53,6 +53,10 @@ test('notes/list/Controller: init()', t => {
 
         sand.restore();
         t.end();
+    })
+    .catch(() => {
+        sand.restore();
+        t.end('resolve promise');
     });
 });
 

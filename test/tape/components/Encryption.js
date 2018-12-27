@@ -1,5 +1,5 @@
 /**
- * Test utils/Encryption
+ * Test components/Encryption
  * @file
  */
 import test from 'tape';
@@ -16,30 +16,30 @@ import Notes from '../../../src/scripts/collections/Notes';
 
 let sand;
 const user = new Profile({username: 'bob', privateKey: 'private', publicKey: 'public'});
-test('models/Encryption: before()', t => {
+test('components/Encryption: before()', t => {
     sand = sinon.createSandbox();
     Radio.reply('collections/Profiles', 'getUser', user);
     localStorage.clear();
     t.end();
 });
 
-test('models/Encryption: channel', t => {
+test('components/Encryption: channel', t => {
     t.equal(Encryption.prototype.channel.channelName, 'components/Encryption');
     t.end();
 });
 
-test('models/Encryption: configs', t => {
+test('components/Encryption: configs', t => {
     Radio.replyOnce('collections/Configs', 'findConfigs', {});
     t.equal(typeof Encryption.prototype.configs, 'object');
     t.end();
 });
 
-test('models/Encryption: user', t => {
+test('components/Encryption: user', t => {
     t.equal(Encryption.prototype.user, user.attributes);
     t.end();
 });
 
-test('models/Encryption: constructor()', t => {
+test('components/Encryption: constructor()', t => {
     const reply      = sand.stub(Encryption.prototype.channel, 'reply');
     const enc        = new Encryption({privateKey: 'key'});
 
@@ -73,7 +73,7 @@ test('models/Encryption: constructor()', t => {
     t.end();
 });
 
-test('models/Encryption: sha256()', t => {
+test('components/Encryption: sha256()', t => {
     const enc = new Encryption();
     const spy = sand.spy(sjcl.hash.sha256, 'hash');
 
@@ -91,7 +91,7 @@ test('models/Encryption: sha256()', t => {
     });
 });
 
-test('models/Encryption: random()', t => {
+test('components/Encryption: random()', t => {
     const enc = new Encryption();
 
     enc.random()
@@ -109,7 +109,7 @@ test('models/Encryption: random()', t => {
     .catch(() => t.end('resolve promise'));
 });
 
-test('models/Encryption: readKeys() - reject', t => {
+test('components/Encryption: readKeys() - reject', t => {
     const enc  = new Encryption({privateKey: 'key'});
     const read = sand.stub(openpgp.key, 'readArmored');
     read.returns({keys: [{decrypt: () => false}]});
@@ -124,7 +124,7 @@ test('models/Encryption: readKeys() - reject', t => {
     });
 });
 
-test('models/Encryption: readKeys() - resolve', t => {
+test('components/Encryption: readKeys() - resolve', t => {
     const enc        = new Encryption();
     const read       = sand.stub(openpgp.key, 'readArmored');
     const privateKey = {decrypt: () => true, toPublic: () => 'pub'};
@@ -150,7 +150,7 @@ test('models/Encryption: readKeys() - resolve', t => {
     });
 });
 
-test('models/Encryption: readPublicKeys()', t => {
+test('components/Encryption: readPublicKeys()', t => {
     const enc   = new Encryption();
     const users = new Users([{pendingAccept: true}, {pendingAccept: false}]);
     const req   = sand.stub(Radio, 'request').resolves(users);
@@ -173,7 +173,7 @@ test('models/Encryption: readPublicKeys()', t => {
     });
 });
 
-test('models/Encryption: readUserKey()', t => {
+test('components/Encryption: readUserKey()', t => {
     const enc   = new Encryption();
     const read  = sand.stub(openpgp.key, 'readArmored');
     const model = new User({username: 'alice', publicKey: 'armored'});
@@ -197,7 +197,7 @@ test('models/Encryption: readUserKey()', t => {
     });
 });
 
-test('models/Encryption: generateKeys()', t => {
+test('components/Encryption: generateKeys()', t => {
     const enc   = new Encryption({privateKey: 'key'});
     const key   = {privateKeyArmored: 'priv', publicKeyArmored: 'pub'};
     enc.openpgp = {generateKey: sand.stub().resolves(key)};
@@ -224,7 +224,7 @@ test('models/Encryption: generateKeys()', t => {
     });
 });
 
-test('models/Encryption: changePassphrase()', t => {
+test('components/Encryption: changePassphrase()', t => {
     const enc     = new Encryption();
     const encrypt = sand.stub();
     const key     = {
@@ -257,7 +257,7 @@ test('models/Encryption: changePassphrase()', t => {
     });
 });
 
-test('models/Encryption: sign()', t => {
+test('components/Encryption: sign()', t => {
     const enc   = new Encryption();
     enc.keys    = {privateKey: 'privateKey'};
     enc.openpgp = {
@@ -287,7 +287,7 @@ test('models/Encryption: sign()', t => {
     });
 });
 
-test('models/Encryption: verify()', t => {
+test('components/Encryption: verify()', t => {
     const enc   = new Encryption();
     enc.openpgp = {verify: sand.stub()};
     enc.openpgp.verify.resolves(true);
@@ -317,7 +317,7 @@ test('models/Encryption: verify()', t => {
     });
 });
 
-test('models/Encryption: getUserKeys()', t => {
+test('components/Encryption: getUserKeys()', t => {
     const enc = new Encryption();
     enc.keys  = {
         privateKey  : 'privateKey',
@@ -340,7 +340,7 @@ test('models/Encryption: getUserKeys()', t => {
     t.end();
 });
 
-test('models/Encryption: encrypt()', t => {
+test('components/Encryption: encrypt()', t => {
     const enc     = new Encryption();
     const encrypt = sand.stub().resolves({data: 'encrypted'});
     enc.openpgp   = {
@@ -381,7 +381,7 @@ test('models/Encryption: encrypt()', t => {
     });
 });
 
-test('models/Encryption: decrypt()', t => {
+test('components/Encryption: decrypt()', t => {
     const enc   = new Encryption();
     enc.openpgp = {
         decrypt: sand.stub().resolves({data: 'decrypted'}),
@@ -409,7 +409,7 @@ test('models/Encryption: decrypt()', t => {
     });
 });
 
-test('models/Encryption: encryptModel()', t => {
+test('components/Encryption: encryptModel()', t => {
     const enc  = new Encryption();
     const conf = {encrypt: 0};
     Object.defineProperty(enc, 'configs', {get: () => conf});
@@ -448,7 +448,7 @@ test('models/Encryption: encryptModel()', t => {
     });
 });
 
-test('models/Encryption: decryptModel()', t => {
+test('components/Encryption: decryptModel()', t => {
     const enc       = new Encryption();
     const decrypted = JSON.stringify({title: 'Test'});
     sand.stub(enc, 'decrypt').resolves(decrypted);
@@ -485,7 +485,7 @@ test('models/Encryption: decryptModel()', t => {
     });
 });
 
-test('models/Encryption: encryptCollection()', t => {
+test('components/Encryption: encryptCollection()', t => {
     const enc  = new Encryption();
     const conf = {encrypt: 0};
     Object.defineProperty(enc, 'configs', {get: () => conf});
@@ -528,7 +528,7 @@ test('models/Encryption: encryptCollection()', t => {
     });
 });
 
-test('models/Encryption: decryptCollection()', t => {
+test('components/Encryption: decryptCollection()', t => {
     const enc = new Encryption();
     sand.stub(enc, 'decryptModel').resolves();
     const collection = new Notes();

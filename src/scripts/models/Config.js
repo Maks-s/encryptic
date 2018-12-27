@@ -15,7 +15,7 @@ import BaseModel from './BaseModel';
  * if there's a better way of doing it.
  *
  * @class
- * @extends module:models/Model
+ * @extends module:models/BaseModel
  * @license MPL-2.0
  */
 export default class Config extends BaseModel {

@@ -9,7 +9,6 @@ import Radio from 'backbone.radio';
  * Override Backbone sync.
  *
  * @class
- * @constructor
  * @license MPL-2.0
  * @example
  * class MyModel extend Backbone.Model {

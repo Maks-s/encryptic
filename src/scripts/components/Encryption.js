@@ -15,7 +15,6 @@ const log = deb('lav:components/Encryption');
  * Almost every method in this class can be requested with Radio requests.
  *
  * @class
- * @extends module:workers/Module
  * @license MPL-2.0
  */
 export default class Encryption {

@@ -1,33 +1,33 @@
 /**
- * @file Test collections/modules/Files
+ * @file Test modules/Files
  */
 import test from 'tape';
 import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 import md5 from 'js-md5';
 
-import '../../../../src/scripts/utils/underscore';
-import ModuleOrig from '../../../../src/scripts/modules/Module';
-import Files from '../../../../src/scripts/collections/Files';
-import File from '../../../../src/scripts/models/File';
+import '../../../src/scripts/utils/underscore';
+import ModuleOrig from '../../../src/scripts/modules/Module';
+import Files from '../../../src/scripts/collections/Files';
+import File from '../../../src/scripts/models/File';
 
 const toBlob = sinon.stub().returns('blob');
-const Module  = proxyquire('../../../../src/scripts/modules/Files', {
+const Module  = proxyquire('../../../src/scripts/modules/Files', {
     'blueimp-canvas-to-blob': toBlob,
 }).default;
 
 let sand;
-test('collections/modules/Files: before()', t => {
+test('modules/Files: before()', t => {
     sand = sinon.createSandbox();
     t.end();
 });
 
-test('collections/modules/Files: Collection', t => {
+test('modules/Files: Collection', t => {
     t.equal(Module.prototype.Collection, Files, 'uses files collection');
     t.end();
 });
 
-test('collections/modules/Files: constructor()', t => {
+test('modules/Files: constructor()', t => {
     const reply = sand.stub(Module.prototype.channel, 'reply');
     const mod   = new Module();
 
@@ -41,7 +41,7 @@ test('collections/modules/Files: constructor()', t => {
     t.end();
 });
 
-test('collections/modules/Files: saveModel()', t => {
+test('modules/Files: saveModel()', t => {
     const mod   = new Module();
     const model = new File({});
     const save  = sand.stub(ModuleOrig.prototype, 'saveModel');
@@ -71,7 +71,7 @@ test('collections/modules/Files: saveModel()', t => {
     t.end();
 });
 
-test('collections/modules/Files: findFiles()', t => {
+test('modules/Files: findFiles()', t => {
     const mod  = new Module();
     const find = sand.stub(mod, 'findModel').returns({id: '1'});
 
@@ -97,7 +97,7 @@ test('collections/modules/Files: findFiles()', t => {
     });
 });
 
-test('collections/modules/Files: addFiles()', t => {
+test('modules/Files: addFiles()', t => {
     const mod  = new Module();
     const save = sand.stub(mod, 'saveModel').resolves();
 
@@ -122,7 +122,7 @@ test('collections/modules/Files: addFiles()', t => {
     });
 });
 
-test('collections/modules/Files: createUrls()', t => {
+test('modules/Files: createUrls()', t => {
     const mod   = new Module();
     global.URL  = {createObjectURL: src => `${src}/url`};
     const files = new Files([

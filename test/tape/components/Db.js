@@ -1,5 +1,5 @@
 /**
- * Test utils/Db.js
+ * Test components/Db.js
  * @file
  */
 import test from 'tape';
@@ -9,25 +9,25 @@ import localforage from 'localforage';
 import Db from '../../../src/scripts/components/Db';
 
 let sand;
-test('Db: before()', t => {
+test('components/Db: before()', t => {
     sand = sinon.createSandbox();
     localStorage.clear();
     t.end();
 });
 
-test('Db: constructor()', t => {
+test('components/Db: constructor()', t => {
     const db = new Db();
     t.equal(typeof db.dbs, 'object', 'creates dbs property');
     t.end();
 });
 
-test('Db: fileName()', t => {
+test('components/Db: fileName()', t => {
     const db = new Db();
     t.equal(db.fileName, 'components/Db', 'returns relative path');
     t.end();
 });
 
-test('Db: getDb()', t => {
+test('components/Db: getDb()', t => {
     const db  = new Db();
     const spy = sand.spy(localforage, 'createInstance');
 
@@ -43,7 +43,7 @@ test('Db: getDb()', t => {
     t.end();
 });
 
-test('Db: getDb() - old instance', t => {
+test('components/Db: getDb() - old instance', t => {
     const db       = new Db();
     const spy      = sand.spy(localforage, 'createInstance');
     const instance = {test: 1};
@@ -57,7 +57,7 @@ test('Db: getDb() - old instance', t => {
     t.end();
 });
 
-test('Db: findItem()', t => {
+test('components/Db: findItem()', t => {
     const db   = new Db();
     const stub = sand.stub().resolves();
     sand.stub(db, 'getDb').returns({getItem: stub});
@@ -73,7 +73,7 @@ test('Db: findItem()', t => {
     t.end();
 });
 
-test('Db: find()', t => {
+test('components/Db: find()', t => {
     const db  = new Db();
     const spy = sand.spy(db, 'getDb');
     const opt = {storeName: 'find', profileId: 'test', id: '1'};
@@ -94,7 +94,7 @@ test('Db: find()', t => {
     });
 });
 
-test('Db: save()', t => {
+test('components/Db: save()', t => {
     const db  = new Db();
     const spy = sand.spy(db, 'getDb');
     const opt = {storeName: 'save', profileId: 'test', id: '1'};
@@ -114,7 +114,7 @@ test('Db: save()', t => {
     });
 });
 
-test('Db: save() - generates ID if it is empty', t => {
+test('components/Db: save() - generates ID if it is empty', t => {
     const db  = new Db();
     const opt = {storeName: 'save-generate-id', profileId: 'test'};
 
@@ -127,7 +127,7 @@ test('Db: save() - generates ID if it is empty', t => {
     .catch(() => t.end('resolve promise'));
 });
 
-test('Db: findItem() - can find', t => {
+test('components/Db: findItem() - can find', t => {
     const db  = new Db();
     const opt = {storeName: 'findItem-can-find', profileId: 'test', id: '1'};
 
@@ -143,7 +143,7 @@ test('Db: findItem() - can find', t => {
     .catch(() => t.end('resolve promise'));
 });
 
-test('Db: find() - can find', t => {
+test('components/Db: find() - can find', t => {
     const db  = new Db();
     const opt = {storeName: 'find-can-find', profileId: 'test'};
 
@@ -162,7 +162,7 @@ test('Db: find() - can find', t => {
     .catch(() => t.end('resolve promise'));
 });
 
-test('Db: find() - filters the results', t => {
+test('components/Db: find() - filters the results', t => {
     const db  = new Db();
     const opt = {storeName: 'find-filters', profileId: 'test'};
 
@@ -185,7 +185,7 @@ test('Db: find() - filters the results', t => {
     .catch(() => t.end('resolve promise'));
 });
 
-test('Db: removeItem()', t => {
+test('components/Db: removeItem()', t => {
     const db         = new Db();
     const opt        = {
         storeName   : 'find-filters',
@@ -207,7 +207,7 @@ test('Db: removeItem()', t => {
     t.end();
 });
 
-test('Db: after()', t => {
+test('components/Db: after()', t => {
     localStorage.clear();
     sand.restore();
     t.end();

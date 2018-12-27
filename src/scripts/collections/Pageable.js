@@ -8,7 +8,7 @@ import _ from 'underscore';
  * Add pagination support to Backbone collections.
  *
  * @class
- * @extends module:collections/Collection
+ * @extends module:collections/BaseCollection
  * @license MPL-2.0
  */
 export default class Pageable extends BaseCollection {

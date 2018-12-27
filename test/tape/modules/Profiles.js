@@ -1,27 +1,27 @@
 /**
- * @file Test collections/modules/Profiles
+ * @file Test modules/Profiles
  */
 import test from 'tape';
 import sinon from 'sinon';
 
-import '../../../../src/scripts/utils/underscore';
-import Module from '../../../../src/scripts/modules/Profiles';
+import '../../../src/scripts/utils/underscore';
+import Module from '../../../src/scripts/modules/Profiles';
 
-import Profiles from '../../../../src/scripts/collections/Profiles';
-import Profile from '../../../../src/scripts/models/Profile';
+import Profiles from '../../../src/scripts/collections/Profiles';
+import Profile from '../../../src/scripts/models/Profile';
 
 let sand;
-test('collections/modules/Profiles: before()', t => {
+test('modules/Profiles: before()', t => {
     sand = sinon.createSandbox();
     t.end();
 });
 
-test('collections/modules/Profiles: Collection', t => {
+test('modules/Profiles: Collection', t => {
     t.equal(new Module().Collection, Profiles);
     t.end();
 });
 
-test('collections/modules/Profiles: constructor()', t => {
+test('modules/Profiles: constructor()', t => {
     const rep = sand.stub(Module.prototype.channel, 'reply');
     const mod = new Module();
 
@@ -39,7 +39,7 @@ test('collections/modules/Profiles: constructor()', t => {
     t.end();
 });
 
-test('collections/modules/Profiles: createProfile()', t => {
+test('modules/Profiles: createProfile()', t => {
     const mod  = new Module();
     const save = sand.stub(mod, 'saveModel')
     .callsFake(({model}) => Promise.resolve(model));
@@ -60,7 +60,7 @@ test('collections/modules/Profiles: createProfile()', t => {
     });
 });
 
-test('collections/modules/Profiles: findProfiles()', t => {
+test('modules/Profiles: findProfiles()', t => {
     const mod      = new Module();
     mod.collection = new Profiles();
 
@@ -68,7 +68,7 @@ test('collections/modules/Profiles: findProfiles()', t => {
     t.end();
 });
 
-test('collections/modules/Profiles: setUser()', t => {
+test('modules/Profiles: setUser()', t => {
     const mod      = new Module();
     mod.collection = new Profiles([{username: 'alice'}]);
 
@@ -81,7 +81,7 @@ test('collections/modules/Profiles: setUser()', t => {
     t.end();
 });
 
-test('collections/modules/Profiles: getUser()', t => {
+test('modules/Profiles: getUser()', t => {
     const mod = new Module();
 
     t.equal(mod.getUser(), null, 'returns null');
@@ -92,7 +92,7 @@ test('collections/modules/Profiles: getUser()', t => {
     t.end();
 });
 
-test('collections/modules/Profiles: getProfile()', t => {
+test('modules/Profiles: getProfile()', t => {
     const mod   = new Module();
     mod.profile = new Profile({username: 'alice'});
 
@@ -100,7 +100,7 @@ test('collections/modules/Profiles: getProfile()', t => {
     t.end();
 });
 
-test('collections/modules/Profiles: changePassphrase() - reject', t => {
+test('modules/Profiles: changePassphrase() - reject', t => {
     const mod    = new Module();
     const reject = sand.spy(Promise, 'reject');
 
@@ -118,7 +118,7 @@ test('collections/modules/Profiles: changePassphrase() - reject', t => {
     t.end();
 });
 
-test('collections/modules/Profiles: changePassphrase() - success', async t => {
+test('modules/Profiles: changePassphrase() - success', async t => {
     const mod = new Module();
     const opt = {
         model         : new Profile({username: 'alice'}),

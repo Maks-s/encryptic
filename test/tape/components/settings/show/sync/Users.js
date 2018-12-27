@@ -6,9 +6,9 @@ import test from 'tape';
 import sinon from 'sinon';
 
 import Radio from 'backbone.radio';
-import _ from '../../../../../src/scripts/utils/underscore';
-import View from '../../../../../src/scripts/components/settings/show/sync/Users';
-import Users from '../../../../../src/scripts/collections/Users';
+import _ from '../../../../../../src/scripts/utils/underscore';
+import View from '../../../../../../src/scripts/components/settings/show/sync/Users';
+import Users from '../../../../../../src/scripts/collections/Users';
 
 let sand;
 test('settings/show/sync/Users: before()', t => {

@@ -4,9 +4,9 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import '../../../../src/scripts/utils/underscore';
+import '../../../../../src/scripts/utils/underscore';
 
-import Region from '../../../../src/scripts/components/fuzzySearch/views/Region';
+import Region from '../../../../../src/scripts/components/fuzzySearch/views/Region';
 
 let sand;
 test('fuzzySearch/views/Region: before()', t => {

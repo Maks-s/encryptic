@@ -5,10 +5,10 @@
 import test from 'tape';
 import sinon from 'sinon';
 // import Radio from 'backbone.radio';
-import _ from '../../../../src/scripts/utils/underscore';
+import _ from '../../../../../src/scripts/utils/underscore';
 
-import View from '../../../../src/scripts/components/linkDialog/views/View';
-import ModalForm from '../../../../src/scripts/behaviors/ModalForm';
+import View from '../../../../../src/scripts/components/linkDialog/views/View';
+import ModalForm from '../../../../../src/scripts/behaviors/ModalForm';
 
 let sand;
 test('linkDialog/views/View: before()', t => {

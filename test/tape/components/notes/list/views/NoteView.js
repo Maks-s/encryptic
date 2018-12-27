@@ -5,11 +5,11 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../../src/scripts/utils/underscore';
+import _ from '../../../../../../src/scripts/utils/underscore';
 
-import NoteView from '../../../../../src/scripts/components/notes/list/views/NoteView';
-import NavModel from '../../../../../src/scripts/behaviors/NavModel';
-import Note from '../../../../../src/scripts/models/Note';
+import NoteView from '../../../../../../src/scripts/components/notes/list/views/NoteView';
+import NavModel from '../../../../../../src/scripts/behaviors/NavModel';
+import Note from '../../../../../../src/scripts/models/Note';
 
 let sand;
 test('notes/list/views/NoteView: before()', t => {

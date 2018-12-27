@@ -1,5 +1,5 @@
 /**
- * @module collections/modules/Tags
+ * @module modules/Tags
  */
 import Radio from 'backbone.radio';
 import _ from 'underscore';
@@ -10,7 +10,7 @@ import Collection from '../collections/Tags';
  * Tag collection module
  *
  * @class
- * @extends module:collections/modules/Module
+ * @extends module:modules/Module
  * @license MPL-2.0
  */
 export default class Tags extends Module {

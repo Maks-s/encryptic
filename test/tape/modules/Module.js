@@ -1,14 +1,14 @@
 /**
- * @file Test collections/modules/Module
+ * @file Test modules/Module
  */
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import ModuleObj from '../../../../src/scripts/modules/Module';
-import Notes from '../../../../src/scripts/collections/Notes';
-// import Edit from '../../../../src/scripts/models/Edit';
-import Profile from '../../../../src/scripts/models/Profile';
-import _ from '../../../../src/scripts/utils/underscore';
+import ModuleObj from '../../../src/scripts/modules/Module';
+import Notes from '../../../src/scripts/collections/Notes';
+// import Edit from '../../../src/scripts/models/Edit';
+import Profile from '../../../src/scripts/models/Profile';
+import _ from '../../../src/scripts/utils/underscore';
 
 class Module extends ModuleObj {
     get Collection() {
@@ -17,34 +17,34 @@ class Module extends ModuleObj {
 }
 
 let sand;
-test('collections/modules/Module: before()', t => {
+test('modules/Module: before()', t => {
     sand = sinon.createSandbox();
     t.end();
 });
 
-test('collections/modules/Module: Collection', t => {
+test('modules/Module: Collection', t => {
     t.equal(ModuleObj.prototype.Collection, null, 'is equal to null for default');
     t.equal(Module.prototype.Collection, Notes);
     t.end();
 });
 
-test('collections/modules/Module: Model', t => {
+test('modules/Module: Model', t => {
     t.equal(Module.prototype.Model, Notes.prototype.model);
     t.end();
 });
 
-test('collections/modules/Module: idAttribute', t => {
+test('modules/Module: idAttribute', t => {
     t.equal(Module.prototype.idAttribute, Notes.prototype.model.prototype.idAttribute);
     t.end();
 });
 
-test('collections/modules/Module: channel', t => {
+test('modules/Module: channel', t => {
     t.equal(Module.prototype.channel, Notes.prototype.channel);
     t.equal(typeof Module.prototype.channel, 'object');
     t.end();
 });
 
-test('collections/modules/Module: configs', t => {
+test('modules/Module: configs', t => {
     const conf = {username: 'bob'};
     const req  = sand.stub(Radio, 'request').returns(conf);
 
@@ -56,7 +56,7 @@ test('collections/modules/Module: configs', t => {
     t.end();
 });
 
-test('collections/modules/Module: user', t => {
+test('modules/Module: user', t => {
     const user = {username: 'alice', privateKey: '--', publicKey: '--pub'};
     sand.stub(Radio, 'request').returns(user);
 
@@ -66,7 +66,7 @@ test('collections/modules/Module: user', t => {
     t.end();
 });
 
-test('collections/modules/Module: constructor()', t => {
+test('modules/Module: constructor()', t => {
     const spy = sand.spy(Module.prototype.channel, 'reply');
     const mod = new Module();
 
@@ -85,7 +85,7 @@ test('collections/modules/Module: constructor()', t => {
     t.end();
 });
 
-test('collections/modules/Module: findModel() - no ID', t => {
+test('modules/Module: findModel() - no ID', t => {
     const mod = new Module();
     const res = mod.findModel({});
 
@@ -102,7 +102,7 @@ test('collections/modules/Module: findModel() - no ID', t => {
     });
 });
 
-test('collections/modules/Module: findModel() - finds a cached model', t => {
+test('modules/Module: findModel() - finds a cached model', t => {
     const mod      = new Module();
     mod.collection = new mod.Collection(null, {profileId: 'test'});
     mod.collection.add({id: '1'});
@@ -120,7 +120,7 @@ test('collections/modules/Module: findModel() - finds a cached model', t => {
     });
 });
 
-test('collections/modules/Module: findModel() - fetches a model', t => {
+test('modules/Module: findModel() - fetches a model', t => {
     const mod     = new Module();
     const fetch   = sand.stub(mod.Model.prototype, 'fetch').resolves('');
     const decrypt = sand.stub(mod, 'decryptModel');
@@ -141,7 +141,7 @@ test('collections/modules/Module: findModel() - fetches a model', t => {
     });
 });
 
-test('collections/modules/Module: find()', t => {
+test('modules/Module: find()', t => {
     const mod  = new Module();
     const coll = new mod.Collection();
     sand.stub(mod, 'fetch').resolves(coll);
@@ -176,7 +176,7 @@ test('collections/modules/Module: find()', t => {
     });
 });
 
-test('collections/modules/Module: fetch()', t => {
+test('modules/Module: fetch()', t => {
     const mod   = new Module();
     const fetch = sand.stub(mod.Collection.prototype, 'fetch');
     fetch.resolves();
@@ -202,7 +202,7 @@ test('collections/modules/Module: fetch()', t => {
     });
 });
 
-test('collections/modules/Module: isCollectionCached()', t => {
+test('modules/Module: isCollectionCached()', t => {
     const mod      = new Module();
     mod.collection = new Notes([{id: 1}, {id: 2}]);
 
@@ -217,7 +217,7 @@ test('collections/modules/Module: isCollectionCached()', t => {
     t.end();
 });
 
-test('collections/modules/Module: saveModel()', t => {
+test('modules/Module: saveModel()', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1', test: '2'});
 
@@ -257,10 +257,15 @@ test('collections/modules/Module: saveModel()', t => {
     });
 });
 
-test('collections/modules/Module: setSharedBy()', t => {
+test('modules/Module: setSharedBy()', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1', test: '2'});
     const user  = new Profile({username: 'alice'});
+
+    Object.defineProperty(mod, 'user', {
+        get          : () => null,
+        configurable : true,
+    });
 
     mod.setSharedBy(model);
     t.equal(model.get('sharedBy'), '',
@@ -280,7 +285,7 @@ test('collections/modules/Module: setSharedBy()', t => {
     t.end();
 });
 
-test('collections/modules/Module: onSaveModel()', t => {
+test('modules/Module: onSaveModel()', t => {
     const mod   = new Module();
     const model = new mod.Collection.prototype.model({id: 1});
 
@@ -302,7 +307,7 @@ test('collections/modules/Module: onSaveModel()', t => {
     t.end();
 });
 
-test('collections/modules/Module: saveModel() - validate', t => {
+test('modules/Module: saveModel() - validate', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1'});
     sand.spy(model, 'trigger');
@@ -322,7 +327,7 @@ test('collections/modules/Module: saveModel() - validate', t => {
     });
 });
 
-test('collections/modules/Module: save()', t => {
+test('modules/Module: save()', t => {
     const mod        = new Module();
     const collection = new mod.Collection([{id: '1'}, {id: '2'}, {id: '3'}]);
 
@@ -352,7 +357,7 @@ test('collections/modules/Module: save()', t => {
     });
 });
 
-test('collections/modules/Module: saveModelObject()', t => {
+test('modules/Module: saveModelObject()', t => {
     const mod  = new Module();
     const data = {id: '1', title: 'Test'};
 
@@ -384,7 +389,7 @@ test('collections/modules/Module: saveModelObject()', t => {
     });
 });
 
-test('collections/modules/Module: saveFromArray()', t => {
+test('modules/Module: saveFromArray()', t => {
     const mod    = new Module();
     const values = [
         {id: '1', title: 'Test 1'},
@@ -409,7 +414,7 @@ test('collections/modules/Module: saveFromArray()', t => {
     });
 });
 
-test('collections/modules/Module: remove()', t => {
+test('modules/Module: remove()', t => {
     const mod      = new Module();
     mod.collection = new mod.Collection([{id: '1'}, {id: '2'}, {id: '3'}]);
     const stub     = sand.stub();
@@ -440,7 +445,7 @@ test('collections/modules/Module: remove()', t => {
     });
 });
 
-test('collections/modules/Module: isEncryptEnabled()', t => {
+test('modules/Module: isEncryptEnabled()', t => {
     const mod = new Module();
     const req = sand.stub(Radio, 'request');
 
@@ -463,7 +468,7 @@ test('collections/modules/Module: isEncryptEnabled()', t => {
     t.end();
 });
 
-test('collections/modules/Module: decryptModel()', t => {
+test('modules/Module: decryptModel()', t => {
     const mod   = new Module();
     const req   = sand.stub(Radio, 'request').resolves();
     const model = {id: '1'};
@@ -482,7 +487,7 @@ test('collections/modules/Module: decryptModel()', t => {
     t.end();
 });
 
-test('collections/modules/Module: decryptCollection()', t => {
+test('modules/Module: decryptCollection()', t => {
     const mod  = new Module();
     const req  = sand.stub(Radio, 'request').resolves();
     const coll = new Notes();
@@ -513,7 +518,7 @@ test('collections/modules/Module: decryptCollection()', t => {
     });
 });
 
-test('collections/modules/Module: encryptModel()', t => {
+test('modules/Module: encryptModel()', t => {
     const mod  = new Module();
     const req  = sand.stub(Radio, 'request').resolves();
     sand.stub(mod, 'isEncryptEnabled').returns(false);

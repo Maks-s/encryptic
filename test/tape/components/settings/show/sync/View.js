@@ -6,9 +6,9 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import View from '../../../../../src/scripts/components/settings/show/sync/View';
-import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
-import Configs from '../../../../../src/scripts/collections/Configs';
+import View from '../../../../../../src/scripts/components/settings/show/sync/View';
+import Behavior from '../../../../../../src/scripts/components/settings/show/Behavior';
+import Configs from '../../../../../../src/scripts/collections/Configs';
 
 let sand;
 test('settings/show/sync/View: before()', t => {

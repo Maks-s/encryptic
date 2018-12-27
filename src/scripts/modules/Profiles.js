@@ -1,5 +1,5 @@
 /**
- * @module collections/modules/Profiles
+ * @module modules/Profiles
  */
 import Module from './Module';
 import Collection from '../collections/Profiles';
@@ -9,7 +9,7 @@ import Radio from 'backbone.radio';
  * Profiles collection module
  *
  * @class
- * @extends module:collections/modules/Module
+ * @extends module:modules/Module
  * @license MPL-2.0
  */
 export default class Profiles extends Module {

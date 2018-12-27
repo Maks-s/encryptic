@@ -6,7 +6,7 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import View from '../../../../../src/scripts/components/settings/show/encryption/Key';
+import View from '../../../../../../src/scripts/components/settings/show/encryption/Key';
 
 let sand;
 test('settings/show/encryption/Key: before()', t => {

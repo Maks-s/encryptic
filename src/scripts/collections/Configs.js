@@ -11,7 +11,7 @@ import Radio from 'backbone.radio';
  * Config collection.
  *
  * @class
- * @extends module:collections/Collection
+ * @extends module:collections/BaseCollection
  * @license MPL-2.0
  */
 

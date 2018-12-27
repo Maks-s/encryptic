@@ -1,27 +1,27 @@
 /**
- * @file Test collections/modules/Configs
+ * @file Test modules/Configs
  */
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import _ from '../../../../src/scripts/utils/underscore';
-import ModuleOrig from '../../../../src/scripts/modules/Module';
-import Configs from '../../../../src/scripts/collections/Configs';
-import Module from '../../../../src/scripts/modules/Configs';
+import _ from '../../../src/scripts/utils/underscore';
+import ModuleOrig from '../../../src/scripts/modules/Module';
+import Configs from '../../../src/scripts/collections/Configs';
+import Module from '../../../src/scripts/modules/Configs';
 
 let sand;
-test('collections/modules/Configs: before()', t => {
+test('modules/Configs: before()', t => {
     sand = sinon.createSandbox();
     t.end();
 });
 
-test('collections/modules/Configs: Collection', t => {
+test('modules/Configs: Collection', t => {
     t.equal(Module.prototype.Collection, Configs, 'uses configs collection');
     t.end();
 });
 
-test('collections/modules/Configs: constructor()', t => {
+test('modules/Configs: constructor()', t => {
     const reply = sand.stub(Module.prototype.channel, 'reply');
     const mod   = new Module();
 
@@ -38,7 +38,7 @@ test('collections/modules/Configs: constructor()', t => {
     t.end();
 });
 
-test('collections/modules/Configs: findModel()', t => {
+test('modules/Configs: findModel()', t => {
     const mod  = new Module();
     const find = sand.stub(ModuleOrig.prototype, 'findModel');
     const get  = sand.spy(Configs.prototype, 'getDefault');
@@ -67,7 +67,7 @@ test('collections/modules/Configs: findModel()', t => {
     });
 });
 
-test('collections/modules/Configs: find()', t => {
+test('modules/Configs: find()', t => {
     const mod        = new Module();
     const collection = new mod.Collection([{id: '1'}]);
     mod.collection   = collection;
@@ -99,7 +99,7 @@ test('collections/modules/Configs: find()', t => {
     });
 });
 
-test('collections/modules/Configs: saveModel()', t => {
+test('modules/Configs: saveModel()', t => {
     const mod   = new Module();
     const model = new mod.Model({name: '', value: 0});
     const stub  = sand.stub(mod, 'backupEncrypt');
@@ -129,7 +129,7 @@ test('collections/modules/Configs: saveModel()', t => {
     });
 });
 
-test('collections/modules/Configs: backupEncrypt()', t => {
+test('modules/Configs: backupEncrypt()', t => {
     const mod      = new Module();
     const model    = new mod.Model({value: 0});
     const backup   = new mod.Model({name: 'encryptBackup', value: 1});
@@ -158,7 +158,7 @@ test('collections/modules/Configs: backupEncrypt()', t => {
     t.end();
 });
 
-test('collections/modules/Configs: checkOrCreate()', t => {
+test('modules/Configs: checkOrCreate()', t => {
     const mod      = new Module();
     mod.collection = new mod.Collection();
 
@@ -192,7 +192,7 @@ test('collections/modules/Configs: checkOrCreate()', t => {
     });
 });
 
-test('collections/modules/Configs: findConfig()', t => {
+test('modules/Configs: findConfig()', t => {
     const mod      = new Module();
     t.equal(mod.findConfig({name: 'config'}), null,
         'returns "null" if there is no collection');
@@ -208,7 +208,7 @@ test('collections/modules/Configs: findConfig()', t => {
     t.end();
 });
 
-test('collections/modules/Configs: findConfigs()', t => {
+test('modules/Configs: findConfigs()', t => {
     const mod = new Module();
 
     t.equal(mod.findConfigs(), null, 'returns "null" if there is no collection');
@@ -224,7 +224,7 @@ test('collections/modules/Configs: findConfigs()', t => {
     t.end();
 });
 
-test('collections/modules/Configs: saveConfig()', t => {
+test('modules/Configs: saveConfig()', t => {
     const mod    = new Module();
     const save   = sand.stub(mod, 'saveModel').resolves('saved');
     const find   = sand.stub(mod, 'findModel').resolves(null);
@@ -255,7 +255,7 @@ test('collections/modules/Configs: saveConfig()', t => {
     });
 });
 
-test('collections/modules/Configs: saveConfigs() - object', t => {
+test('modules/Configs: saveConfigs() - object', t => {
     const mod     = new Module();
     const configs = {
         test  : {name: 'test', value: 'test1'},
@@ -284,7 +284,7 @@ test('collections/modules/Configs: saveConfigs() - object', t => {
     });
 });
 
-test('collections/modules/Configs: saveConfigs() - array', t => {
+test('modules/Configs: saveConfigs() - array', t => {
     const mod     = new Module();
     const configs = [
         {name: 'test', value: 'test1'},
@@ -309,7 +309,7 @@ test('collections/modules/Configs: saveConfigs() - array', t => {
     });
 });
 
-test('collections/modules/Configs: createDeviceId()', t => {
+test('modules/Configs: createDeviceId()', t => {
     const mod = new Module();
     const req = sand.stub(Radio, 'request').resolves('rand');
     sand.stub(mod, 'saveConfig');
@@ -332,7 +332,7 @@ test('collections/modules/Configs: createDeviceId()', t => {
     });
 });
 
-test('collections/modules/Configs: updatePeer()', t => {
+test('modules/Configs: updatePeer()', t => {
     const mod      = new Module();
     const lastSeen = Date.now();
     const model    = new Configs.prototype.model({

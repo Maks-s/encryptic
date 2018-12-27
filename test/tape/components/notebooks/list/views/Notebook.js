@@ -4,9 +4,9 @@
  */
 import test from 'tape';
 
-import View from '../../../../../src/scripts/components/notebooks/list/views/Notebook';
+import View from '../../../../../../src/scripts/components/notebooks/list/views/Notebook';
 // eslint-disable-next-line max-len
-import ItemView from '../../../../../src/scripts/components/notebooks/list/views/ItemView';
+import ItemView from '../../../../../../src/scripts/components/notebooks/list/views/ItemView';
 
 test('notebooks/list/views/Tag: extends from ItemView', t => {
     t.equal(View.prototype instanceof ItemView, true);

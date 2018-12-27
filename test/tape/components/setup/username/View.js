@@ -6,10 +6,10 @@ import test from 'tape';
 import sinon from 'sinon';
 // import Radio from 'backbone.radio';
 
-import _ from '../../../../src/scripts/utils/underscore';
-import ContentView from '../../../../src/scripts/components/setup/ContentView';
-import View from '../../../../src/scripts/components/setup/username/View';
-import {configNames} from '../../../../src/scripts/collections/configNames';
+import _ from '../../../../../src/scripts/utils/underscore';
+import ContentView from '../../../../../src/scripts/components/setup/ContentView';
+import View from '../../../../../src/scripts/components/setup/username/View';
+import {configNames} from '../../../../../src/scripts/collections/configNames';
 
 let sand;
 test('setup/username/View: before()', t => {

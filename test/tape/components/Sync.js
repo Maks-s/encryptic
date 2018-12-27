@@ -1,5 +1,5 @@
 /**
- * Test models/Sync
+ * Test components/Sync
  * @file
  */
 import test from 'tape';
@@ -17,23 +17,23 @@ class Model extends BModel {
 }
 
 let sand;
-test('Sync: before()', t => {
+test('components/Sync: before()', t => {
     sand = sinon.createSandbox();
     t.end();
 });
 
-test('Sync: db()', t => {
+test('components/Sync: db()', t => {
     const sync = new Sync();
     t.equal(sync.db instanceof Db, true, 'creates an instance of components/Db');
     t.end();
 });
 
-test('Sync: use()', t => {
+test('components/Sync: use()', t => {
     t.equal(typeof Sync.use(), 'function', 'returns a function');
     t.end();
 });
 
-test('Sync: sync()', t => {
+test('components/Sync: sync()', t => {
     const sync  = new Sync();
     const stub  = sand.stub(sync, 'read');
     const model = new Model({id: '1', title: 'Test'});
@@ -51,7 +51,7 @@ test('Sync: sync()', t => {
     t.end();
 });
 
-test('Sync: sync() - collection', t => {
+test('components/Sync: sync() - collection', t => {
     const sync  = new Sync();
     const stub  = sand.stub(sync, 'read');
 
@@ -66,7 +66,7 @@ test('Sync: sync() - collection', t => {
     t.end();
 });
 
-test('Sync: read()', t => {
+test('components/Sync: read()', t => {
     const sync  = new Sync();
 
     sand.stub(sync, 'findItem');
@@ -83,7 +83,7 @@ test('Sync: read()', t => {
     t.end();
 });
 
-test('Sync: findItem() - not found', t => {
+test('components/Sync: findItem() - not found', t => {
     const sync  = new Sync();
     const model = new Model({id: '1', title: 'Test'});
 
@@ -97,7 +97,7 @@ test('Sync: findItem() - not found', t => {
     });
 });
 
-test('Sync: find()', t => {
+test('components/Sync: find()', t => {
     const sync = new Sync();
     const coll = {model: Model};
 
@@ -111,7 +111,7 @@ test('Sync: find()', t => {
     .catch(() => t.end('resolve promise'));
 });
 
-test('Sync: create() + update()', t => {
+test('components/Sync: create() + update()', t => {
     const sync = new Sync();
     const stub = sand.stub(sync, 'save');
 
@@ -125,7 +125,7 @@ test('Sync: create() + update()', t => {
     t.end();
 });
 
-test('Sync: save()', t => {
+test('components/Sync: save()', t => {
     const sync  = new Sync();
     const model = new Model({id: '1'});
     const opt   = {profileId: 'test', storeName: 'sync-save'};
@@ -150,7 +150,7 @@ test('Sync: save()', t => {
     });
 });
 
-test('Sync: find()', t => {
+test('components/Sync: find()', t => {
     const sync = new Sync();
     const opt  = {profileId: 'test', storeName: 'sync-save'};
     const coll = {model: Model};
@@ -168,7 +168,7 @@ test('Sync: find()', t => {
     });
 });
 
-test('Sync: delete()', t => {
+test('components/Sync: delete()', t => {
     const sync  = new Sync();
     const opt   = {profileId: 'test', storeName: 'sync-save'};
     const model = new Model({id: '1'});

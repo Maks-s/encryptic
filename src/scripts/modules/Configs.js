@@ -1,5 +1,5 @@
 /**
- * @module collections/modules/Configs
+ * @module modules/Configs
  */
 import _ from 'underscore';
 import Radio from 'backbone.radio';
@@ -10,7 +10,7 @@ import Collection from '../collections/Configs';
  * Configs collection module
  *
  * @class
- * @extends module:collections/modules/Module
+ * @extends module:modules/Module
  * @license MPL-2.0
  */
 export default class Configs extends Module {

@@ -1,5 +1,5 @@
 /**
- * @module collections/modules/Users
+ * @module modules/Users
  */
 import Radio from 'backbone.radio';
 import _ from 'underscore';
@@ -8,13 +8,13 @@ import Collection from '../collections/Users';
 import * as openpgp from 'openpgp';
 import deb from 'debug';
 
-const log = deb('lav:collections/Modules/Users');
+const log = deb('lav:Modules/Users');
 
 /**
  * User collection module
  *
  * @class
- * @extends module:collections/modules/Module
+ * @extends module:modules/Module
  * @license MPL-2.0
  */
 export default class Users extends Module {

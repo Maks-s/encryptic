@@ -5,9 +5,9 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import NotesView from '../../../../../src/scripts/components/notes/list/views/NotesView';
-import Navigate from '../../../../../src/scripts/behaviors/Navigate';
-import NoteView from '../../../../../src/scripts/components/notes/list/views/NoteView';
+import NotesView from '../../../../../../src/scripts/components/notes/list/views/NotesView';
+import Navigate from '../../../../../../src/scripts/behaviors/Navigate';
+import NoteView from '../../../../../../src/scripts/components/notes/list/views/NoteView';
 
 let sand;
 test('notes/list/views/NotesView: before()', t => {

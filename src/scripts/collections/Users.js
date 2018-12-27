@@ -8,7 +8,7 @@ import BaseCollection from './BaseCollection';
  * User collection.
  *
  * @class
- * @extends module:collections/Collection
+ * @extends module:collections/BaseCollection
  * @license MPL-2.0
  */
 export default class Users extends BaseCollection {

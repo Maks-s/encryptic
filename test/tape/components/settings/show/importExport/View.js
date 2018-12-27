@@ -5,8 +5,8 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import View from '../../../../../src/scripts/components/settings/show/importExport/View';
-import Configs from '../../../../../src/scripts/collections/Configs';
+import View from '../../../../../../src/scripts/components/settings/show/importExport/View';
+import Configs from '../../../../../../src/scripts/collections/Configs';
 
 let sand;
 test('settings/show/importExport/View: before()', t => {

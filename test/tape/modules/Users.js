@@ -1,25 +1,25 @@
 /**
- * @file Test collections/modules/Users
+ * @file Test modules/Users
  */
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../src/scripts/utils/underscore';
+import _ from '../../../src/scripts/utils/underscore';
 import * as openpgp from 'openpgp';
 
-import Module from '../../../../src/scripts/modules/Users';
-import ModuleOrig from '../../../../src/scripts/modules/Module';
-import Users from '../../../../src/scripts/collections/Users';
-import User  from '../../../../src/scripts/models/User';
+import Module from '../../../src/scripts/modules/Users';
+import ModuleOrig from '../../../src/scripts/modules/Module';
+import Users from '../../../src/scripts/collections/Users';
+import User  from '../../../src/scripts/models/User';
 
 let sand;
-test('collections/modules/Users: before()', t => {
+test('modules/Users: before()', t => {
     Radio.channel('models/Signal').stopReplying();
     sand = sinon.createSandbox();
     t.end();
 });
 
-test('collections/modules/Users: user', t => {
+test('modules/Users: user', t => {
     const attributes = {username: 'alice'};
     sand.stub(Radio, 'request').returns({attributes});
 
@@ -29,12 +29,12 @@ test('collections/modules/Users: user', t => {
     t.end();
 });
 
-test('collections/modules/Users: Collection', t => {
+test('modules/Users: Collection', t => {
     t.equal(Module.prototype.Collection, Users, 'uses "Users" collection');
     t.end();
 });
 
-test('collections/modules/Users: constructor()', t => {
+test('modules/Users: constructor()', t => {
     const reply  = sand.stub(Module.prototype.channel, 'reply');
     const mod = new Module();
 
@@ -50,7 +50,7 @@ test('collections/modules/Users: constructor()', t => {
     t.end();
 });
 
-test('collections/modules/Users: find()', t => {
+test('modules/Users: find()', t => {
     const mod      = new Module();
     const find     = sand.stub(ModuleOrig.prototype, 'find').resolves();
     mod.collection = new Users();
@@ -67,7 +67,7 @@ test('collections/modules/Users: find()', t => {
     t.end();
 });
 
-test('collections/modules/Users: saveModel()', t => {
+test('modules/Users: saveModel()', t => {
     const mod  = new Module();
     const req  = sand.stub(Radio, 'request');
     sand.stub(ModuleOrig.prototype, 'saveModel').resolves();
@@ -93,7 +93,7 @@ test('collections/modules/Users: saveModel()', t => {
     });
 });
 
-test('collections/modules/Users: remove()', t => {
+test('modules/Users: remove()', t => {
     const mod      = new Module();
     const model    = new User({username: 'bob'});
     mod.collection = new Users([model]);
@@ -114,7 +114,7 @@ test('collections/modules/Users: remove()', t => {
     });
 });
 
-test('collections/modules/Users: acceptInvite()', t => {
+test('modules/Users: acceptInvite()', t => {
     const mod   = new Module();
     const model = new User({username: 'bob', pendingAccept: true, pendingInvite: true});
     const req   = sand.stub(Radio, 'request');
@@ -140,7 +140,7 @@ test('collections/modules/Users: acceptInvite()', t => {
     });
 });
 
-test('collections/modules/Users: acceptIfPending()', t => {
+test('modules/Users: acceptIfPending()', t => {
     const mod   = new Module();
     const model = new User({pendingInvite: false});
 
@@ -168,7 +168,7 @@ test('collections/modules/Users: acceptIfPending()', t => {
     });
 });
 
-test('collections/modules/Users: rejectInvite()', t => {
+test('modules/Users: rejectInvite()', t => {
     const mod   = new Module();
     const model = new User({username: 'bob', pendingAccept: true, pendingInvite: true});
     sand.stub(mod, 'remove');
@@ -183,7 +183,7 @@ test('collections/modules/Users: rejectInvite()', t => {
     t.end();
 });
 
-test('collections/modules/Users: removeServerInvite()', t => {
+test('modules/Users: removeServerInvite()', t => {
     const mod   = new Module();
     const model = new User({username: 'bob'});
     const req   = sand.stub(Radio, 'request');
@@ -197,7 +197,7 @@ test('collections/modules/Users: removeServerInvite()', t => {
     t.end();
 });
 
-test('collections/modules/Users: addUser()', t => {
+test('modules/Users: addUser()', t => {
     const mod  = new Module();
     const user = {username: 'bob', fingerprint: 'print', publicKey: 'pubKey'};
     sand.stub(mod, 'saveModel');
@@ -211,7 +211,7 @@ test('collections/modules/Users: addUser()', t => {
     t.end();
 });
 
-test('collections/modules/Users: checkKey()', t => {
+test('modules/Users: checkKey()', t => {
     const mod  = new Module();
     sand.stub(openpgp.key, 'readArmored').returns({
         keys: [{primaryKey: {fingerprint: 'print'}}],
@@ -228,7 +228,7 @@ test('collections/modules/Users: checkKey()', t => {
     t.end();
 });
 
-test('collections/modules/Users: invite()', t => {
+test('modules/Users: invite()', t => {
     const mod  = new Module();
     const user = {username: 'bob', fingerprint: 'print', publicKey: 'pubKey'};
     const req  = sand.stub(Radio, 'request');
@@ -258,7 +258,7 @@ test('collections/modules/Users: invite()', t => {
     });
 });
 
-test('collections/modules/Users: saveInvite() -> autoAcceptInvite()', t => {
+test('modules/Users: saveInvite() -> autoAcceptInvite()', t => {
     const mod     = new Module();
     const options = {username: 'bob', fingerprint: 'test', publicKey: 'pubKey'};
     const model   = new User({username: 'bob', pendingAccept: true});
@@ -300,7 +300,7 @@ test('collections/modules/Users: saveInvite() -> autoAcceptInvite()', t => {
     });
 });
 
-test('collections/modules/Users: saveInvite() -> saveNewInvite()', t => {
+test('modules/Users: saveInvite() -> saveNewInvite()', t => {
     const mod     = new Module();
     const options = {username: 'bob', fingerprint: 'print', publicKey: 'pubKey'};
 
@@ -330,7 +330,7 @@ test('collections/modules/Users: saveInvite() -> saveNewInvite()', t => {
     });
 });
 
-test('collections/modules/Users: autoAcceptInvite()', t => {
+test('modules/Users: autoAcceptInvite()', t => {
     const mod     = new Module();
     const options = {username: 'bob', fingerprint: 'print', publicKey: 'pubKey'};
     const model   = new User({username: 'bob', pendingInvite: true});
@@ -366,7 +366,7 @@ test('collections/modules/Users: autoAcceptInvite()', t => {
     });
 });
 
-test('collections/modules/Users: saveNewInvite()', t => {
+test('modules/Users: saveNewInvite()', t => {
     const mod     = new Module();
     const options = {username: 'bob', fingerprint: 'print', publicKey: 'pubKey'};
     sand.stub(mod, 'checkInviteSignature').resolves(false);
@@ -395,7 +395,7 @@ test('collections/modules/Users: saveNewInvite()', t => {
     });
 });
 
-test('collections/modules/Users: checkInviteSignature()', t => {
+test('modules/Users: checkInviteSignature()', t => {
     const mod       = new Module();
     const options   = {username: 'bob', fingerprint: 'print', publicKey: 'pubKey'};
     const data      = JSON.stringify({from: options.username, to: 'alice'});

@@ -1,13 +1,13 @@
 /**
- * Test components/settings/sidebar/View.js
+ * Test components/settings/sidebar/views/View.js
  * @file
  */
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import View from '../../../../../src/scripts/components/settings/sidebar/views/View';
-import Sidebar from '../../../../../src/scripts/behaviors/Sidebar';
+import View from '../../../../../../src/scripts/components/settings/sidebar/views/View';
+import Sidebar from '../../../../../../src/scripts/behaviors/Sidebar';
 
 let sand;
 test('settings/sidebar/views/View: before()', t => {

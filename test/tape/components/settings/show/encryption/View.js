@@ -6,10 +6,10 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-import View from '../../../../../src/scripts/components/settings/show/encryption/View';
-import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
-import Configs from '../../../../../src/scripts/collections/Configs';
-import Profile from '../../../../../src/scripts/models/Profile';
+import View from '../../../../../../src/scripts/components/settings/show/encryption/View';
+import Behavior from '../../../../../../src/scripts/components/settings/show/Behavior';
+import Configs from '../../../../../../src/scripts/collections/Configs';
+import Profile from '../../../../../../src/scripts/models/Profile';
 
 let sand;
 const user = new Profile({username: 'alice', publicKey: 'pub', privateKey: 'priv'});

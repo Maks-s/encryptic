@@ -1,5 +1,5 @@
 /**
- * @file Test collections/Collection
+ * @file Test collections/BaseCollection
  */
 import test from 'tape';
 import sinon from 'sinon';
@@ -8,18 +8,18 @@ import Collection from '../../../src/scripts/collections/BaseCollection';
 import Note from '../../../src/scripts/models/Note';
 
 let sand;
-test('collections/Collection: before()', t => {
+test('collections/BaseCollection: before()', t => {
     sand = sinon.createSandbox();
     t.end();
 });
 
-test('collections/Collection: sync', t => {
+test('collections/BaseCollection: sync', t => {
     const coll = new Collection();
     t.equal(typeof coll.sync, 'function', 'has sync method');
     t.end();
 });
 
-test('collections/Collection: profileId', t => {
+test('collections/BaseCollection: profileId', t => {
     t.equal(new Collection().profileId, undefined, 'is equal to "undefined"');
 
     const coll = new Collection(null, {profileId: 'default'});
@@ -29,7 +29,7 @@ test('collections/Collection: profileId', t => {
     t.end();
 });
 
-test('collections/Collection: profileId - can change', t => {
+test('collections/BaseCollection: profileId - can change', t => {
     const coll = new Collection();
     coll.model = Note.extend({});
 
@@ -42,7 +42,7 @@ test('collections/Collection: profileId - can change', t => {
     t.end();
 });
 
-test('collections/Collection: storeName', t => {
+test('collections/BaseCollection: storeName', t => {
     const coll = new Collection();
     coll.model = Note.extend({});
 
@@ -53,14 +53,14 @@ test('collections/Collection: storeName', t => {
     t.end();
 });
 
-test('collections/Collection: channel', t => {
+test('collections/BaseCollection: channel', t => {
     const coll = new Collection();
     coll.model = Note.extend({});
     t.equal(coll.channel, coll.model.prototype.channel);
     t.end();
 });
 
-test('collections/Collection: filterList()', t => {
+test('collections/BaseCollection: filterList()', t => {
     const coll      = new Collection();
     coll.testFilter = sand.stub().returns([]);
 
@@ -80,7 +80,7 @@ test('collections/Collection: filterList()', t => {
     t.end();
 });
 
-test('collections/Collection: getCondition()', t => {
+test('collections/BaseCollection: getCondition()', t => {
     const coll      = new Collection();
     coll.conditions = {active: {trash: 0}};
 
@@ -96,7 +96,7 @@ test('collections/Collection: getCondition()', t => {
     t.end();
 });
 
-test('collections/Collection: findOrCreate()', t => {
+test('collections/BaseCollection: findOrCreate()', t => {
     const coll      = new Collection();
     coll.add({id: 1});
     sand.spy(coll, 'add');

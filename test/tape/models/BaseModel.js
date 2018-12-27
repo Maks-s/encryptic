@@ -7,13 +7,13 @@ import test from 'tape';
 import '../../../src/scripts/utils/underscore';
 import Model from '../../../src/scripts/models/BaseModel';
 
-test('models/Model: sync()', t => {
+test('models/BaseModel: sync()', t => {
     const model = new Model();
     t.equal(typeof model.sync, 'function', 'has sync method');
     t.end();
 });
 
-test('models/Model: profileId() - get', t => {
+test('models/BaseModel: profileId() - get', t => {
     const model = new Model();
 
     t.equal(model.profileId, undefined, 'returns "undefined" for default');
@@ -23,7 +23,7 @@ test('models/Model: profileId() - get', t => {
     t.end();
 });
 
-test('models/Model: profileId() - set', t => {
+test('models/BaseModel: profileId() - set', t => {
     const model = new Model();
 
     model.profileId = 'test2';
@@ -33,14 +33,14 @@ test('models/Model: profileId() - set', t => {
     t.end();
 });
 
-test('models/Model: channel', t => {
+test('models/BaseModel: channel', t => {
     const model     = new Model();
     model.storeName = 'notes';
     t.equal(model.channel.channelName, 'collections/Notes');
     t.end();
 });
 
-test('models/Model: validate()', t => {
+test('models/BaseModel: validate()', t => {
     const model = new Model();
     Object.defineProperty(model, 'validateAttributes', {
         get: () => {
@@ -60,7 +60,7 @@ test('models/Model: validate()', t => {
     t.end();
 });
 
-test('models/Model: setEscape()', t => {
+test('models/BaseModel: setEscape()', t => {
     const model = new Model();
     Object.defineProperty(model, 'escapeAttributes', {
         get: () => {
@@ -82,7 +82,7 @@ test('models/Model: setEscape()', t => {
     t.end();
 });
 
-test('models/Model: getData()', t => {
+test('models/BaseModel: getData()', t => {
     const model    = new Model({title: 'Test', test: '1'});
     model.defaults = {title: '', encryptedData: ''};
 
@@ -101,7 +101,7 @@ test('models/Model: getData()', t => {
     t.end();
 });
 
-test('models/Model: setDate()', t => {
+test('models/BaseModel: setDate()', t => {
     const model = new Model();
     Object.defineProperty(model, 'defaults', {
         get: () => {
@@ -118,7 +118,7 @@ test('models/Model: setDate()', t => {
     t.end();
 });
 
-test('models/Model: isSharedWith()', t => {
+test('models/BaseModel: isSharedWith()', t => {
     const model = new Model({sharedWith: ['alice'], sharedBy: 'bob'});
 
     t.equal(model.isSharedWith('sid'), false, 'returns false');
@@ -130,7 +130,7 @@ test('models/Model: isSharedWith()', t => {
     t.end();
 });
 
-test('models/Model: toggleShare()', t => {
+test('models/BaseModel: toggleShare()', t => {
     const model = new Model({sharedWith: ['alice'], sharedBy: 'bob'});
 
     model.toggleShare('alice');

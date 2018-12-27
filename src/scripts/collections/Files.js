@@ -8,7 +8,7 @@ import BaseCollection from './BaseCollection';
  * File collection.
  *
  * @class
- * @extends module:collections/Collection
+ * @extends module:collections/BaseCollection
  * @license MPL-2.0
  */
 export default class Files extends BaseCollection {

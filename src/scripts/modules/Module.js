@@ -1,5 +1,5 @@
 /**
- * @module collections/modules/Module
+ * @module modules/Module
  */
 import _ from 'underscore';
 import Radio from 'backbone.radio';

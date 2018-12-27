@@ -4,11 +4,11 @@
  */
 import test from 'tape';
 
-import _ from '../../../../../src/scripts/utils/underscore';
-import View from '../../../../../src/scripts/components/notebooks/list/views/Notebooks';
+import _ from '../../../../../../src/scripts/utils/underscore';
+import View from '../../../../../../src/scripts/components/notebooks/list/views/Notebooks';
 // eslint-disable-next-line max-len
-import Notebook from '../../../../../src/scripts/components/notebooks/list/views/Notebook';
-import Navigate from '../../../../../src/scripts/behaviors/Navigate';
+import Notebook from '../../../../../../src/scripts/components/notebooks/list/views/Notebook';
+import Navigate from '../../../../../../src/scripts/behaviors/Navigate';
 
 test('notebooks/list/views/Notebooks: className', t => {
     t.equal(View.prototype.className, 'list--notebooks');

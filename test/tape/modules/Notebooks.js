@@ -1,26 +1,26 @@
 /**
- * @file Test collections/modules/Module
+ * @file Test modules/Module
  */
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import Module from '../../../../src/scripts/modules/Notebooks';
-import ModuleOrig from '../../../../src/scripts/modules/Module';
-import Notebooks from '../../../../src/scripts/collections/Notebooks';
+import Module from '../../../src/scripts/modules/Notebooks';
+import ModuleOrig from '../../../src/scripts/modules/Module';
+import Notebooks from '../../../src/scripts/collections/Notebooks';
 
 let sand;
-test('collections/modules/Notebooks: before()', t => {
+test('modules/Notebooks: before()', t => {
     sand = sinon.createSandbox();
     t.end();
 });
 
-test('collections/modules/Notebooks: Collection', t => {
+test('modules/Notebooks: Collection', t => {
     t.equal(Module.prototype.Collection, Notebooks,
         'uses notebooks collection');
     t.end();
 });
 
-test('collections/modules/Notebooks: remove()', t => {
+test('modules/Notebooks: remove()', t => {
     const mod = new Module();
 
     sand.stub(mod, 'updateChildren').resolves();
@@ -56,7 +56,7 @@ test('collections/modules/Notebooks: remove()', t => {
     });
 });
 
-test('collections/modules/Notebooks: updateChildren()', t => {
+test('modules/Notebooks: updateChildren()', t => {
     const mod   = new Module();
     const model = new mod.Model({id: '1', parentId: 0}, {profileId: 'test'});
     const coll  = new Notebooks([{id: '1'}, {id: '2'}]);
@@ -84,7 +84,7 @@ test('collections/modules/Notebooks: updateChildren()', t => {
     });
 });
 
-test('collections/modules/Notebooks: getChildren()', t => {
+test('modules/Notebooks: getChildren()', t => {
     const mod  = new Module();
     const stub = sand.stub(mod, 'find').resolves();
 
@@ -118,7 +118,7 @@ test('collections/modules/Notebooks: getChildren()', t => {
     });
 });
 
-test('collections/modules/Notebooks: find()', t => {
+test('modules/Notebooks: find()', t => {
     const mod  = new Module();
     const coll = new mod.Collection();
     const find = sand.stub(ModuleOrig.prototype, 'find')

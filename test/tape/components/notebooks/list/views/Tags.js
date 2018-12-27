@@ -5,11 +5,11 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import _ from '../../../../../src/scripts/utils/underscore';
-import View from '../../../../../src/scripts/components/notebooks/list/views/Tags';
-import Tag from '../../../../../src/scripts/components/notebooks/list/views/Tag';
-import Navigate from '../../../../../src/scripts/behaviors/Navigate';
-import Tags from '../../../../../src/scripts/collections/Tags';
+import _ from '../../../../../../src/scripts/utils/underscore';
+import View from '../../../../../../src/scripts/components/notebooks/list/views/Tags';
+import Tag from '../../../../../../src/scripts/components/notebooks/list/views/Tag';
+import Navigate from '../../../../../../src/scripts/behaviors/Navigate';
+import Tags from '../../../../../../src/scripts/collections/Tags';
 
 test('tags/list/views/Tags: className', t => {
     t.equal(View.prototype.className, 'list list--tags');

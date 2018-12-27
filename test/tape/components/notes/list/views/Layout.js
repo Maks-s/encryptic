@@ -5,10 +5,10 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import Layout from '../../../../../src/scripts/components/notes/list/views/Layout';
-import Pagination from '../../../../../src/scripts/behaviors/Pagination';
-import Sidebar from '../../../../../src/scripts/behaviors/Sidebar';
-import NotesView from '../../../../../src/scripts/components/notes/list/views/NotesView';
+import Layout from '../../../../../../src/scripts/components/notes/list/views/Layout';
+import Pagination from '../../../../../../src/scripts/behaviors/Pagination';
+import Sidebar from '../../../../../../src/scripts/behaviors/Sidebar';
+import NotesView from '../../../../../../src/scripts/components/notes/list/views/NotesView';
 
 global.overrideTemplate(Layout, 'components/notes/list/templates/layout.html');
 

@@ -5,7 +5,7 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import View from '../../../../src/scripts/components/share/users/View';
+import View from '../../../../../src/scripts/components/share/users/View';
 
 let sand;
 test('share/users/View: before()', t => {

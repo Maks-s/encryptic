@@ -4,7 +4,7 @@
  */
 import test from 'tape';
 
-import View from '../../../../src/scripts/components/share/info/View';
+import View from '../../../../../src/scripts/components/share/info/View';
 
 
 test('share/info/View: triggers()', t => {

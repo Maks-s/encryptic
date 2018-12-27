@@ -5,9 +5,9 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-import View from '../../../../../src/scripts/components/settings/show/keybindings/View';
-import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
-import Configs from '../../../../../src/scripts/collections/Configs';
+import View from '../../../../../../src/scripts/components/settings/show/keybindings/View';
+import Behavior from '../../../../../../src/scripts/components/settings/show/Behavior';
+import Configs from '../../../../../../src/scripts/collections/Configs';
 
 let sand;
 test('settings/show/keybindings/View: before()', t => {

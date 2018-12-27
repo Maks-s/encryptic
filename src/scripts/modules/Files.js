@@ -1,5 +1,5 @@
 /**
- * @module collections/modules/Files
+ * @module modules/Files
  */
 import _ from 'underscore';
 import toBlob from 'blueimp-canvas-to-blob';
@@ -11,7 +11,7 @@ import md5 from 'js-md5';
  * Files collection module.
  *
  * @class
- * @extends module:collections/modules/Module
+ * @extends module:modules/Module
  * @license MPL-2.0
  */
 export default class Files extends Module {

@@ -4,8 +4,8 @@
  */
 import test from 'tape';
 
-import '../../../../src/scripts/utils/underscore';
-import View from '../../../../src/scripts/components/setup/export/View';
+import '../../../../../src/scripts/utils/underscore';
+import View from '../../../../../src/scripts/components/setup/export/View';
 
 test('setup/export/View: serializeData()', t => {
     const opt  = {el: 'test'};

@@ -1,27 +1,27 @@
 /**
- * @file Test collections/modules/Tags
+ * @file Test modules/Tags
  */
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../src/scripts/utils/underscore';
-import Module from '../../../../src/scripts/modules/Tags';
-import ModuleOrig from '../../../../src/scripts/modules/Module';
-import Tags from '../../../../src/scripts/collections/Tags';
+import '../../../src/scripts/utils/underscore';
+import Module from '../../../src/scripts/modules/Tags';
+import ModuleOrig from '../../../src/scripts/modules/Module';
+import Tags from '../../../src/scripts/collections/Tags';
 
 let sand;
-test('collections/modules/Tags: before()', t => {
+test('modules/Tags: before()', t => {
     sand = sinon.createSandbox();
     t.end();
 });
 
-test('collections/modules/Tags: Collection', t => {
+test('modules/Tags: Collection', t => {
     t.equal(Module.prototype.Collection, Tags,
         'uses tags collection');
     t.end();
 });
 
-test('collections/modules/Tags: constructor()', t => {
+test('modules/Tags: constructor()', t => {
     const reply = sand.stub(Module.prototype.channel, 'reply');
     const mod   = new Module();
 
@@ -32,7 +32,7 @@ test('collections/modules/Tags: constructor()', t => {
     t.end();
 });
 
-test('collections/modules/Tags: addTags()', t => {
+test('modules/Tags: addTags()', t => {
     const mod = new Module();
     const add = sand.stub(mod, 'addTag');
     const opt = {profileId: 'test', tags: ['tag', 'test']};
@@ -56,7 +56,7 @@ test('collections/modules/Tags: addTags()', t => {
     });
 });
 
-test('collections/modules/Tags: addTag()', t => {
+test('modules/Tags: addTag()', t => {
     const mod  = new Module();
     const save = sand.stub(ModuleOrig.prototype, 'saveModel');
     sand.stub(mod, 'getId').resolves('testId');
@@ -81,7 +81,7 @@ test('collections/modules/Tags: addTag()', t => {
     });
 });
 
-test('collections/modules/Tags: saveModel() - do not compute ID', t => {
+test('modules/Tags: saveModel() - do not compute ID', t => {
     const mod  = new Module();
     const save = sand.stub(ModuleOrig.prototype, 'saveModel');
     sand.stub(mod, 'getId');
@@ -96,7 +96,7 @@ test('collections/modules/Tags: saveModel() - do not compute ID', t => {
     t.end();
 });
 
-test('collections/modules/Tags: saveModel() - compute ID', t => {
+test('modules/Tags: saveModel() - compute ID', t => {
     const mod   = new Module();
     const model = new mod.Model({id: 'testId', name: 'test'});
     const save  = sand.stub(ModuleOrig.prototype, 'saveModel');
@@ -136,7 +136,7 @@ test('collections/modules/Tags: saveModel() - compute ID', t => {
     });
 });
 
-test('collections/modules/Tags: getId()', t => {
+test('modules/Tags: getId()', t => {
     const mod   = new Module();
     const model = new mod.Model({name: 'testing'});
     const req   = sand.stub(Radio, 'request').resolves(['t', 'e']);

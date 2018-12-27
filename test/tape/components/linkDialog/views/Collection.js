@@ -5,10 +5,10 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../../src/scripts/utils/underscore';
+import '../../../../../src/scripts/utils/underscore';
 
-import View from '../../../../src/scripts/components/linkDialog/views/Collection';
-import Item from '../../../../src/scripts/components/linkDialog/views/Item';
+import View from '../../../../../src/scripts/components/linkDialog/views/Collection';
+import Item from '../../../../../src/scripts/components/linkDialog/views/Item';
 
 let sand;
 test('linkDialog/views/Collection: before()', t => {

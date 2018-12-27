@@ -3,9 +3,9 @@
  * @file
  */
 import test from 'tape';
-import '../../../../src/scripts/utils/underscore';
+import '../../../../../src/scripts/utils/underscore';
 
-import Child from '../../../../src/scripts/components/fuzzySearch/views/Child';
+import Child from '../../../../../src/scripts/components/fuzzySearch/views/Child';
 
 test('fuzzySearch/views/Child: className', t => {
     t.equal(Child.prototype.className, 'list-group list--group');

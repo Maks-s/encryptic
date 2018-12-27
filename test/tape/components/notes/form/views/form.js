@@ -5,19 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
+import Mousetrap from 'mousetrap';
 
-import '../../../../../../src/scripts/utils/underscore';
 import Note from '../../../../../../src/scripts/models/Note';
+import View from '../../../../../../src/scripts/components/notes/form/views/Form';
+import Content from '../../../../../../src/scripts/behaviors/Content';
 
-// Fix mousetrap bug
-const Mousetrap     = require('mousetrap');
-global.Mousetrap    = Mousetrap;
-
-/* eslint-disable */
-const View      = require('../../../../../../src/scripts/components/notes/form/views/Form').default;
-const Notebooks = require('../../../../../../src/scripts/components/notes/form/views/Notebooks').default;
-const Content = require('../../../../../../src/scripts/behaviors/Content').default;
-/* eslint-enable */
 
 let sand;
 test('notes/form/views/Form: before()', t => {

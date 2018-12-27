@@ -21,8 +21,10 @@ test('collections/modules/Users: before()', t => {
 
 test('collections/modules/Users: user', t => {
     const attributes = {username: 'alice'};
-    const req        = sand.stub(Radio, 'request').returns({attributes});
+    sand.stub(Radio, 'request').returns({attributes});
+
     t.equal(new Module().user, attributes);
+
     sand.restore();
     t.end();
 });
@@ -141,7 +143,8 @@ test('collections/modules/Users: acceptInvite()', t => {
 test('collections/modules/Users: acceptIfPending()', t => {
     const mod   = new Module();
     const model = new User({pendingInvite: false});
-    const find  = sand.stub(mod, 'findModel').resolves(model);
+
+    sand.stub(mod, 'findModel').resolves(model);
     sand.stub(mod, 'acceptInvite');
 
     mod.acceptIfPending({username: 'bob'})

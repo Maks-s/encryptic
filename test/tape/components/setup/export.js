@@ -3,16 +3,9 @@
  * @file
  */
 import test from 'tape';
-import sinon from 'sinon';
 
 import '../../../../src/scripts/utils/underscore';
 import View from '../../../../src/scripts/components/setup/export/View';
-
-let sand;
-test('setup/export/View: before()', t => {
-    sand = sinon.createSandbox();
-    t.end();
-});
 
 test('setup/export/View: serializeData()', t => {
     const opt  = {el: 'test'};

@@ -134,7 +134,7 @@ test('components/dropbox/Sync: startWatch()', t => {
     }, 200);
 });
 
-test('components/dropbox/Sync: getInterval() - increases the value until it reaches the max', t => {
+test('components/dropbox/Sync: getInterval() - increases the value up to the max', t => {
     const sync = new Sync();
 
     let prev;
@@ -142,12 +142,12 @@ test('components/dropbox/Sync: getInterval() - increases the value until it reac
     do {
         prev = sync.getInterval();
     }
-    while (prev < sync.stat.intervalMax); {
-        t.end();
-    }
+    while (prev < sync.stat.intervalMax);
+
+    t.end();
 });
 
-test('components/dropbox/Sync: getInterval() - decreases the value until it reaches the min', t => {
+test('components/dropbox/Sync: getInterval() - decreases the value up to the min', t => {
     const sync = new Sync();
 
     let prev;
@@ -157,9 +157,9 @@ test('components/dropbox/Sync: getInterval() - decreases the value until it reac
     do {
         prev = sync.getInterval();
     }
-    while (prev > sync.stat.intervalMin); {
-        t.end();
-    }
+    while (prev > sync.stat.intervalMin);
+
+    t.end();
 });
 
 test('components/dropbox/Sync: stopWatch', t => {
@@ -238,8 +238,17 @@ test('components/dropbox/Sync: syncCollection()', t => {
 
 test('components/dropbox/Sync: syncRemoteChanges()', t => {
     const sync       = new Sync();
-    const files      = [{id: '1'}, {id: '2'}, {id: '3', updated: 2}, {id: '4', updated: 1}];
-    const collection = new Notes([{id: '1'}, {id: '3', updated: 1}, {id: '4', updated: 2}]);
+    const files      = [
+        {id: '1'},
+        {id: '2'},
+        {id: '3', updated: 2},
+        {id: '4', updated: 1},
+    ];
+    const collection = new Notes([
+        {id: '1'},
+        {id: '3', updated: 1},
+        {id: '4', updated: 2},
+    ]);
     const req        = sand.stub(collection.channel, 'request');
     Object.defineProperty(sync, 'profileId', {get: () => 'test'});
 
@@ -270,7 +279,11 @@ test('components/dropbox/Sync: syncRemoteChanges()', t => {
 test('components/dropbox/Sync: syncLocalChanges()', t => {
     const sync       = new Sync();
     const files      = [{id: '2'}, {id: '3', updated: 1}, {id: '4', updated: 2}];
-    const collection = new Notes([{id: '1'}, {id: '3', updated: 2}, {id: '4', updated: 1}]);
+    const collection = new Notes([
+        {id: '1'},
+        {id: '3', updated: 2},
+        {id: '4', updated: 1},
+    ]);
     const save       = sand.stub(sync.adapter, 'saveModel');
     Object.defineProperty(sync, 'profileId', {get: () => 'test'});
 

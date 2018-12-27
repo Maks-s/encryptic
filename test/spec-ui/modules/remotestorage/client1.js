@@ -1,6 +1,6 @@
 /* global describe, before, after, it */
 'use strict';
-const exec = require('child_process').exec;
+import {exec} from 'child_process';
 
 /**
  * Remove reStore's files.

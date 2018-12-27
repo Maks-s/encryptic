@@ -7,7 +7,6 @@ import sinon from 'sinon';
 import '../../../../../src/scripts/utils/underscore';
 
 import View from '../../../../../src/scripts/components/encryption/auth/View';
-import Profiles from '../../../../../src/scripts/collections/Profiles';
 
 let sand;
 test('encryption/auth/View: before()', t => {

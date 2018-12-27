@@ -4,11 +4,9 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Radio from 'backbone.radio';
 import _ from '../../../../../src/scripts/utils/underscore';
 
-// eslint-disable-next-line
-const View = require('../../../../../src/scripts/components/importExport/migrate/View').default;
+import View from '../../../../../src/scripts/components/importExport/migrate/View';
 
 let sand;
 test('importExport/migrate/View: before()', t => {

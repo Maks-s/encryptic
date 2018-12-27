@@ -49,6 +49,7 @@ test('components/dropbox/Adapter: checkAuth()', t => {
         t.equal(adapter.authenticate.called, true,
             'starts authentication process');
 
+        // eslint-disable-next-line camelcase
         adapter.parseHash.returns({access_token: '1'});
         return adapter.checkAuth();
     })
@@ -95,18 +96,18 @@ test('components/dropbox/Adapter: parseHash()', t => {
 test('components/dropbox/Adapter: authenticate()', t => {
     const adapter = new Adapter(configs);
     const wind    = window;
-    window        = {cordova: null};
+    global.window = {cordova: null};
     sand.stub(adapter, 'authCordova');
     sand.stub(adapter, 'authBrowser');
 
     adapter.authenticate();
     t.equal(adapter.authBrowser.called, true, 'calls .authBrowser()');
 
-    window.cordova = {};
+    global.window.cordova = {};
     adapter.authenticate();
     t.equal(adapter.authCordova.called, true, 'calls .authCordova()');
 
-    window = wind;
+    global.window = wind;
     sand.restore();
     t.end();
 });
@@ -115,7 +116,7 @@ test('components/dropbox/Adapter: authBrowser()', t => {
     const adapter = new Adapter(configs);
     const authUrl = 'http://localhost:8000/';
     const wind    = window;
-    window        = {location: ''};
+    global.window        = {location: ''};
 
     sand.stub(adapter.dbx, 'getAuthenticationUrl').returns(authUrl);
     sand.stub(_, 'i18n').callsFake(str => str);
@@ -141,12 +142,12 @@ test('components/dropbox/Adapter: authBrowser()', t => {
     .then(() => {
         t.equal(adapter.authElectron.called, true, 'waits for a response from Electron');
 
-        window = wind;
+        global.window = wind;
         sand.restore();
         t.end();
     })
     .catch(() => {
-        window = wind;
+        global.window = wind;
         sand.restore();
         t.end('resolve promise');
     });
@@ -243,6 +244,7 @@ test('components/dropbox/Adapter: saveAccessToken()', t => {
 test('components/dropbox/Adapter: find()', t => {
     const adapter = new Adapter(configs);
     const resp = {entries: [
+        // eslint-disable-next-line camelcase
         {name: '1.json', path_lower: '/1.json'}, {name: '2', path_lower: '/2'},
     ]};
     sand.stub(adapter, 'readDir').withArgs({path: '/default/notes'})
@@ -270,6 +272,7 @@ test('components/dropbox/Adapter: readDir()', t => {
     const res     = [{name: '1'}];
     sand.stub(adapter.dbx, 'filesListFolder').withArgs({
         path            : '/notes',
+        // eslint-disable-next-line camelcase
         include_deleted : false,
     })
     .resolves(res);
@@ -286,20 +289,25 @@ test('components/dropbox/Adapter: readDir()', t => {
     });
 });
 
-// @todo
+/**
+ * @todo
+ *
+ 
 test('components/dropbox/Adapter: readFile()', t => {
     const adapter = new Adapter(configs);
     const data    = {id: '1', title: 'Test'};
 
-    // sand.stub(adapter.dbx, 'filesDownload').withArgs({path: '/notes/1.json'})
-    // .resolves(data);
+    sand.stub(adapter.dbx, 'filesDownload').withArgs({path: '/notes/1.json'})
+    .resolves(data);
 
-    // adapter.readFile({path: '/notes/1.json'})
-    // .then(() => {
+    adapter.readFile({path: '/notes/1.json'})
+    .then(() => {
     sand.restore();
     t.end();
-    // });
+    });
 });
+
+ */
 
 test('components/dropbox/Adapter: findModel()', t => {
     const adapter = new Adapter(configs);

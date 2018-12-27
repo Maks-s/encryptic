@@ -4,7 +4,6 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-// import Radio from 'backbone.radio';
 import Mousetrap from 'mousetrap';
 
 import _ from '../../../../src/scripts/utils/underscore';

@@ -58,7 +58,7 @@ test('collections/modules/Module: configs', t => {
 
 test('collections/modules/Module: user', t => {
     const user = {username: 'alice', privateKey: '--', publicKey: '--pub'};
-    const req  = sand.stub(Radio, 'request').returns(user);
+    sand.stub(Radio, 'request').returns(user);
 
     t.equal(Module.prototype.user, user);
 

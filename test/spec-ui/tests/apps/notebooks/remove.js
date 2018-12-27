@@ -1,6 +1,6 @@
 'use strict';
-let expect = require('chai').expect,
-    notebookCount;
+import {expect} from 'chai';
+let notebookCount;
 
 /**
  * Notebook removal test

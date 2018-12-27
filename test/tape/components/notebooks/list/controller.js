@@ -6,13 +6,11 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-/* eslint-disable */
 import Notebooks from '../../../../../src/scripts/collections/Notebooks';
 import Tags from '../../../../../src/scripts/collections/Tags';
 import Controller from '../../../../../src/scripts/components/notebooks/list/Controller';
 import View from '../../../../../src/scripts/components/notebooks/list/views/Layout';
 import _ from '../../../../../src/scripts/utils/underscore';
-/* eslint-enable */
 
 let sand;
 test('notebooks/list/Controller: before()', t => {

@@ -68,7 +68,7 @@ test('Layout: show()', t => {
 
 test('Layout: empty()', t => {
     const view  = new Layout();
-    const show  = sand.stub(view, 'showChildView');
+    sand.stub(view, 'showChildView');
 
     const empty = sand.stub();
     sand.stub(view, 'getRegion').withArgs('content')

@@ -5,7 +5,6 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../src/scripts/utils/underscore';
 import codemirror from 'codemirror';
 
 import Controller from '../../../../src/scripts/components/codemirror/Editor';
@@ -54,7 +53,8 @@ test('codemirror/Controller: init()', t => {
         spellcheck      : true,
     }), true, 'instantiates codemirror editor');
 
-    t.deepEqual(con.instance, {test: '1'}, 'saves codemirror instance in editor property');
+    t.deepEqual(con.instance, {test: '1'},
+        'saves codemirror instance in editor property');
 
     sand.restore();
     t.end();

@@ -5,10 +5,7 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-/* eslint-disable */
-import _ from '../../../../../src/scripts/utils/underscore';
 import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
-/* eslint-enable */
 
 let sand;
 test('settings/show/Behavior: before()', t => {
@@ -33,7 +30,6 @@ test('settings/show/Behavior: events()', t => {
 
 test('settings/show/Behavior: triggerChange()', t => {
     const behavior = Behavior.prototype;
-    const attr     = sand.stub();
     const jq       = {
         attr : sand.stub(),
         val  : sand.stub().returns('codemirror'),

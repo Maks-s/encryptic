@@ -6,10 +6,9 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-/* eslint-disable */
 import Configs from '../../../../../src/scripts/collections/Configs';
+// eslint-disable-next-line max-len
 import Controller from '../../../../../src/scripts/components/help/keybindings/Controller';
-/* eslint-enable */
 
 let sand;
 test('help/keybindings/controller: before()', t => {

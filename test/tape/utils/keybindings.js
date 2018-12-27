@@ -7,12 +7,9 @@ import sinon from 'sinon';
 import _ from 'underscore';
 import Configs from '../../../src/scripts/collections/Configs';
 import Radio from 'backbone.radio';
+import Mousetrap from 'mousetrap';
 
-const Mousetrap     = require('mousetrap');
-global.Mousetrap    = Mousetrap;
-
-const keybindings   = require('../../../src/scripts/utils/Keybindings');
-const Keybindings   = keybindings.default;
+import Keybindings from '../../../src/scripts/utils/Keybindings';
 
 let sand;
 test('utils/Keybindings: before()', t => {

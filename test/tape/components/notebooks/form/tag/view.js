@@ -4,11 +4,8 @@
  */
 import test from 'tape';
 
-/* eslint-disable */
-import _ from '../../../../../../src/scripts/utils/underscore';
 import View from '../../../../../../src/scripts/components/notebooks/form/tag/View';
 import ModalForm from '../../../../../../src/scripts/behaviors/ModalForm';
-/* eslint-enable */
 
 test('notebooks/form/tag/View: className', t => {
     t.equal(View.prototype.className, 'modal fade');

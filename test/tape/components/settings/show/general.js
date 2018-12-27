@@ -5,12 +5,9 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-/* eslint-disable */
-import _ from '../../../../../src/scripts/utils/underscore';
 import View from '../../../../../src/scripts/components/settings/show/general/View';
 import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
 import Configs from '../../../../../src/scripts/collections/Configs';
-/* eslint-enable */
 
 let sand;
 test('settings/show/general/View: before()', t => {

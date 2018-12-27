@@ -5,13 +5,12 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../../src/scripts/utils/underscore';
 import localforage from 'localforage';
 
-// eslint-disable-next-line
-const Controller = require('../../../../../src/scripts/components/importExport/migrate/Controller').default;
-// eslint-disable-next-line
-const Encryption = require('../../../../../src/scripts/components/importExport/migrate/Encryption').default;
+/* eslint-disable max-len */
+import Controller from '../../../../../src/scripts/components/importExport/migrate/Controller';
+import Encryption from '../../../../../src/scripts/components/importExport/migrate/Encryption';
+/* eslint-enable */
 
 let sand;
 test('importExport/migrate/Controller: before()', t => {
@@ -265,7 +264,8 @@ test('importExport/migrate/Controller: migrateModel()', t => {
     t.equal(typeof res.then, 'function', 'returns a promise');
     t.equal(decrypt.calledWith({attributes}), true, 'decrypts the attributes');
 
-    t.equal(req.calledWith('collections/Notes', 'saveModelObject'), true,'saves the model');
+    t.equal(req.calledWith('collections/Notes', 'saveModelObject'),
+        true,'saves the model');
 
     sand.restore();
     t.end();

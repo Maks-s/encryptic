@@ -6,17 +6,15 @@ import test from 'tape';
 import sinon from 'sinon';
 import _ from 'underscore';
 import Radio from 'backbone.radio';
+import List from '../../../../src/scripts/components/notes/list/Controller';
+import Show from '../../../../src/scripts/components/notes/show/Controller';
 
 // Fix mousetrap bug
-const Mousetrap     = require('mousetrap');
-global.Mousetrap    = Mousetrap;
-
-/* eslint-disable */
+global.Mousetrap = require('mousetrap');
 const controller = require('../../../../src/scripts/components/notes/controller').default;
-const List       = require('../../../../src/scripts/components/notes/list/Controller').default;
-const Show       = require('../../../../src/scripts/components/notes/show/Controller').default;
+// eslint-disable-next-line max-len
 const Form       = require('../../../../src/scripts/components/notes/form/Controller').default;
-/* eslint-enable */
+
 
 let sand;
 test('notes/Controller: before()', t => {

@@ -5,16 +5,11 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
+
 import _ from '../../../../../src/scripts/utils/underscore';
 import Note from '../../../../../src/scripts/models/Note';
-
-// Fix mousetrap bug
-const Mousetrap     = require('mousetrap');
-global.Mousetrap    = Mousetrap;
-
-// eslint-disable-next-line
-const Controller = require('../../../../../src/scripts/components/notes/form/Controller').default;
-const View       = require('../../../../../src/scripts/components/notes/form/views/Form').default;
+import Controller from '../../../../../src/scripts/components/notes/form/Controller';
+import View from '../../../../../src/scripts/components/notes/form/views/Form';
 
 let sand;
 test('notes/form/Controller: before()', t => {
@@ -103,8 +98,10 @@ test('notes/form/Controller: show()', t => {
     const trig    = sand.stub(View.prototype, 'triggerMethod');
 
     con.show();
-    t.deepEqual(con.dataBeforeChange, _.omit(con.model.attributes, 'created', 'updated', 'encryptedData'),
+    t.deepEqual(con.dataBeforeChange,
+        _.omit(con.model.attributes, 'created', 'updated', 'encryptedData'),
         'saves model attributes to restore it later');
+
     t.equal(req.calledWithMatch('Layout', 'show', {region: 'content'}), true,
         'renders the view');
     t.equal(trig.calledWith('after:render'), true, 'triggers after:render event');
@@ -157,8 +154,8 @@ test('notes/form/Controller: save()', t => {
     const con    = new Controller({});
     con.view     = new View({model: new Note()});
 
-    const req      = sand.stub(Radio, 'request');
     const notesReq = sand.stub(con.notesChannel, 'request');
+    sand.stub(Radio, 'request');
     sand.stub(con, 'getData').resolves({title: 'Ok'});
     sand.spy(con, 'checkTitle');
     sand.stub(con, 'redirect');

@@ -6,11 +6,9 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-/* eslint-disable */
 import _ from '../../../../../src/scripts/utils/underscore';
+// eslint-disable-next-line max-len
 import View from '../../../../../src/scripts/components/settings/show/encryption/Passphrase';
-import Configs from '../../../../../src/scripts/collections/Configs';
-/* eslint-enable */
 
 let sand;
 test('settings/show/encryption/Passphrase: before()', t => {

@@ -6,10 +6,9 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import sjcl from 'sjcl';
-import _ from '../../../../../src/scripts/utils/underscore';
 
-// eslint-disable-next-line
-const Encryption = require('../../../../../src/scripts/components/importExport/migrate/Encryption').default;
+// eslint-disable-next-line max-len
+import Encryption from '../../../../../src/scripts/components/importExport/migrate/Encryption';
 
 const encryptConfigs = {
     encrypt        : 1,

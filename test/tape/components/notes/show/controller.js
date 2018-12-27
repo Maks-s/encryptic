@@ -182,7 +182,7 @@ test('notes/show/Controller: toggleTask()', async t => {
     };
     const request = sand.stub(Radio, 'request').resolves(result);
 
-    const res = await con.toggleTask({taskId: 1});
+    await con.toggleTask({taskId: 1});
 
     t.equal(request.calledWithMatch('markdown', 'toggleTask', {
         taskId  : 1,

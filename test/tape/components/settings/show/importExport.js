@@ -4,14 +4,9 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Radio from 'backbone.radio';
 
-/* eslint-disable */
-import _ from '../../../../../src/scripts/utils/underscore';
 import View from '../../../../../src/scripts/components/settings/show/importExport/View';
-import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
 import Configs from '../../../../../src/scripts/collections/Configs';
-/* eslint-enable */
 
 let sand;
 test('settings/show/importExport/View: before()', t => {

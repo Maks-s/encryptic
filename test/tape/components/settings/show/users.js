@@ -5,12 +5,10 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-/* eslint-disable */
 import Radio from 'backbone.radio';
 import _ from '../../../../../src/scripts/utils/underscore';
 import View from '../../../../../src/scripts/components/settings/show/sync/Users';
 import Users from '../../../../../src/scripts/collections/Users';
-/* eslint-enable */
 
 let sand;
 test('settings/show/sync/Users: before()', t => {
@@ -103,8 +101,10 @@ test('settings/show/sync/Users: acceptInvite()', t => {
 
     view.acceptInvite(e)
     .then(() => {
+        // eslint-disable-next-line max-len
         t.equal(view.showConfirm.calledWith(e, 'Confirm you want to add the user to trust'),
             true, 'shows a confirmation dialog');
+
         t.equal(model.channel.request.notCalled, true, 'does not accept the invite');
 
         view.showConfirm.resolves(['confirm', model]);
@@ -133,6 +133,7 @@ test('settings/show/sync/Users: removeFromTrust()', t => {
     view.removeFromTrust(e)
     .then(() => {
         t.equal(e.preventDefault.called, true, 'prevents the default behaviour');
+        // eslint-disable-next-line max-len
         t.equal(view.showConfirm.calledWith(e, 'Confirm you want to remove the user from trust'),
             true, 'shows a confirmation dialog');
         t.equal(model.channel.request.notCalled, true,

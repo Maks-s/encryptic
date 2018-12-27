@@ -5,7 +5,6 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import _ from '../../../../src/scripts/utils/underscore';
 
 import Export from '../../../../src/scripts/components/importExport/Export';
 import Profile from '../../../../src/scripts/models/Profile';
@@ -245,7 +244,9 @@ test('importExport/Export: exportNote()', t => {
     mod.set({encryptedData: '--encryptedData--', id: '2'});
     con.exportNote('backups', mod);
     t.equal(con.zip.file.calledWith('backups/notes/2.md', mod.get('content')),
-        false, 'does not save plain text Markdown if a model has encryptedData attribute');
+        false,
+        'does not save plain text Markdown if a model has encryptedData attribute');
+
     t.equal(con.zip.file.calledWith('backups/notes/2.json'),
         true, 'saves other attributes in a JSON file');
 

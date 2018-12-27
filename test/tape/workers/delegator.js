@@ -6,7 +6,6 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-// eslint-disable-next-line
 import {default as Delegator, initializer} from '../../../src/scripts/workers/Delegator';
 
 let sand;

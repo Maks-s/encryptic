@@ -231,7 +231,7 @@ test('collections/modules/Configs: saveConfig()', t => {
     const config = {name: 'test', value: '1'};
 
     mod.saveConfig({config})
-    .then(res => {
+    .then(() => {
         t.equal(find.calledWithMatch({name: 'test'}), true,
             'tries to find the config model');
         t.equal(save.notCalled, true, 'does not save if the model was not found');

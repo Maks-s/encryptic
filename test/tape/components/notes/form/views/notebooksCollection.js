@@ -7,7 +7,7 @@ import sinon from 'sinon';
 
 import _ from '../../../../../../src/scripts/utils/underscore';
 
-/* eslint-disable */
+/* eslint-disable max-len */
 import View from '../../../../../../src/scripts/components/notes/form/views/NotebooksCollection';
 import NotebookView from '../../../../../../src/scripts/components/notes/form/views/Notebook';
 /* eslint-enable */

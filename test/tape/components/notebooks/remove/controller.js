@@ -6,12 +6,11 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-/* eslint-disable */
 import Notebook from '../../../../../src/scripts/models/Notebook';
 import Tag from '../../../../../src/scripts/models/Tag';
+// eslint-disable-next-line max-len
 import Controller from '../../../../../src/scripts/components/notebooks/remove/Controller';
 import _ from '../../../../../src/scripts/utils/underscore';
-/* eslint-enable */
 
 let sand;
 test('notebooks/remove/Controller: before()', t => {
@@ -66,7 +65,6 @@ test('notebooks/remove/Controller: remove()', t => {
 
 test('notebooks/remove/Controller: showConfirm()', t => {
     const con   = new Controller();
-    const model = new Notebook({id: '1'});
     const req   = sand.stub(Radio, 'request');
     sand.stub(_, 'i18n').callsFake(str => str);
 

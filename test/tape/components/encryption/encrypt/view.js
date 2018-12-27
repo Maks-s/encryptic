@@ -6,10 +6,7 @@ import test from 'tape';
 import sinon from 'sinon';
 import _ from '../../../../../src/scripts/utils/underscore';
 
-/* eslint-disable */
 import View from '../../../../../src/scripts/components/encryption/encrypt/View';
-import Notes from '../../../../../src/scripts/collections/Notes';
-/* eslint-enable */
 
 let sand;
 test('encryption/encrypt/View: before()', t => {

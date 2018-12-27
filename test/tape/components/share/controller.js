@@ -8,7 +8,6 @@ import Radio from 'backbone.radio';
 import Controller from '../../../../src/scripts/components/share/Controller';
 import Note from '../../../../src/scripts/models/Note';
 import Users from '../../../../src/scripts/collections/Users';
-import View from '../../../../src/scripts/components/share/View';
 
 let sand;
 test('share/Controller: before()', t => {

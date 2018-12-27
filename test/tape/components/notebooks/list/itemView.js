@@ -6,12 +6,10 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-/* eslint-disable */
 import _ from '../../../../../src/scripts/utils/underscore';
 import View from '../../../../../src/scripts/components/notebooks/list/views/ItemView';
 import NavModel from '../../../../../src/scripts/behaviors/NavModel';
 import Model from '../../../../../src/scripts/models/Tag';
-/* eslint-enable */
 
 test('notebooks/list/views/ItemView: className', t => {
     t.equal(View.prototype.className, 'list--group list-group');

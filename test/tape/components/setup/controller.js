@@ -130,7 +130,8 @@ test('setup/Controller: checkUser()', t => {
     const req     = sand.stub(Radio, 'request').resolves({});
     Object.defineProperty(con, 'profiles', {get: () => profiles});
 
-    const user    = {username: 'test'};
+    // Removed, see below
+    // const user    = {username: 'test'};
     const trigger = sand.stub();
     con.view      = {
         showRegister  : sand.stub(),

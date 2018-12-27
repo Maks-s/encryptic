@@ -3,7 +3,6 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Radio from 'backbone.radio';
 
 import '../../../../src/scripts/utils/underscore';
 import Module from '../../../../src/scripts/modules/Profiles';

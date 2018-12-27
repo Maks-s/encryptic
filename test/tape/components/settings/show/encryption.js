@@ -4,16 +4,12 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import * as openpgp from 'openpgp';
 import Radio from 'backbone.radio';
 
-/* eslint-disable */
-import _ from '../../../../../src/scripts/utils/underscore';
 import View from '../../../../../src/scripts/components/settings/show/encryption/View';
 import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
 import Configs from '../../../../../src/scripts/collections/Configs';
 import Profile from '../../../../../src/scripts/models/Profile';
-/* eslint-enable */
 
 let sand;
 const user = new Profile({username: 'alice', publicKey: 'pub', privateKey: 'priv'});

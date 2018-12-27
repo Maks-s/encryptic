@@ -8,11 +8,9 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import '../../../../../src/scripts/utils/underscore';
 
-/* eslint-disable */
+// eslint-disable-next-line max-len
 import Controller from '../../../../../src/scripts/components/encryption/encrypt/Controller';
-import View from '../../../../../src/scripts/components/encryption/encrypt/View';
 import Notes from '../../../../../src/scripts/collections/Notes';
-/* eslint-enable */
 
 let sand;
 test('encryption/encrypt/Controller: before()', t => {

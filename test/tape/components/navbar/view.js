@@ -265,7 +265,7 @@ test('navbar/View: serializeData()', t => {
         notebooks    : new Notebooks(),
         configs      : {navbarNotebooksMax : 10},
     });
-    const req  = sand.stub(Radio, 'request').returns('testurl');
+    sand.stub(Radio, 'request').returns('testurl');
     sand.spy(_, 'first');
 
     const res = view.serializeData();

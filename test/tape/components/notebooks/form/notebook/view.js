@@ -4,12 +4,10 @@
  */
 import test from 'tape';
 
-/* eslint-disable */
 import _ from '../../../../../../src/scripts/utils/underscore';
 import Notebooks from '../../../../../../src/scripts/collections/Notebooks';
 import View from '../../../../../../src/scripts/components/notebooks/form/notebook/View';
 import ModalForm from '../../../../../../src/scripts/behaviors/ModalForm';
-/* eslint-enable */
 
 test('notebooks/form/notebook/View: className', t => {
     t.equal(View.prototype.className, 'modal fade');

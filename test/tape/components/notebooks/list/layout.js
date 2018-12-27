@@ -7,13 +7,11 @@ import sinon from 'sinon';
 import Radio from 'backbone.radio';
 import Mousetrap from 'mousetrap';
 
-/* eslint-disable */
 import _ from '../../../../../src/scripts/utils/underscore';
 import View from '../../../../../src/scripts/components/notebooks/list/views/Layout';
 import Notebooks from '../../../../../src/scripts/collections/Notebooks';
 import Tags from '../../../../../src/scripts/collections/Tags';
 import Sidebar from '../../../../../src/scripts/behaviors/Sidebar';
-/* eslint-enable */
 
 let sand;
 test('notebooks/list/views/Layout: before()', t => {

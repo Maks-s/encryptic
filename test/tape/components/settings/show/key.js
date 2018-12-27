@@ -6,11 +6,7 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-/* eslint-disable */
-import _ from '../../../../../src/scripts/utils/underscore';
 import View from '../../../../../src/scripts/components/settings/show/encryption/Key';
-import Configs from '../../../../../src/scripts/collections/Configs';
-/* eslint-enable */
 
 let sand;
 test('settings/show/encryption/Key: before()', t => {

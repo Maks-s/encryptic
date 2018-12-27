@@ -48,13 +48,15 @@ test('collections/modules/Files: saveModel()', t => {
 
     const opt = {model, data: {src: 'file-src'}};
     mod.saveModel(opt);
-    t.equal(model.id, md5.create().update('file-src').hex(), // eslint-disable-line
+    // eslint-disable-next-line newline-per-chained-call
+    t.equal(model.id, md5.create().update('file-src').hex(),
         'uses md5 sum of the data.src as the ID');
     t.equal(save.calledWith(opt), true, 'saves the file');
 
     const model2 = new File({src: 'file-src2'});
     mod.saveModel({data: {}, model: model2});
-    t.equal(model2.id, md5.create().update('file-src2').hex(), // eslint-disable-line
+    // eslint-disable-next-line newline-per-chained-call
+    t.equal(model2.id, md5.create().update('file-src2').hex(),
         'uses md5 sum of the src atribute as the ID');
 
     const model3 = new File();

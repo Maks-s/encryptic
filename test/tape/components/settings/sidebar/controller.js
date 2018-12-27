@@ -6,9 +6,8 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-/* eslint-disable */
+// eslint-disable-next-line max-len
 import Controller from '../../../../../src/scripts/components/settings/sidebar/Controller';
-/* eslint-enable */
 
 let sand;
 test('settings/sidebar/Controller: before()', t => {

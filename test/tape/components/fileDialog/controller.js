@@ -173,7 +173,6 @@ test('fileDialog/Controller: saveFiles()', t => {
 });
 
 test('fileDialog/Controller: attachFiles()', t => {
-    const model = new Backbone.Model({fileModels: ['1']});
     const con = new Controller();
     const req = sand.stub(Radio, 'request').returns('url');
     sand.stub(con, 'makeText');

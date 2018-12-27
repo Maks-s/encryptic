@@ -6,10 +6,8 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-/* eslint-disable */
 import View from '../../../../../src/scripts/components/settings/sidebar/views/View';
 import Sidebar from '../../../../../src/scripts/behaviors/Sidebar';
-/* eslint-enable */
 
 let sand;
 test('settings/sidebar/views/View: before()', t => {

@@ -7,10 +7,8 @@ import sinon from 'sinon';
 
 import '../../../../../../src/scripts/utils/underscore';
 
-/* eslint-disable */
 import View from '../../../../../../src/scripts/components/notes/form/views/Notebook';
 import Notebook from '../../../../../../src/scripts/models/Notebook';
-/* eslint-enable */
 
 test('notes/form/Notebook: tagName', t => {
     t.equal(View.prototype.tagName, 'option');

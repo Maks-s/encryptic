@@ -127,7 +127,7 @@ test('importExport/ImportEvernote: parseData() - note', t => {
     const a = '\\[bitcoin.pdf\\]\\(#file:d56d71ecadf2137be09d8b1d35c6c042\\)';
     t.notEqual(data.note.content.search(a), -1, 'content contains a link to bitcoin.pdf');
 
-    // eslint-disable-next-line
+    // eslint-disable-next-line max-len
     const p = '!\\[2000px-Bitcoin_logo_svg.png\\]\\(#file:161db755b7b5bb7c5a69a74c0d7f116c\\)';
     t.notEqual(data.note.content.search(p), -1, 'content contains image');
 

@@ -1,6 +1,6 @@
 'use strict';
-let expect = require('chai').expect,
-    ids    = [];
+import {expect} from 'chai';
+let ids = [];
 
 /**
  * Edit notebook form test

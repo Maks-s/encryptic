@@ -6,12 +6,9 @@ import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
 
-/* eslint-disable */
-import _ from '../../../../../src/scripts/utils/underscore';
 import View from '../../../../../src/scripts/components/settings/show/sync/View';
 import Behavior from '../../../../../src/scripts/components/settings/show/Behavior';
 import Configs from '../../../../../src/scripts/collections/Configs';
-/* eslint-enable */
 
 let sand;
 test('settings/show/sync/View: before()', t => {
@@ -80,7 +77,7 @@ test('settings/show/sync/View: showSync()', t => {
     const SyncView = sand.stub();
 
     const show = sand.stub(view, 'showChildView');
-    const req  = sand.stub(Radio, 'request')
+    sand.stub(Radio, 'request')
     .withArgs('components/dropbox', 'getSettingsView')
     .returns(SyncView);
 

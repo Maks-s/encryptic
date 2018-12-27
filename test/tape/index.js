@@ -4,13 +4,12 @@ import glob from 'glob';
 import {LocalStorage} from 'node-localstorage';
 import overrideTemplate from './overrideTemplate';
 import raf from 'raf';
-import _ from 'underscore';
 
 try {
     mkdirSync(`${__dirname}/../../_dev`);
     mkdirSync(`${__dirname}/../../_dev/scratch`);
 }
-// eslint-disable-next-line
+// eslint-disable-next-line no-empty
 catch (e) {
 }
 

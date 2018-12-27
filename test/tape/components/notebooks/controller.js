@@ -5,12 +5,11 @@
 import test from 'tape';
 import sinon from 'sinon';
 
-/* eslint-disable */
 import controller from '../../../../src/scripts/components/notebooks/controller';
 import List from '../../../../src/scripts/components/notebooks/list/Controller';
+// eslint-disable-next-line max-len
 import NotebookForm from '../../../../src/scripts/components/notebooks/form/notebook/Controller';
 import TagForm from '../../../../src/scripts/components/notebooks/form/tag/Controller';
-/* eslint-enable */
 
 let sand;
 test('notebooks/Controller: before()', t => {

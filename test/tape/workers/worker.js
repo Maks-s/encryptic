@@ -15,6 +15,7 @@ global.self     = {
     postMessage: () => {},
 };
 
+// if we use import, it breaks
 const {delegator, onMessage} = require('../../../src/scripts/workers/worker');
 
 let sand;

@@ -133,22 +133,23 @@ export default class Encryption {
                 publicKeys  : {},
             };
 
-            
+
             // Try to decrypt the private key
             if ((await this.keys.privateKey.decrypt(options.passphrase)) === false) {
                 return Promise.reject('Cannot decrypt the private key');
             }
 
             // My public key
-            this.keys.publicKeys[this.user.username] = this.keys.privateKeys[0].toPublic();
+            const username = this.user.username;
+            this.keys.publicKeys[username] = this.keys.privateKeys[0].toPublic();
 
             return this.readPublicKeys()
             .then(() => {
-                return this.keys;    
+                return this.keys;
             });
         })()
         .then(successmessage => {
-            // console.log("successmessage: ");
+            // console.log('successmessage: ');
             // console.log(successmessage);
             Radio.request('components/Encryption', 'saveKeys', successmessage);
             return successmessage;
@@ -170,10 +171,10 @@ export default class Encryption {
      * @returns {Promise}
      */
     readPublicKeys() {
-        console.log("encryption: readPublicKeys()");
+        console.log('encryption: readPublicKeys()');
         return Radio.request('collections/Users', 'find')
         .then(collection => {
-            // console.log("readPublicKeys():");
+            // console.log('readPublicKeys():');
             collection.each(model => {
                 if (!model.get('pendingAccept')) {
                     // console.log({model});
@@ -209,7 +210,7 @@ export default class Encryption {
      * @returns {Promise} - resolves with an object {privateKey, publicKey}
      */
     generateKeys(options) {
-        console.log("encryption: generateKeys()");
+        console.log('encryption: generateKeys()');
         const opt = _.extend({
             numBits: 2048,
         }, options);
@@ -234,7 +235,7 @@ export default class Encryption {
      * @returns {Promise} resolves with the new private key
      */
     changePassphrase(options) {
-        console.log("encryption: changePassphrase()");
+        console.log('encryption: changePassphrase()');
         const privateKey = this.openpgp.key.readArmored(this.user.privateKey).keys[0];
 
         // Try to decrypt the private key
@@ -267,8 +268,8 @@ export default class Encryption {
      * @returns {Promise}
      */
     sign({data}) {
-        console.log("encryption: sign()");
-        // console.log("Before data:");
+        console.log('encryption: sign()');
+        // console.log('Before data:');
         // console.log(data)
         const message = this.openpgp.message.fromText(data);
         // console.log('after data: ');
@@ -289,17 +290,18 @@ export default class Encryption {
      * @returns {Promise}
      */
     verify(options) {
-        console.log("encryption: verify()");
+        console.log('encryption: verify()');
         const message = this.openpgp.cleartext.readArmored(options.message);
         const keys    = options.publicKeys || this.getUserKeys(options.username);
         return this.openpgp.verify({message, publicKeys: keys.publicKeys || keys});
     }
 
     /**
-     * Return an object that contains a user's public key.  This was originally marked protected, but
-     * in components/settings/show/encryption/View.js we then go out of our way to obtain the private
-     * key in a way that's neither maintainable nor compatible with the current version (4.0.1) of
-     * openpgpjs.  As such (and since anyone can get the private key by looking in localstorage anyway),
+     * Return an object that contains a user's public key.This was originally marked protected, but
+     * in components/settings/show/encryption/View.js we then go out of our way to obtain
+     * the private key in a way that's neither maintainable nor compatible with the current version
+     * (4.0.1) of openpgpjs.
+     * As such (and since anyone can get the private key by looking in localstorage anyway),
      * I'm going to be practical here.
      *
      * @public
@@ -307,7 +309,7 @@ export default class Encryption {
      * @return {Object} - {privateKeys, publicKeys}
      */
     getUserKeys(username) {
-        console.log("encryption: getUserKeys()");
+        console.log('encryption: getUserKeys()');
         const publicKeys = [this.keys.publicKeys[this.user.username]];
 
 
@@ -316,7 +318,7 @@ export default class Encryption {
             publicKeys.push(this.keys.publicKeys[username]);
         }
 
-        console.log("encryption: getUserKeys(): returning keys")
+        console.log('encryption: getUserKeys(): returning keys');
         return {
             publicKeys,
             privateKey : this.keys.privateKey,
@@ -336,21 +338,24 @@ export default class Encryption {
      * @returns {Promise} - resolves with an encrypted string
      */
     async encrypt(options) {
-        console.log("encryption: encrypt(): starting data:");
+        console.log('encryption: encrypt(): starting data:');
         console.log(options.data);
         const keys = this.getUserKeys(options.username);
         // openpgp 4 needs a 'message', not 'data'
-        if (keys.publickeys == null && keys.privateKey == null)
-        {
-            console.log("encryption: encrypt(): no pub/priv key found.  Is this an old laverna import?  Passing through in case it is.");
+        if (keys.publickeys === null && keys.privateKey === null) {
+            // eslint-disable-next-line max-len
+            console.log('encryption: encrypt(): no pub/priv key found. Is this an old laverna import?');
             return options.data;
         }
-        options.message = this.openpgp.message.fromText(options.data);
-        options.publicKeys = keys.publicKeys;
-        options.privateKeys = keys.privateKeys;
+
+        const encryptOptions = options;
+        encryptOptions.message = this.openpgp.message.fromText(options.data);
+        encryptOptions.publicKeys = keys.publicKeys;
+        encryptOptions.privateKeys = keys.privateKeys;
+
         // importing from laverna 0.7.51 throws a "Unknown ASCII armor type" error here.
         // I think it is breaking the import.
-        const enc  = await this.openpgp.encrypt(options);
+        const enc  = await this.openpgp.encrypt(encryptOptions);
         return enc.data;
     }
 
@@ -366,7 +371,7 @@ export default class Encryption {
      * @returns {Promise}
      */
     async decrypt(options) {
-        console.log("encryption: decrypt()");
+        console.log('encryption: decrypt()');
         const t0 = performance.now();
         const keys = this.getUserKeys(options.username);
         // console.log('Encryption.js: readArmored() start');
@@ -382,7 +387,7 @@ export default class Encryption {
             // console.log(plaintext.data);
             return plaintext.data;
         });
-        const t1 = performance.now();   
+        const t1 = performance.now();
         console.log(`Encryption.js: decrypt() end +${(t1 - t0).toString()}`);
         return plaintext;
     }
@@ -396,7 +401,7 @@ export default class Encryption {
      * @returns {Promise} resolve with the model
      */
     async encryptModel({model, username}) {
-        console.log("encryption: encryptModel()");
+        console.log('encryption: encryptModel()');
         // Don't encrypt if encryption is disabled
         if (!Number(this.configs.encrypt)) {
             log('do not encrypt');
@@ -405,7 +410,7 @@ export default class Encryption {
 
         const data = _.pick(model.attributes, model.encryptKeys);
 
-        // console.log("model");
+        // console.log('model');
         // console.log(model);
         const encryptedData = await this.encrypt({username, data: JSON.stringify(data)});
         model.set({encryptedData});
@@ -421,7 +426,7 @@ export default class Encryption {
      * @returns {Promise} resolves with the model
      */
     async decryptModel({model, username}) {
-        console.log("encryption: decryptModel()");
+        console.log('encryption: decryptModel()');
         const message = model.attributes.encryptedData;
 
         if (!message.length) {
@@ -430,7 +435,7 @@ export default class Encryption {
 
         return this.decrypt({message, username})
         .then(msg => {
-            // console.log("decryptModel: this.decrypt returned: ");
+            // console.log('decryptModel: this.decrypt returned: ');
             // console.log(msg);
             model.set(JSON.parse(msg));
             return model;
@@ -446,7 +451,7 @@ export default class Encryption {
      * @returns {Promise}
      */
     encryptCollection({collection, username}) {
-        console.log("encryption: encryptCollection()");
+        console.log('encryption: encryptCollection()');
         // Don't decrypt if the collection is empty or encryption is disabled
         if (!collection.length || !Number(this.configs.encrypt)) {
             return Promise.resolve(collection);
@@ -470,7 +475,7 @@ export default class Encryption {
      * @returns {Promise}
      */
     decryptCollection({collection, username}) {
-        console.log("encryption: decryptCollection()");
+        console.log('encryption: decryptCollection()');
         if (!collection.length) {
             return Promise.resolve(collection);
         }

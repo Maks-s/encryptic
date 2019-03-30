@@ -1,6 +1,6 @@
 {
   "name": "Encryptic",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "An encrypted note-taking application",
   "main": "electron.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "electron-window-state": "^5.0.1",
+    "electron-window-state": "^5.0.3",
     "finalhandler": "^1.1.1",
     "serve-static": "^1.13.2"
   }

@@ -115,7 +115,7 @@ export default class Encryption {
      * @returns {Object}
      */
     readKeys(options = this.options) {
-        console.log('Encryption.js: readKeys()');
+        log('Encryption.js: readKeys()');
         const success = (async() => {
             this.options   = _.extend(this.options, options);
             let privateKey = this.options.privateKey || this.user.privateKey;
@@ -149,12 +149,9 @@ export default class Encryption {
             });
         })()
         .then(successmessage => {
-            // console.log('successmessage: ');
-            // console.log(successmessage);
             Radio.request('components/Encryption', 'saveKeys', successmessage);
             return successmessage;
         });
-        // console.log('Encryption.js: readKeys() end');
         return success;
     }
 
@@ -171,13 +168,11 @@ export default class Encryption {
      * @returns {Promise}
      */
     readPublicKeys() {
-        console.log('encryption: readPublicKeys()');
+        log('encryption: readPublicKeys()');
         return Radio.request('collections/Users', 'find')
         .then(collection => {
-            // console.log('readPublicKeys():');
             collection.each(model => {
                 if (!model.get('pendingAccept')) {
-                    // console.log({model});
                     this.readUserKey({model});
                 }
             });
@@ -192,8 +187,7 @@ export default class Encryption {
      * @returns {Promise<String>} key
      */
     async readUserKey({model}) {
-        console.log("encryption: readUserKey()");
-        // console.log(model.attributes);
+        log('encryption: readUserKey()');
         const pubkey = model.attributes.publicKey;
         const key = (await this.openpgp.key.readArmored(pubkey)).keys[0];
         this.keys.publicKeys[model.get('username')] = key;
@@ -210,7 +204,7 @@ export default class Encryption {
      * @returns {Promise} - resolves with an object {privateKey, publicKey}
      */
     generateKeys(options) {
-        console.log('encryption: generateKeys()');
+        log('encryption: generateKeys()');
         const opt = _.extend({
             numBits: 2048,
         }, options);
@@ -235,7 +229,7 @@ export default class Encryption {
      * @returns {Promise} resolves with the new private key
      */
     changePassphrase(options) {
-        console.log('encryption: changePassphrase()');
+        log('encryption: changePassphrase()');
         const privateKey = this.openpgp.key.readArmored(this.user.privateKey).keys[0];
 
         // Try to decrypt the private key
@@ -268,12 +262,8 @@ export default class Encryption {
      * @returns {Promise}
      */
     sign({data}) {
-        console.log('encryption: sign()');
-        // console.log('Before data:');
-        // console.log(data)
+        log('encryption: sign()');
         const message = this.openpgp.message.fromText(data);
-        // console.log('after data: ');
-        // console.log(message);
         return this.openpgp.sign({message, privateKeys: this.keys.privateKey})
         .then(sign => sign.data);
     }
@@ -290,7 +280,7 @@ export default class Encryption {
      * @returns {Promise}
      */
     verify(options) {
-        console.log('encryption: verify()');
+        log('encryption: verify()');
         const message = this.openpgp.cleartext.readArmored(options.message);
         const keys    = options.publicKeys || this.getUserKeys(options.username);
         return this.openpgp.verify({message, publicKeys: keys.publicKeys || keys});
@@ -309,7 +299,7 @@ export default class Encryption {
      * @return {Object} - {privateKeys, publicKeys}
      */
     getUserKeys(username) {
-        console.log('encryption: getUserKeys()');
+        log('encryption: getUserKeys()');
         const publicKeys = [this.keys.publicKeys[this.user.username]];
 
 
@@ -318,7 +308,7 @@ export default class Encryption {
             publicKeys.push(this.keys.publicKeys[username]);
         }
 
-        console.log('encryption: getUserKeys(): returning keys');
+        log('encryption: getUserKeys(): returning keys');
         return {
             publicKeys,
             privateKey : this.keys.privateKey,
@@ -338,13 +328,13 @@ export default class Encryption {
      * @returns {Promise} - resolves with an encrypted string
      */
     async encrypt(options) {
-        console.log('encryption: encrypt(): starting data:');
-        console.log(options.data);
+        log('encryption: encrypt(): starting data:');
+        log(options.data);
         const keys = this.getUserKeys(options.username);
         // openpgp 4 needs a 'message', not 'data'
         if (keys.publickeys === null && keys.privateKey === null) {
             // eslint-disable-next-line max-len
-            console.log('encryption: encrypt(): no pub/priv key found. Is this an old laverna import?');
+            log('encryption: encrypt(): no pub/priv key found. Is this an old laverna import?');
             return options.data;
         }
 
@@ -371,24 +361,20 @@ export default class Encryption {
      * @returns {Promise}
      */
     async decrypt(options) {
-        console.log('encryption: decrypt()');
+        log('encryption: decrypt()');
         const t0 = performance.now();
         const keys = this.getUserKeys(options.username);
-        // console.log('Encryption.js: readArmored() start');
         const t3 = performance.now();
         const data = _.extend({}, keys, options, {
             message : await this.openpgp.message.readArmored(options.message),
         });
         const t4 = performance.now();
-        console.log(`Encryption.js: readArmored() end +${(t4 - t3).toString()}`);
-        // console.log(data);
+        log(`Encryption.js: readArmored() end +${(t4 - t3).toString()}`);
         const plaintext = this.openpgp.decrypt(data).then(plaintext => {
-            // console.log('Encryption.js: this.openpgp.decrypt (first then()):');
-            // console.log(plaintext.data);
             return plaintext.data;
         });
         const t1 = performance.now();
-        console.log(`Encryption.js: decrypt() end +${(t1 - t0).toString()}`);
+        log(`Encryption.js: decrypt() end +${(t1 - t0).toString()}`);
         return plaintext;
     }
 
@@ -401,7 +387,7 @@ export default class Encryption {
      * @returns {Promise} resolve with the model
      */
     async encryptModel({model, username}) {
-        console.log('encryption: encryptModel()');
+        log('encryption: encryptModel()');
         // Don't encrypt if encryption is disabled
         if (!Number(this.configs.encrypt)) {
             log('do not encrypt');
@@ -409,9 +395,6 @@ export default class Encryption {
         }
 
         const data = _.pick(model.attributes, model.encryptKeys);
-
-        // console.log('model');
-        // console.log(model);
         const encryptedData = await this.encrypt({username, data: JSON.stringify(data)});
         model.set({encryptedData});
         return model;
@@ -426,7 +409,7 @@ export default class Encryption {
      * @returns {Promise} resolves with the model
      */
     async decryptModel({model, username}) {
-        console.log('encryption: decryptModel()');
+        log('encryption: decryptModel()');
         const message = model.attributes.encryptedData;
 
         if (!message.length) {
@@ -435,8 +418,6 @@ export default class Encryption {
 
         return this.decrypt({message, username})
         .then(msg => {
-            // console.log('decryptModel: this.decrypt returned: ');
-            // console.log(msg);
             model.set(JSON.parse(msg));
             return model;
         });
@@ -451,7 +432,7 @@ export default class Encryption {
      * @returns {Promise}
      */
     encryptCollection({collection, username}) {
-        console.log('encryption: encryptCollection()');
+        log('encryption: encryptCollection()');
         // Don't decrypt if the collection is empty or encryption is disabled
         if (!collection.length || !Number(this.configs.encrypt)) {
             return Promise.resolve(collection);
@@ -475,7 +456,7 @@ export default class Encryption {
      * @returns {Promise}
      */
     decryptCollection({collection, username}) {
-        console.log('encryption: decryptCollection()');
+        log('encryption: decryptCollection()');
         if (!collection.length) {
             return Promise.resolve(collection);
         }

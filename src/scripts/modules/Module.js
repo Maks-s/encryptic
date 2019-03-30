@@ -3,6 +3,9 @@
  */
 import _ from 'underscore';
 import Radio from 'backbone.radio';
+import deb from 'debug';
+
+const log = deb('lav:modules/Module');
 
 /**
  * Core collection module. The main purpose of this class is to
@@ -217,8 +220,8 @@ export default class Module {
         // Trigger invalid event if there are any validation errors
         if (errors) {
             model.trigger('invalid', {errors});
-            console.log('Error detected.  Dumping models:');
-            console.log(model.attributes);
+            log('Error detected.  Dumping models:');
+            log(model.attributes);
             return Promise.reject(`Validation error: ${errors}`);
 
         }
@@ -375,11 +378,9 @@ export default class Module {
      * @returns {Promise} resolves with a decrypted model
      */
     decryptModel(model) {
-        // console.log('Encryption.js: decryptModel() start');
         if (!this.isEncryptEnabled(model)) {
             return Promise.resolve(model);
         }
-        // console.log('Encryption.js: decryptModel() end');
         return Radio.request('components/Encryption', 'decryptModel', {model});
     }
 
@@ -418,8 +419,6 @@ export default class Module {
         if (model.storeName === 'edits') {
             username = model.get('username');
         }
-        // console.log("Module.js: encryptModel(): model:" );
-        // console.log(model);
         return Radio.request('components/Encryption', 'encryptModel', {model, username});
     }
 

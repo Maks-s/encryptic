@@ -45,19 +45,11 @@ function createTask(name) {
     'test',
     'copy',
     'copyDist',
-    'copyRelease',
 ].forEach(createTask);
-
-gulp.task('release:after', () => {
-    return gulp.src('./release')
-    .pipe($.shell([
-        'cd ./release && zip -r ../release/webapp.zip ./Encryptic',
-    ]));
-});
 
 /**
  * Build the app.
- * ``gulp build --dev`` to build without minifying.
+ * `gulp build --dev` to build without minifying.
  */
 gulp.task('build', gulp.series(
     'clean:dist',
@@ -69,9 +61,9 @@ createTask('mobile');
 
 // Prepare the release files.
 gulp.task('release', gulp.series(
+    'build',
     'clean:release',
     'copyDist', 
-    'copyRelease',
     'npm:install',
     'electron'
 ));
@@ -79,7 +71,7 @@ gulp.task('release', gulp.series(
 // Build for android
 gulp.task('release-mobile', gulp.series(
     'clean:release',
-    gulp.parallel('copyDist', 'copyRelease'),
+    'copyDist',
     'npm:install',
     'mobile:build'
 ));

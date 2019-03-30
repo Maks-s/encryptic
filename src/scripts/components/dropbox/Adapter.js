@@ -5,6 +5,10 @@ import {Dropbox} from 'dropbox';
 import _ from 'underscore';
 import Radio from 'backbone.radio';
 import Backbone from 'backbone';
+import constants from '../../constants';
+import deb from 'debug';
+
+const log = deb('lav:components/dropbox/Adapter');
 
 /**
  * Dropbox sync adapter.
@@ -15,12 +19,12 @@ import Backbone from 'backbone';
 export default class Adapter {
 
     /**
-     * Default Dropbox app key.
+     * Default Dropbox app key, set to constants because it should never change.
      *
      * @prop {String}
      */
     get clientKey() {
-        return 'hlicys9cs8rj3ep';
+        return constants.dropboxKey;
     }
 
     /**
@@ -59,7 +63,7 @@ export default class Adapter {
         }
         // A user has granted the permission
         else if (hash.access_token && hash.access_token.length) {
-            console.log(`Access token: ${hash.access_token}`);
+            log(`Access token: ${hash.access_token}`);
             return this.saveAccessToken(hash.access_token);
         }
         else {
@@ -109,49 +113,6 @@ export default class Adapter {
         if (window.cordova) {
             return this.authCordova();
         }
-        else {
-            return this.authBrowser();
-        }
-    }
-
-    /**
-     * Authenticate in browser.
-     */
-    async authBrowser() {
-        const url     = window.electron ? 'http://localhost:9000/' : document.location;
-        const authUrl = this.dbx.getAuthenticationUrl(url);
-        const answer  = await Radio.request('components/confirm', 'show', {
-            content: _.i18n('dropbox.auth confirm'),
-        });
-
-        if (answer === 'confirm') {
-            window.location = authUrl;
-            if (window.electron) {
-                return this.authElectron();
-            }
-        }
-    }
-
-    /**
-     * Authenticate in Electron environment.
-     *
-     * @returns {Promise}
-     */
-    authElectron() {
-        const {ipcRenderer} = window.electron;
-
-        return new Promise(resolve => {
-            ipcRenderer.once('lav:dropbox:oauth', (event, {url}) => {
-                const hash = url ? this.parseHash(url.split('#')[1]) : {};
-
-                if (hash.access_token && hash.access_token.length) {
-                    this.saveAccessToken(hash.access_token).then(resolve);
-                }
-                else {
-                    resolve(false);
-                }
-            });
-        });
     }
 
     /**
@@ -235,7 +196,7 @@ export default class Adapter {
      * @returns {Promise}
      */
     async readFile({path}) {
-        console.log('dropbox/Adapter.js: readFile()');
+        log('dropbox/Adapter.js: readFile()');
         const resp = await this.dbx.filesDownload({path});
         return new Promise(resolve => {
             const reader = new FileReader();

@@ -287,9 +287,9 @@ test('navbar/View: templateContext()', t => {
     t.equal(context.isSyncEnabled(), true,
         'isSyncEnabled returns true if dropbox is enabled');
 
-    context.configs.cloudStorage = '';
+    context.configs.cloudStorage = 'p2p';
     t.equal(context.isSyncEnabled(), false,
-        'isSyncEnabled returns false if dropbox is disabled');
+        'isSyncEnabled returns false if p2p is enabled');
 
     sand.restore();
     t.end();

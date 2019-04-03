@@ -1,5 +1,5 @@
 /**
- * Test models/Config.js
+ * Test models/Config
  * @file
  */
 import test from 'tape';

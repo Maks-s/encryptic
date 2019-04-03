@@ -8,7 +8,7 @@ import Radio from 'backbone.radio';
 import '../../../../src/scripts/utils/underscore';
 import initialize from '../../../../src/scripts/components/dropbox/main';
 import Sync from '../../../../src/scripts/components/dropbox/Sync';
-import View from '../../../../src/scripts/components/dropbox/settings/View';
+import View from '../../../../src/scripts/components/settings/show/sync/dropbox/View';
 
 let sand;
 test('components/dropbox/main: before()', t => {

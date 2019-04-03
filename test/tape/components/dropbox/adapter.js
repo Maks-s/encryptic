@@ -96,14 +96,9 @@ test('components/dropbox/Adapter: parseHash()', t => {
 test('components/dropbox/Adapter: authenticate()', t => {
     const adapter = new Adapter(configs);
     const wind    = window;
-    global.window = {cordova: null};
+    global.window = {cordova: {}};
     sand.stub(adapter, 'authCordova');
-    sand.stub(adapter, 'authBrowser');
 
-    adapter.authenticate();
-    t.equal(adapter.authBrowser.called, true, 'calls .authBrowser()');
-
-    global.window.cordova = {};
     adapter.authenticate();
     t.equal(adapter.authCordova.called, true, 'calls .authCordova()');
 
@@ -292,7 +287,7 @@ test('components/dropbox/Adapter: readDir()', t => {
 /**
  * @todo
  *
- 
+
 test('components/dropbox/Adapter: readFile()', t => {
     const adapter = new Adapter(configs);
     const data    = {id: '1', title: 'Test'};

@@ -5,10 +5,16 @@
 import test from 'tape';
 import sinon from 'sinon';
 import Radio from 'backbone.radio';
-import '../../../src/scripts/utils/underscore';
+import {View as MnView} from 'backbone.marionette';
 
 import Pagination from '../../../src/scripts/behaviors/Pagination';
 import Notes from '../../../src/scripts/collections/Notes';
+
+class View extends MnView {
+    behaviors() {
+        return [Pagination];
+    }
+}
 
 let sand;
 test('behaviors/Pagination: before()', t => {
@@ -17,147 +23,170 @@ test('behaviors/Pagination: before()', t => {
 });
 
 test('Pagination: ui()', t => {
-    const ui = Pagination.prototype.ui();
-    t.equal(typeof ui, 'object', 'returns an object');
-    t.equal(ui.pageNav, '#pageNav');
-    t.equal(ui.prevPage, '#prevPage');
-    t.equal(ui.nextPage, '#nextPage');
-
+    t.equal(typeof Pagination.prototype.ui(), 'object', 'returns an object');
     t.end();
 });
 
 test('Pagination: events()', t => {
-    const events = Pagination.prototype.events();
-    t.equal(typeof events, 'object', 'returns an object');
-    t.equal(events['click @ui.nextPage'], 'getNextPage',
-        'opens the next page if the next button is clicked');
-    t.equal(events['click @ui.prevPage'], 'getPreviousPage',
-        'opens the previous page if the previous button is clicked');
-
+    t.equal(typeof Pagination.prototype.events(), 'object', 'returns an object');
     t.end();
 });
 
 test('Pagination: collectionEvents()', t => {
-    const events = Pagination.prototype.collectionEvents();
-    t.equal(typeof events, 'object', 'returns an object');
-    t.equal(events.reset, 'updatePaginationButtons',
-        'updates pagination buttons if the collection is reset');
+    t.equal(typeof Pagination.prototype.collectionEvents(), 'object',
+        'returns an object');
 
     t.end();
 });
 
 test('Pagination: initialize()', t => {
-    const page = Pagination.prototype;
-    page.view  = {options: {collection: new Notes()}};
-    const list = sand.stub(page, 'listenTo');
+    const listenTo = sand.stub(Pagination.prototype, 'listenTo');
+    const view = new View({collection: new Notes()});
 
-    page.initialize();
-    t.equal(page.options, page.view.options, 'uses options from the view');
-    t.equal(page.collection, page.view.options.collection,
+    const page = listenTo.firstCall.thisValue;
+
+    t.deepEqual(page.options, view.options, 'uses options from the view');
+    t.deepEqual(page.collection, view.options.collection,
         'uses collection from the view');
 
-    const {collection} = page.view.options;
-    t.equal(list.calledWith(collection.channel, 'page:next', page.getNextPage),
-        true, 'listens to page:next event on collection channel');
-    t.equal(list.calledWith(collection.channel, 'page:previous', page.getPreviousPage),
-        true, 'listens to page:previous event on collection channel');
+    t.true(listenTo.calledWith(view.collection.channel, 'page:next'),
+        'listens to page:next event on collection channel');
 
-    page.view       = null;
-    page.collection = null;
-    page.options    = null;
+    t.true(listenTo.calledWith(view.collection.channel, 'page:previous'),
+        'listens to page:previous event on collection channel');
+
+    sand.restore();
     t.end();
 });
 
 test('Pagination: updatePaginationButtons()', t => {
-    const page = Pagination.prototype;
-    page.oldUi = page.ui;
-    page.ui    = {
+    let prevPage            = false,
+        nextPage            = false;
+    const oldUi             = Pagination.prototype.ui;
+    Pagination.prototype.ui = {
         pageNav  : {toggleClass : sinon.stub()},
         prevPage : {toggleClass : sinon.stub()},
         nextPage : {toggleClass : sinon.stub()},
     };
-    page.collection = new Notes();
-    page.collection.pagination.total = 10;
+    Pagination.prototype.collection = {
+        hasPreviousPage : () => prevPage,
+        hasNextPage     : () => nextPage,
+        pagination      : {
+            total: 0,
+        },
+    };
 
-    page.updatePaginationButtons();
-    t.equal(page.ui.pageNav.toggleClass.calledWith('hidden', false), true,
-        'toggles "hidden" class of the pagination button group');
-    t.equal(page.ui.prevPage.toggleClass.calledWith('disabled'), true,
-        'toggles "disabled" class of the "previous" button');
-    t.equal(page.ui.nextPage.toggleClass.calledWith('disabled'), true,
-        'toggles "disabled" class of the "next" button');
+    Pagination.prototype.updatePaginationButtons();
 
-    page.collection.pagination.total = 0;
-    page.updatePaginationButtons();
-    t.equal(page.ui.pageNav.toggleClass.calledWith('hidden', true), true,
-        'hides all pagination buttons if the total number of models is equal to 0');
+    t.true(Pagination.prototype.ui.pageNav.toggleClass.calledWith('hidden', true),
+        'enable "hidden" class on the pagination button group if there\'s 0 page');
+    t.true(Pagination.prototype.ui.prevPage.toggleClass.calledWith('disabled', true),
+        'enable "disabled" class on the "previous" button if there\'s no previous page');
+    t.true(Pagination.prototype.ui.nextPage.toggleClass.calledWith('disabled', true),
+        'enable "disabled" class on the "next" button if there\'s no next page');
 
-    page.ui = page.oldUi;
+    sand.reset();
+
+    Pagination.prototype.collection.pagination.total = 10;
+    prevPage                                         = true;
+    nextPage                                         = true;
+
+    Pagination.prototype.updatePaginationButtons();
+
+    t.true(Pagination.prototype.ui.pageNav.toggleClass.calledWith('hidden', false),
+        'disable "hidden" class of the pagination button group if there\'s >0 page');
+    t.true(Pagination.prototype.ui.prevPage.toggleClass.calledWith('disabled', false),
+        'disable "disabled" class of the "previous" button if there\'s a previous page');
+    t.true(Pagination.prototype.ui.nextPage.toggleClass.calledWith('disabled', false),
+        'disable "disabled" class of the "next" button if there\'s a next page');
+
+    delete Pagination.prototype.collection;
+    Pagination.prototype.ui = oldUi;
     sand.restore();
     t.end();
 });
 
 test('Pagination: getNextPage()', t => {
-    const page      = Pagination.prototype;
-    page.collection = new Notes();
+    const collection = new Notes();
+    sand.stub(collection, 'hasNextPage').returns(false);
+    sand.stub(Pagination.prototype, 'navigatePage');
+    sand.stub(collection, 'getNextPage');
 
-    sand.stub(page.collection, 'hasNextPage').returns(false);
-    sand.stub(page, 'navigatePage');
-    sand.stub(page.collection, 'getNextPage');
+    const view = new View({collection});
 
-    page.getNextPage();
-    t.equal(page.navigatePage.notCalled, true,
+    view.collection.channel.trigger('page:next');
+
+    t.true(Pagination.prototype.navigatePage.notCalled,
+        'does nothing if the collection does not have any next pages left');
+    t.true(collection.getNextPage.notCalled,
         'does nothing if the collection does not have any next pages left');
 
-    page.collection.hasNextPage.returns(true);
-    page.getNextPage();
-    t.equal(page.navigatePage.calledWith(1), true, 'calls navigatePage method');
-    t.equal(page.collection.getNextPage.called, true,
+    sand.reset();
+
+    collection.hasNextPage.returns(true);
+    view.collection.channel.trigger('page:next');
+    t.true(Pagination.prototype.navigatePage.calledWith(1), 'calls navigatePage method');
+    t.true(collection.getNextPage.called,
         'calls getNextPage method');
 
     sand.restore();
-    page.collection = null;
     t.end();
 });
 
 test('Pagination: getPreviousPage()', t => {
-    const page      = Pagination.prototype;
-    page.collection = new Notes();
+    const collection = new Notes();
+    sand.stub(collection, 'hasPreviousPage').returns(false);
+    sand.stub(Pagination.prototype, 'navigatePage');
+    sand.stub(collection, 'getPreviousPage');
 
-    sand.stub(page.collection, 'hasPreviousPage').returns(false);
-    sand.stub(page, 'navigatePage');
-    sand.stub(page.collection, 'getPreviousPage');
+    const view = new View({collection});
 
-    page.getPreviousPage();
-    t.equal(page.navigatePage.notCalled, true,
-        'does nothing if the collection does not have any next pages left');
+    view.collection.channel.trigger('page:previous');
 
-    page.collection.hasPreviousPage.returns(true);
-    page.getPreviousPage();
-    t.equal(page.navigatePage.calledWith(-1), true, 'calls navigatePage method');
-    t.equal(page.collection.getPreviousPage.called, true,
+    t.true(Pagination.prototype.navigatePage.notCalled,
+        'does nothing if the collection does not have any previous pages left');
+    t.true(collection.getPreviousPage.notCalled,
+        'does nothing if the collection does not have any previous pages left');
+
+    sand.reset();
+
+    collection.hasPreviousPage.returns(true);
+    view.collection.channel.trigger('page:previous');
+    t.true(Pagination.prototype.navigatePage.calledWith(-1), 'calls navigatePage method');
+    t.true(collection.getPreviousPage.called,
         'calls getPreviousPage method');
 
     sand.restore();
-    page.collection = null;
     t.end();
 });
 
 test('Pagination: navigatePage()', t => {
-    const page      = Pagination.prototype;
-    page.options    = {filterArgs: {page: 10}};
-    page.collection = new Notes();
-    page.collection.pagination.current = 8;
-
     const request = sand.stub(Radio, 'request');
-    page.navigatePage(1);
-    t.equal(request.calledWithMatch('utils/Url', 'navigate', {
+
+    Pagination.prototype.options                       = {filterArgs: {page: 10}};
+    Pagination.prototype.collection                    = new Notes();
+    Pagination.prototype.collection.pagination.current = 8;
+
+    Pagination.prototype.navigatePage(1);
+    t.true(request.calledWithMatch('utils/Url', 'navigate', {
         trigger    : false,
         filterArgs : {page: 9},
-    }), true, 'makes a navigate request');
+    }), 'makes a navigate request');
+    t.equal(Pagination.prototype.options.filterArgs.page, 9,
+        'changes filterArgs.page to next page');
 
-    page.options    = null;
-    page.collection = null;
+    sand.reset();
+
+    Pagination.prototype.navigatePage(-1);
+    t.true(request.calledWithMatch('utils/Url', 'navigate', {
+        trigger    : false,
+        filterArgs : {page: 7},
+    }), 'makes a navigate request');
+    t.equal(Pagination.prototype.options.filterArgs.page, 7,
+        'changes filterArgs.page to previous page');
+
+    delete Pagination.prototype.options;
+    delete Pagination.prototype.collection;
     sand.restore();
     t.end();
 });

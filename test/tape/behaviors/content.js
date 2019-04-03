@@ -15,11 +15,7 @@ test('behaviors/Content: before()', t => {
 });
 
 test('behaviors/Content: events()', t => {
-    const events = Content.prototype.events();
-    t.equal(typeof events, 'object');
-    t.equal(events['click #show--sidebar'], 'showSidebar',
-        'shows the sidebar if the button is clicked');
-
+    t.equal(typeof Content.prototype.events(), 'object', 'is an object');
     t.end();
 });
 
@@ -30,26 +26,28 @@ test('behaviors/Content: onDestroy()', t => {
     sand.stub(content, 'showSidebar');
 
     content.onDestroy();
-    t.equal(content.$active.off.calledWith('click'), true, 'msg');
-    t.equal(content.hammer.destroy.called, true, 'destroyes the hammer instance');
-    t.equal(content.showSidebar.called, true, 'shows the sidebar');
+    t.true(content.$active.off.calledWith('click'), 'msg');
+    t.true(content.hammer.destroy.called, 'destroyes the hammer instance');
+    t.true(content.showSidebar.called, 'shows the sidebar');
+
+    delete content.$active;
+    delete content.hammer;
+    sand.reset();
+
+    content.onDestroy();
+    t.true(content.showSidebar.called, 'always shows the sidebar');
 
     sand.restore();
     t.end();
 });
 
-test('behaviors/Content: onRender()', t => {
-    const con = new Content();
-    sand.stub(con, 'showContent');
-    sand.stub(con, 'listenToHammer');
-    sand.stub(con, 'listenActive');
+test('behaviors/Content: listenActive()', t => {
+    const content = new Content();
 
-    con.onRender();
-    t.equal(con.showContent.called, true, 'shows content region');
-    t.equal(con.listenToHammer.called, true, 'starts listening to touch events');
-    t.equal(con.listenActive.called, true, 'calls listenActive method');
+    t.false(content.$active);
+    content.listenActive();
+    t.true(content.$active);
 
-    sand.restore();
     t.end();
 });
 

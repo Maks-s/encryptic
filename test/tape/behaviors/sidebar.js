@@ -19,7 +19,7 @@ test('behaviors/Sidebar: onDestroy()', t => {
     side.hammer = {destroy: sand.stub()};
 
     side.onDestroy();
-    t.equal(side.hammer.destroy.called, true, 'destroyes the hammer instance');
+    t.true(side.hammer.destroy.called, 'destroyes the hammer instance');
 
     sand.restore();
     t.end();
@@ -30,7 +30,7 @@ test('behaviors/Sidebar: onSwipeRight()', t => {
     const trig = sand.stub(Radio, 'trigger');
 
     side.onSwipeRight();
-    t.equal(trig.calledWith('components/navbar', 'show:sidemenu'), true,
+    t.true(trig.calledWith('components/navbar', 'show:sidemenu'),
         'shows the sidebar menu');
 
     sand.restore();
@@ -39,18 +39,16 @@ test('behaviors/Sidebar: onSwipeRight()', t => {
 
 test('behaviors/Sidebar: onSwipeLeft()', t => {
     const side = new Sidebar();
-    const req  = sand.stub(Radio, 'request');
     side.view  = {noSwipeLeft: true};
+    const req  = sand.stub(Radio, 'request');
 
     side.onSwipeLeft();
-    t.equal(req.notCalled, true,
-        'does nothing if the noSwipeRight property is equal to true');
+    t.true(req.notCalled, 'does nothing if the noSwipeRight property is equal to true');
 
     side.view.noSwipeLeft = false;
     side.onSwipeLeft();
-    t.equal(req.calledWith('Layout', 'toggleContent', {
-        visible: true,
-    }), true, 'shows content region and hides the sidebar');
+    t.true(req.calledWith('Layout', 'toggleContent', {visible: true}),
+        'shows content region and hides the sidebar');
 
     sand.restore();
     t.end();

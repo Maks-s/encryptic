@@ -4,19 +4,15 @@
  */
 import test from 'tape';
 import sinon from 'sinon';
-import Mn from 'backbone.marionette';
+import {View as MnView} from 'backbone.marionette';
 import Mousetrap from 'mousetrap';
 import $ from 'jquery';
-import '../../../src/scripts/utils/underscore';
 
 import Navigate from '../../../src/scripts/behaviors/Navigate';
 import Notes from '../../../src/scripts/collections/Notes';
+import Note from '../../../src/scripts/models/Note';
 
-class View extends Mn.View {
-    get useNavigateKeybindings() {
-        return true;
-    }
-
+class View extends MnView {
     behaviors() {
         return [Navigate];
     }
@@ -29,134 +25,143 @@ test('behaviors/Navigate: before()', t => {
 });
 
 test('behaviors/Navigate: initialize()', t => {
-    const navigate = Navigate.prototype;
-    const bind     = sand.stub(navigate, 'bindKeys');
-    const listen   = sand.stub(navigate, 'listenTo');
+    const bind   = sand.stub(Navigate.prototype, 'bindKeys');
+    const listen = sand.stub(Navigate.prototype, 'listenTo');
 
-    View.prototype.channel = {channelName: 'test'};
-    const view     = new View({
-        collection : new Notes(),
-        configs    : {test: 'yes'},
-    });
+    const view = new View({collection: new Notes()});
 
-    t.equal(bind.called, true, 'starts listening to keybinding events');
+    t.true(bind.notCalled, 'doesn\'t listen to keybinding events');
 
-    t.equal(listen.calledWith(view.collection.channel, 'model:navigate'), true,
+    t.true(listen.calledWith(view.collection.channel, 'model:navigate'),
         'listens to model:navigate event on collection channel');
-    t.equal(listen.calledWith(view.channel, 'model:active'),
-        true, 'listens to model:active event');
-
-    t.equal(listen.calledWith(view, 'childview:scroll:top', navigate.onScrollTop), true,
+    t.true(listen.neverCalledWith(sinon.match.any, 'model:active'),
+        'doesn\'t listen to model:active event');
+    t.ok(listen.calledWith(view, 'childview:scroll:top'),
         'listens to childview:scroll:top event');
-    t.equal(listen.calledWith(view, 'navigate:next', navigate.navigateNextModel),
-        true, 'listens to navigate:next event');
-    t.equal(listen.calledWith(view, 'navigate:previous', navigate.navigatePreviousModel),
-        true, 'listens to navigate:previous event');
+    t.true(listen.calledWith(view, 'navigate:next'),
+        'listens to navigate:next event');
 
+    t.true(listen.calledWith(view, 'navigate:previous'),
+        'listens to navigate:previous event');
+
+    View.prototype.channel                = 'testChannel';
+    View.prototype.useNavigateKeybindings = true;
+    sand.reset();
+
+    new View({collection: new Notes()});
+    t.true(bind.called, 'listens to keybinding events');
+    t.true(
+        listen.calledWith(View.prototype.channel, 'model:active'),
+        'listens to model:active event');
+
+    delete View.prototype.useNavigateKeybindings;
+    delete View.prototype.channel;
     sand.restore();
     t.end();
 });
 
 test('behaviors/Navigate: bindKeys()', t => {
-    const navigate   = Navigate.prototype;
-    const bind       = sand.spy(Mousetrap, 'bind');
-    navigate.configs = {navigateBottom: 'j', navigateTop: 'k'};
+    const next = sand.stub(Navigate.prototype, 'navigateNextModel');
+    const prev = sand.stub(Navigate.prototype, 'navigatePreviousModel');
 
-    navigate.bindKeys();
-    t.equal(bind.calledWith('j'), true, 'binds navigateBottom keybinding');
-    t.equal(bind.calledWith('k'), true, 'binds navigateTop keybinding');
+    View.prototype.useNavigateKeybindings = true;
+    new View({
+        collection : new Notes(),
+        configs    : {navigateBottom: 'j', navigateTop: 'k'},
+    });
 
-    sand.stub(navigate, 'navigateNextModel');
     Mousetrap.trigger('j');
-    t.equal(navigate.navigateNextModel.called, true,
-        'calls navigateNextModel method');
+    t.true(next.called, 'calls navigateNextModel method');
 
-    sand.stub(navigate, 'navigatePreviousModel');
     Mousetrap.trigger('k');
-    t.equal(navigate.navigatePreviousModel.called, true,
-        'calls navigatePreviousModel method');
+    t.true(prev.called, 'calls navigatePreviousModel method');
 
-    navigate.configs = null;
+    delete View.prototype.useNavigateKeybindings;
     Mousetrap.unbind(['j', 'k']);
     sand.restore();
     t.end();
 });
 
 test('behaviors/Navigate: onDestroy()', t => {
-    const navigate   = Navigate.prototype;
-    navigate.view    = {useNavigateKeybindings: true};
-    const unbind     = sand.spy(Mousetrap, 'unbind');
-    navigate.configs = {navigateBottom: 'j', navigateTop: 'k'};
+    const unbind     = sand.stub(Mousetrap, 'unbind');
 
-    navigate.onDestroy();
-    t.equal(unbind.calledWith(['j', 'k']), true, 'unbinds navigate keybindings');
+    let view = new View({
+        collection : new Notes(),
+        configs    : {navigateBottom: 'j', navigateTop: 'k'},
+    });
+    view.destroy();
 
-    navigate.view    = null;
-    navigate.configs = null;
+    t.true(unbind.notCalled, 'doesn\'t unbind keybindings');
+
+    View.prototype.useNavigateKeybindings = true;
+    view = new View({
+        collection : new Notes(),
+        configs    : {navigateBottom: 'j', navigateTop: 'k'},
+    });
+    view.destroy();
+
+    t.true(unbind.calledWith(sinon.match.array.contains(['j', 'k'])),
+        'unbinds navigate keybindings');
+
+    delete View.prototype.useNavigateKeybindings;
     sand.restore();
     t.end();
 });
 
 test('behaviors/Navigate: onScrollTop()', t => {
-    const navigate   = Navigate.prototype;
-    navigate.$scroll = $('body');
-    const scrollTop  = sand.spy(navigate.$scroll, 'scrollTop');
+    Navigate.prototype.$scroll = $('body');
+    const scrollTop = sand.stub(Navigate.prototype.$scroll, 'scrollTop');
 
-    navigate.onScrollTop({offset: 1});
-    t.equal(scrollTop.called, true, 'changes scroll position');
+    Navigate.prototype.onScrollTop({offset: 1});
+    t.true(scrollTop.called, 'changes scroll position');
 
-    navigate.$scroll = null;
+    delete Navigate.prototype.$scroll;
     sand.restore();
     t.end();
 });
 
-test('behaviors/Navigate: navigateNextModel()', t => {
-    const navigate      = Navigate.prototype;
-    navigate.collection = new Notes();
-    navigate.view       = {options: {filterArgs: {id: '1'}}};
+test('behaviors/Navigate: navigateNextModel() + navigatePreviousModel()', t => {
+    const collection = new Notes();
+    const next = sand.stub(collection, 'navigateNextModel');
+    const prev = sand.stub(collection, 'navigatePreviousModel');
 
-    const stub = sand.stub(navigate.collection, 'navigateNextModel');
-    navigate.navigateNextModel();
-    t.equal(stub.calledWith('1'), true,
-        'calls this.collection.navigateNextModel method');
+    const view = new View({
+        collection,
+        filterArgs: {
+            id: '1',
+        },
+    });
 
-    navigate.collection = null;
-    navigate.view       = null;
-    sand.restore();
-    t.end();
-});
+    view.trigger('navigate:next');
 
-test('behaviors/Navigate: navigatePreviousModel()', t => {
-    const navigate      = Navigate.prototype;
-    navigate.collection = new Notes();
-    navigate.view       = {options: {filterArgs: {id: '1'}}};
+    t.true(next.calledWith('1'), 'calls this.collection.navigateNextModel');
+    t.true(prev.notCalled, 'doesn\'t call this.collection.navigatePreviousModel');
 
-    const stub = sand.stub(navigate.collection, 'navigatePreviousModel');
-    navigate.navigatePreviousModel();
-    t.equal(stub.calledWith('1'), true,
-        'calls this.collection.navigatePreviousModel method');
+    sand.reset();
 
-    navigate.collection = null;
-    navigate.view       = null;
+    view.trigger('navigate:previous');
+
+    t.true(next.notCalled, 'doesn\'t call this.collection.navigateNextModel');
+    t.true(prev.calledWith('1'), 'calls this.collection.navigatePreviousModel');
+
     sand.restore();
     t.end();
 });
 
 test('behaviors/Navigate: onModelNavigate()', t => {
-    const navigate = Navigate.prototype;
-    navigate.view  = {options: {filterArgs: {}}};
-    const model    = new Notes.prototype.model({id: '2'});
+    const model = new Note({id: '2'});
     sand.stub(model, 'trigger');
-    navigate.collection = new Notes([model]);
 
-    navigate.onModelNavigate({model: model.clone()});
+    Navigate.prototype.view       = {options: {filterArgs: {}}};
+    Navigate.prototype.collection = new Notes([model]);
 
-    t.equal(navigate.view.options.filterArgs.id, '2', 'updates filter parameters');
-    t.equal(model.trigger.calledWith('focus'), true,
-        'triggers "focus" event on the model');
+    Navigate.prototype.onModelNavigate({model});
+    t.true(model.trigger.calledWith('focus'), 'triggers "focus" event on the model');
+    t.equal(Navigate.prototype.view.options.filterArgs.id, '2',
+        'updates filter parameters');
 
-    navigate.collection = null;
-    navigate.view = null;
+    delete Navigate.prototype.view;
+    delete Navigate.prototype.collection;
     sand.restore();
     t.end();
 });
